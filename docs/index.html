@@ -1,0 +1,2395 @@
+<title>FloodVuln Global</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap">
+<style>
+/* ============ TOKENS — light is the base; dark redefines tokens only ============ */
+:root{
+  color-scheme: light;
+  --paper:#F1F4F3;
+  --panel:#FFFFFF;
+  --panel-2:#E7ECEB;
+  --panel-3:#DCE3E2;
+  --ink:#08191D;
+  --ink-2:#41565A;
+  --ink-3:#75898B;
+  --rule:#CBD6D4;
+  --rule-2:#B3C2C0;
+  --accent:#008C7D;
+  --accent-2:#00655C;
+  --accent-wash:rgba(0,140,125,.10);
+  --amber:#C2751A;
+  --amber-wash:rgba(194,117,26,.12);
+  --slate:#3059AE;
+  --slate-wash:rgba(48,89,174,.12);
+  --alarm:#B32D3B;
+  --alarm-wash:rgba(179,45,59,.12);
+  --good:#1C7A52;
+  --d1:#5FB9AC; --d2:#1FA08F; --d3:#00806F; --d4:#005850;
+  --surface:#FFFFFF;
+  --grid:#E3EAE9;
+  --shadow:0 1px 2px rgba(8,25,29,.05), 0 8px 28px -12px rgba(8,25,29,.16);
+  --shadow-lift:0 2px 6px rgba(8,25,29,.07), 0 22px 50px -18px rgba(8,25,29,.28);
+  --hairline:1px solid var(--rule);
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --measure:66ch;
+  --rail:88px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#0D1B20; --panel:#122429; --panel-2:#162C32; --panel-3:#1D373E;
+    --ink:#E9F2F1; --ink-2:#A6BAB9; --ink-3:#7B9190;
+    --rule:#22403F; --rule-2:#2F5350;
+    --accent:#16A895; --accent-2:#4FCBB9; --accent-wash:rgba(22,168,149,.14);
+    --amber:#C8811F; --amber-wash:rgba(200,129,31,.16);
+    --slate:#5B8FDB; --slate-wash:rgba(91,143,219,.16);
+    --alarm:#D2605E; --alarm-wash:rgba(210,96,94,.16);
+    --good:#3FA97A;
+    --d1:#7FD9C9; --d2:#46C1AE; --d3:#16A895; --d4:#0B7E70;
+    --surface:#122429; --grid:#1E3A3E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+    --shadow-lift:0 2px 8px rgba(0,0,0,.45), 0 26px 56px -20px rgba(0,0,0,.85);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#0D1B20; --panel:#122429; --panel-2:#162C32; --panel-3:#1D373E;
+  --ink:#E9F2F1; --ink-2:#A6BAB9; --ink-3:#7B9190;
+  --rule:#22403F; --rule-2:#2F5350;
+  --accent:#16A895; --accent-2:#4FCBB9; --accent-wash:rgba(22,168,149,.14);
+  --amber:#C8811F; --amber-wash:rgba(200,129,31,.16);
+  --slate:#5B8FDB; --slate-wash:rgba(91,143,219,.16);
+  --alarm:#D2605E; --alarm-wash:rgba(210,96,94,.16);
+  --good:#3FA97A;
+  --d1:#7FD9C9; --d2:#46C1AE; --d3:#16A895; --d4:#0B7E70;
+  --surface:#122429; --grid:#1E3A3E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  --shadow-lift:0 2px 8px rgba(0,0,0,.45), 0 26px 56px -20px rgba(0,0,0,.85);
+}
+
+/* ============ BASE ============ */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--f-body); font-size:17.5px; line-height:1.62;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden;
+}
+h1,h2,h3,h4,h5{font-family:var(--f-display); font-weight:700; letter-spacing:-.02em; line-height:1.08; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+::selection{background:var(--accent); color:#fff}
+svg{display:block}
+table{border-collapse:collapse; width:100%}
+.wrap{max-width:1220px; margin:0 auto; padding:0 28px}
+.measure{max-width:var(--measure)}
+.mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+.num{font-family:var(--f-mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+
+.eyebrow{
+  font-family:var(--f-mono); font-size:11px; font-weight:500; letter-spacing:.02em;
+  text-transform:none; color:var(--accent); display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:""; width:26px; height:0; border-top:2px solid var(--accent)}
+.eyebrow.amber{color:var(--amber)} .eyebrow.amber::before{border-color:var(--amber)}
+.eyebrow.slate{color:var(--slate)} .eyebrow.slate::before{border-color:var(--slate)}
+
+h2.sect{font-size:clamp(30px,4.1vw,50px); letter-spacing:-.03em; margin:16px 0 0}
+.lede{font-size:clamp(18px,1.5vw,20.5px); color:var(--ink-2); line-height:1.58; margin-top:18px; font-weight:300}
+
+section{position:relative}
+.band{padding:clamp(72px,9vw,124px) 0; border-top:var(--hairline)}
+.band-alt{background:var(--panel-2)}
+</style>
+<style>
+/* ============ STAFF-GAUGE RAIL ============ */
+.rail{position:fixed; left:0; top:0; bottom:0; width:var(--rail); z-index:40; pointer-events:none; display:none}
+@media(min-width:1460px){ .rail{display:block} }
+.rail-line{position:absolute; left:56px; top:0; bottom:0; width:1px; background:var(--rule)}
+.rail-fill{position:absolute; left:54px; top:0; width:5px; background:linear-gradient(180deg,var(--accent),var(--accent-2)); height:0; border-radius:0 0 3px 3px}
+.rail-tick{position:absolute; left:40px; width:16px; height:1px; background:var(--rule-2)}
+.rail-tick.major{left:26px; width:30px}
+.rail-lab{position:absolute; left:0; width:22px; text-align:right; transform:translateY(-50%);
+  font-family:var(--f-mono); font-size:9px; letter-spacing:.06em; color:var(--ink-3)}
+.rail-head{position:absolute; left:49px; width:15px; height:15px; margin-top:-7.5px; border-radius:50%;
+  background:var(--paper); border:2.5px solid var(--accent); box-shadow:0 0 0 4px var(--paper)}
+.rail-cap{position:absolute; left:10px; bottom:24px; font-family:var(--f-mono); font-size:9px; letter-spacing:.02em;
+  color:var(--ink-3); writing-mode:vertical-rl; text-transform:none}
+
+/* ============ NAV ============ */
+.nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(16px) saturate(1.4);
+  background:color-mix(in srgb, var(--paper) 85%, transparent); border-bottom:var(--hairline)}
+.nav-in{display:flex; align-items:center; gap:24px; height:62px; max-width:1220px; margin:0 auto; padding:0 28px}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--f-display); font-weight:800;
+  letter-spacing:-.035em; font-size:18.5px; margin-right:auto}
+.brand em{font-style:normal; color:var(--accent); font-weight:600}
+.nlink{font-family:var(--f-display); font-size:13.5px; font-weight:500; color:var(--ink-2); text-decoration:none; transition:color .18s; display:none}
+@media(min-width:1000px){ .nlink{display:inline} }
+.nlink:hover{color:var(--accent)}
+.btn{font-family:var(--f-display); font-weight:600; font-size:13.5px; border:none; cursor:pointer;
+  padding:9px 17px; border-radius:3px; background:var(--accent); color:#fff; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s, background .2s}
+.btn:hover{transform:translateY(-1.5px); box-shadow:0 8px 20px -8px color-mix(in srgb, var(--accent) 75%, transparent)}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--rule-2)}
+.btn.ghost:hover{border-color:var(--accent); color:var(--accent); box-shadow:none}
+.themetog{background:transparent; border:1px solid var(--rule); border-radius:3px; width:32px; height:32px;
+  cursor:pointer; color:var(--ink-2); display:grid; place-items:center; font-size:14px; transition:border-color .18s,color .18s}
+.themetog:hover{border-color:var(--accent); color:var(--accent)}
+</style>
+<style>
+/* ============ HERO ============ */
+.hero{position:relative; overflow:hidden}
+.hero-grid{display:grid; grid-template-columns:1fr; gap:44px; padding:clamp(52px,7vw,88px) 0 clamp(48px,6vw,76px)}
+@media(min-width:1040px){ .hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr); gap:56px; align-items:center} }
+h1.hero-h{font-size:clamp(38px,6.1vw,76px); font-weight:800; letter-spacing:-.045em; line-height:.99}
+h1.hero-h .fade{color:var(--ink-3); font-weight:400}
+.hero-sub{margin-top:24px; font-size:clamp(17.5px,1.6vw,21px); color:var(--ink-2); font-weight:300; line-height:1.55; max-width:56ch}
+.hero-cta{display:flex; gap:12px; margin-top:32px; flex-wrap:wrap}
+.hero-note{margin-top:26px; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.02em; color:var(--ink-3); text-transform:none}
+.tagline{margin-top:36px; padding-top:22px; border-top:var(--hairline); display:flex; gap:28px; flex-wrap:wrap}
+.tagline b{display:block; font-family:var(--f-display); font-size:13px; font-weight:700}
+.tagline span{font-size:13.5px; color:var(--ink-3); font-weight:300}
+
+.gauge{background:var(--panel); border:var(--hairline); border-radius:5px; box-shadow:var(--shadow-lift); overflow:hidden}
+.gauge-top{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-bottom:var(--hairline); background:var(--panel-2)}
+.gauge-title{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.02em; text-transform:none; color:var(--ink-2)}
+.live{display:flex; align-items:center; gap:7px; font-family:var(--f-mono); font-size:10px; letter-spacing:.02em; color:var(--accent); text-transform:none}
+.live i{width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.35; transform:scale(.8)}}
+.gauge-canvas{display:block; width:100%; height:256px}
+.gauge-ctl{padding:16px 18px 6px; display:flex; align-items:center; gap:14px}
+.gauge-ctl label{font-family:var(--f-mono); font-size:10px; letter-spacing:.02em; text-transform:none; color:var(--ink-3); white-space:nowrap}
+.readout{display:grid; grid-template-columns:repeat(4,1fr); border-top:var(--hairline); margin-top:12px}
+.readout div{padding:13px 14px; border-right:var(--hairline)}
+.readout div:last-child{border-right:none}
+.readout .k{font-family:var(--f-mono); font-size:9px; letter-spacing:.02em; text-transform:none; color:var(--ink-3); display:block; margin-bottom:5px}
+.readout .v{font-family:var(--f-display); font-weight:700; font-size:clamp(18px,2vw,24px); letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.readout .v.tail{color:var(--alarm)}
+.readout .v.acc{color:var(--accent)}
+
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; background:transparent; cursor:pointer; height:22px}
+input[type=range]::-webkit-slider-runnable-track{height:4px; border-radius:2px; background:var(--panel-3)}
+input[type=range]::-moz-range-track{height:4px; border-radius:2px; background:var(--panel-3)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:17px; height:17px; border-radius:50%;
+  background:var(--accent); border:3px solid var(--panel); margin-top:-6.5px; box-shadow:0 1px 5px rgba(0,0,0,.28); transition:transform .15s}
+input[type=range]::-moz-range-thumb{width:17px; height:17px; border-radius:50%; background:var(--accent); border:3px solid var(--panel)}
+input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.14)}
+</style>
+<style>
+/* ============ GENERIC PIECES ============ */
+.card{background:var(--panel); border:var(--hairline); border-radius:4px; padding:24px; box-shadow:var(--shadow)}
+.grid-3{display:grid; gap:18px; grid-template-columns:1fr}
+@media(min-width:760px){ .grid-3{grid-template-columns:repeat(2,1fr)} }
+@media(min-width:1020px){ .grid-3{grid-template-columns:repeat(3,1fr)} }
+.grid-2{display:grid; gap:20px; grid-template-columns:1fr}
+@media(min-width:900px){ .grid-2{grid-template-columns:repeat(2,1fr)} }
+.tag{display:inline-flex; align-items:center; gap:6px; font-family:var(--f-mono); font-size:10px;
+  letter-spacing:.02em; text-transform:none; padding:3px 8px; border-radius:2px;
+  background:var(--accent-wash); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 32%,transparent)}
+.tag.amber{background:var(--amber-wash); color:var(--amber); border-color:color-mix(in srgb,var(--amber) 34%,transparent)}
+.tag.slate{background:var(--slate-wash); color:var(--slate); border-color:color-mix(in srgb,var(--slate) 34%,transparent)}
+.tag.alarm{background:var(--alarm-wash); color:var(--alarm); border-color:color-mix(in srgb,var(--alarm) 34%,transparent)}
+.tag.plain{background:var(--panel-2); color:var(--ink-3); border-color:var(--rule)}
+.small{font-size:14.5px; color:var(--ink-2); line-height:1.55}
+.cap{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.04em; color:var(--ink-3); line-height:1.5}
+.rv{opacity:0; transform:translateY(18px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1; transform:none}
+@media(prefers-reduced-motion:reduce){ .rv{opacity:1; transform:none; transition:none} .live i{animation:none} }
+
+/* ============ PIPELINE ============ */
+.pipe{display:grid; grid-template-columns:1fr; gap:10px; margin-top:44px}
+@media(min-width:900px){ .pipe{grid-template-columns:repeat(5,1fr); gap:8px} }
+.stage{position:relative; background:var(--panel); border:var(--hairline); border-top:3px solid var(--stage,var(--accent));
+  border-radius:3px; padding:18px 16px 20px; cursor:default; transition:transform .25s cubic-bezier(.2,.8,.3,1), box-shadow .25s, border-color .25s}
+.stage:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+.stage h4{font-size:14px; font-weight:700; letter-spacing:-.01em; margin-bottom:9px}
+.stage .n{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.13em; color:var(--stage,var(--accent)); display:block; margin-bottom:9px}
+.stage ul{margin:0; padding-left:15px; font-size:13px; color:var(--ink-2); line-height:1.65; font-weight:300}
+@media(min-width:900px){
+  .stage::after{content:""; position:absolute; right:-8px; top:calc(50% - 4px); width:8px; height:8px;
+    border-top:1.5px solid var(--rule-2); border-right:1.5px solid var(--rule-2); transform:rotate(45deg); z-index:2}
+  .stage:last-child::after{display:none}
+}
+
+/* ============ CONSOLE ============ */
+.console{background:var(--panel); border:var(--hairline); border-radius:5px; box-shadow:var(--shadow-lift); overflow:hidden; margin-top:44px}
+.console-bar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 18px; background:var(--panel-2); border-bottom:var(--hairline)}
+.console-body{display:grid; grid-template-columns:1fr}
+@media(min-width:1000px){ .console-body{grid-template-columns:290px minmax(0,1fr) 268px} }
+.pane{padding:22px; border-bottom:var(--hairline)}
+@media(min-width:1000px){ .pane{border-bottom:none; border-right:var(--hairline)} .pane:last-child{border-right:none} }
+.fieldlab{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.02em; text-transform:none; color:var(--ink-3); margin-bottom:9px; display:block}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px}
+.chip{font-family:var(--f-display); font-size:12px; font-weight:500; padding:6px 10px; border-radius:2px; cursor:pointer;
+  background:transparent; border:1px solid var(--rule-2); color:var(--ink-2); transition:all .18s; text-align:left}
+.chip:hover{border-color:var(--accent); color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+.ladder{display:flex; flex-direction:column; gap:3px; margin-top:6px}
+.rung{display:grid; grid-template-columns:34px 1fr auto; align-items:center; gap:10px; padding:8px 9px; border-radius:2px;
+  cursor:pointer; border:1px solid transparent; background:transparent; text-align:left; transition:background .18s, border-color .18s}
+.rung:hover{background:var(--panel-2)}
+.rung[aria-pressed="true"]{background:var(--amber-wash); border-color:color-mix(in srgb,var(--amber) 40%,transparent)}
+.rung .g{font-family:var(--f-mono); font-size:11px; font-weight:600; color:var(--amber)}
+.rung .t{font-size:12.5px; color:var(--ink-2); font-family:var(--f-display); font-weight:500}
+.rung .n{font-family:var(--f-mono); font-size:10px; color:var(--ink-3)}
+</style>
+<style>
+/* ============ CHART SHELL ============ */
+.chartbox{position:relative}
+.chart-h{display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:4px}
+.chart-t{font-family:var(--f-display); font-size:15px; font-weight:700; letter-spacing:-.015em}
+.chart-s{font-size:13px; color:var(--ink-3); font-weight:300; max-width:60ch}
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:12px}
+.legend i{display:inline-block; width:14px; height:3px; border-radius:2px; vertical-align:middle; margin-right:6px}
+.legend span{font-family:var(--f-mono); font-size:10.5px; color:var(--ink-2); letter-spacing:.02em; white-space:nowrap}
+.tip{position:absolute; pointer-events:none; z-index:20; background:var(--ink); color:var(--paper);
+  border-radius:3px; padding:8px 10px; font-family:var(--f-mono); font-size:11px; line-height:1.5;
+  opacity:0; transition:opacity .12s; box-shadow:0 8px 24px -8px rgba(0,0,0,.5); white-space:nowrap}
+.tip.on{opacity:1}
+.tip b{color:var(--accent-2); font-weight:600}
+
+/* API panel */
+.api{background:var(--ink); color:#cfe3e0; font-family:var(--f-mono); font-size:11.5px; line-height:1.85;
+  padding:18px; border-radius:3px; overflow-x:auto}
+:root[data-theme="dark"] .api, :root:not([data-theme="light"]) .api{border:1px solid var(--rule)}
+.api .kk{color:#7fa9a5}
+.api .vv{color:#5ee0c8}
+.api .ss{color:#e8b46a}
+.badge-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+
+/* ============ TABS ============ */
+.tabs{display:flex; gap:2px; flex-wrap:wrap; border-bottom:var(--hairline); margin-top:38px}
+.tab{font-family:var(--f-display); font-size:13.5px; font-weight:600; padding:11px 15px; background:transparent;
+  border:none; border-bottom:2px solid transparent; color:var(--ink-3); cursor:pointer; transition:color .18s, border-color .18s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent)}
+.panel-body{padding-top:28px}
+.panel-body[hidden]{display:none}
+
+/* ============ TABLE ============ */
+.tbl{font-size:13.5px}
+.tbl th{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.02em; text-transform:none; color:var(--ink-3);
+  text-align:left; padding:9px 12px; border-bottom:1px solid var(--rule-2); font-weight:500; white-space:nowrap}
+.tbl td{padding:10px 12px; border-bottom:var(--hairline); vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td.n{font-family:var(--f-mono); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap}
+.tbl tbody tr{transition:background .15s}
+.tbl tbody tr:hover{background:var(--panel-2)}
+.scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch}
+.sev{display:inline-flex; align-items:center; gap:6px; font-family:var(--f-mono); font-size:10px; letter-spacing:.06em}
+.sev i{width:8px; height:8px; border-radius:2px; flex:0 0 8px}
+
+/* ============ STAT TILES ============ */
+.tiles{display:grid; gap:1px; background:var(--rule); border:var(--hairline); border-radius:4px; overflow:hidden; grid-template-columns:repeat(2,1fr)}
+@media(min-width:820px){ .tiles{grid-template-columns:repeat(4,1fr)} }
+.tile{background:var(--panel); padding:20px 18px}
+.tile .k{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.02em; text-transform:none; color:var(--ink-3); display:block; margin-bottom:8px}
+.tile .v{font-family:var(--f-display); font-weight:800; font-size:clamp(24px,3vw,34px); letter-spacing:-.035em; font-variant-numeric:tabular-nums; line-height:1}
+.tile .d{font-size:12.5px; color:var(--ink-3); margin-top:8px; font-weight:300; line-height:1.45}
+
+/* ============ QUOTE / CALLOUT ============ */
+.callout{border-left:3px solid var(--accent); background:var(--accent-wash); padding:20px 24px; border-radius:0 3px 3px 0}
+.callout.amber{border-left-color:var(--amber); background:var(--amber-wash)}
+.callout h5{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.02em; text-transform:none; color:var(--accent); margin-bottom:9px; font-weight:600}
+.callout.amber h5{color:var(--amber)}
+.callout p{font-size:16px; line-height:1.6}
+
+/* ============ FOOTER ============ */
+.foot{background:var(--ink); color:#a9c2be; padding:70px 0 40px}
+:root[data-theme="dark"] .foot, :root:not([data-theme="light"]) .foot{background:#081418}
+.foot h4{color:#fff; font-size:13px; letter-spacing:.02em; margin-bottom:14px}
+.foot a{color:#a9c2be; text-decoration:none; font-size:13.5px; line-height:2; display:block; transition:color .18s}
+.foot a:hover{color:var(--accent-2)}
+.foot-grid{display:grid; gap:34px; grid-template-columns:1fr}
+@media(min-width:780px){ .foot-grid{grid-template-columns:1.6fr 1fr 1fr 1fr} }
+.foot-bot{margin-top:52px; padding-top:22px; border-top:1px solid rgba(255,255,255,.11); display:flex; gap:16px;
+  flex-wrap:wrap; justify-content:space-between; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.05em; color:#7b9490}
+.refs{font-family:var(--f-mono); font-size:10.5px; line-height:1.9; color:#7b9490; columns:1}
+@media(min-width:760px){ .refs{columns:2; column-gap:36px} }
+</style>
+
+<!-- ================= STAFF GAUGE RAIL ================= -->
+<div class="rail" aria-hidden="true">
+  <div class="rail-line"></div>
+  <div class="rail-fill" id="railFill"></div>
+  <div id="railTicks"></div>
+  <div class="rail-head" id="railHead" style="top:0"></div>
+  <div class="rail-cap">Datum &mdash; Scroll Depth</div>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M2 15.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <path d="M2 19.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity=".45"/>
+        <path d="M6.5 10.5V4.2h11v6.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M4.6 4.2h14.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      FloodVuln <em>Global</em>
+    </div>
+    <a class="nlink" href="#engine">Engine</a>
+    <a class="nlink" href="#calibration">Calibration</a>
+    <a class="nlink" href="#insurance">Insurance</a>
+    <a class="nlink" href="#banks">Banks</a>
+    <a class="nlink" href="#validation">Validation</a>
+    <button class="themetog" id="themeBtn" aria-label="Switch colour theme" title="Switch colour theme">&#9681;</button>
+    <a class="btn" href="#pilot">Request a Pilot</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Global Flood Vulnerability Intelligence</div>
+      <h1 class="hero-h">Hazard models tell you where the water goes.<br><span class="fade">We tell you what it does.</span></h1>
+      <p class="hero-sub">FloodVuln Global is a vendor-neutral vulnerability layer that converts flood intensity into a
+        probability distribution of physical damage &mdash; specific to building archetype, geography and the local evidence
+        you can actually produce.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#engine">Open the Engine &rarr;</a>
+        <a class="btn ghost" href="#banks">Bank Climate-Risk Use Case</a>
+      </div>
+      <div class="tagline">
+        <div><b>Global knowledge.</b><span>270 published curve points, 1.86m claims</span></div>
+        <div><b>Local calibration.</b><span>4,483 archetype &times; region units fitted</span></div>
+        <div><b>Insurance-grade uncertainty.</b><span>Aleatory and epistemic reported apart</span></div>
+      </div>
+    </div>
+
+    <div class="gauge" id="heroGauge">
+      <div class="gauge-top">
+        <span class="gauge-title">Sounding &mdash; Single Risk</span>
+        <span class="live"><i></i>Live Model</span>
+      </div>
+      <canvas class="gauge-canvas" id="gaugeCanvas" role="img"
+        aria-label="Cross-section of a single-storey timber-frame dwelling with a rising waterline. Drag the depth control to change inundation depth."></canvas>
+      <div class="gauge-ctl">
+        <label for="heroDepth">Depth</label>
+        <input type="range" id="heroDepth" min="0" max="300" value="55" step="1"
+          aria-label="Effective inundation depth above the first finished floor, in centimetres">
+        <span class="num" id="heroDepthOut" style="min-width:74px; text-align:right; font-weight:600">0.55 m</span>
+      </div>
+      <div class="readout">
+        <div><span class="k">Mean DR</span><span class="v acc" id="roMean">0.184</span></div>
+        <div><span class="k">P10 &ndash; P90</span><span class="v" id="roBand" style="font-size:clamp(14px,1.5vw,18px)">.03&ndash;.49</span></div>
+        <div><span class="k">P(DR &gt; 50%)</span><span class="v tail" id="roTail">9.4%</span></div>
+        <div><span class="k">Ground-Up</span><span class="v" id="roLoss" style="font-size:clamp(14px,1.5vw,18px)">$57.0k</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= THE BOTTLENECK ================= -->
+<section class="band band-alt" id="problem">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">The Bottleneck</div>
+      <h2 class="sect">The hazard side got good.<br>The damage side did not.</h2>
+      <p class="lede measure">A flood model can now resolve inundation to a few metres. The step that turns that water
+        into money is still, in most portfolios, a single curve mapping one depth to one expected damage ratio &mdash;
+        and the observations say that curve is not what happens.</p>
+    </div>
+
+    <div class="tiles rv" style="margin-top:44px">
+      <div class="tile"><span class="k">Sources Reviewed</span><span class="v">61</span><span class="d">Flood loss models assembled in the Gerl et&nbsp;al. harmonization review [1].</span></div>
+      <div class="tile"><span class="k">Vulnerability Functions</span><span class="v">~1,000</span><span class="d">Strongly heterogeneous in structure, datum and damage definition.</span></div>
+      <div class="tile"><span class="k">Explicitly Validated</span><span class="v">~50%</span><span class="d">About half carried no explicit validation at proposal time.</span></div>
+      <div class="tile"><span class="k">US Claims Analysed</span><span class="v">2M+</span><span class="d">NFIP big-data study: losses at a given depth are broad and often bimodal [3].</span></div>
+    </div>
+
+    <div class="card rv" style="margin-top:26px; padding:26px 26px 20px">
+      <div class="chart-h">
+        <div>
+          <div class="chart-t">One depth, many outcomes &mdash; measured</div>
+          <div class="chart-s">Observed damage at a fixed depth spreads across almost the whole 0&ndash;1 range. A deterministic
+            curve prices the middle of a cloud it never describes.</div>
+        </div>
+        <div class="tag">Observed Data</div>
+      </div>
+      <div class="chartbox" id="cloudBox">
+        <svg id="cloudChart" viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+             role="img" aria-label="Scatter of observed damage ratios against flood depth, with a deterministic curve and a P10 to P90 uncertainty ribbon."></svg>
+        <div class="tip" id="cloudTip"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--ink)"></i>Observed bin mean</span>
+        <span><i style="background:var(--ink-3); height:9px; opacity:.45; border-radius:1px"></i>Observed P10&ndash;P90 in bin</span>
+        <span><i style="background:var(--alarm)"></i>JRC published curve</span>
+        <span><i style="background:var(--accent)"></i>FloodVuln fitted mean</span>
+      </div>
+      <p class="cap" style="margin-top:12px">Observed NFIP claims for single-family, one-storey, slab-on-grade dwellings. Bars are the
+        observed P10&ndash;P90 within each depth bin; dots are observed bin means. The published JRC curve
+        and the fitted curve are drawn over the same data.</p>
+    </div>
+
+    <div class="grid-3 rv" style="margin-top:26px">
+      <div class="card">
+        <div class="tag alarm">Fails Quietly</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Depth-only transfer</h3>
+        <p class="small">A curve fitted on one country&rsquo;s building stock, moved to another, carries its construction,
+          code era and repair economics with it &mdash; invisibly.</p>
+      </div>
+      <div class="card">
+        <div class="tag alarm">Fails Quietly</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Payout learned as physics</h3>
+        <p class="small">Calibrating on settled claims without normalising deductibles and limits teaches the model your
+          policy terms and calls the result vulnerability.</p>
+      </div>
+      <div class="card">
+        <div class="tag alarm">Fails Quietly</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Silent extrapolation</h3>
+        <p class="small">Out-of-domain depth, occupancy or geography returns a number with the same confidence as an
+          in-sample one, and nothing on the screen says so.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section class="band" id="architecture">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Architecture</div>
+      <h2 class="sect">Global evidence in.<br>Local insurance intelligence out.</h2>
+      <p class="lede measure">Five independently versioned layers. Every production prediction reproduces from a model
+        version, an evidence snapshot, a calibration dataset ID and a parameter set &mdash; so model governance is a
+        property of the system, not a document written afterwards.</p>
+    </div>
+
+    <div class="pipe rv">
+      <div class="stage" style="--stage:var(--ink-2)">
+        <span class="n">LAYER 1</span><h4>Evidence</h4>
+        <ul><li>Published curves</li><li>Claims &amp; surveys</li><li>Engineering models</li><li>Local expert knowledge</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--accent)">
+        <span class="n">LAYER 2</span><h4>Harmonization</h4>
+        <ul><li>Units &amp; depth datum</li><li>Taxonomy crosswalk</li><li>Provenance</li><li>Evidence scoring</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--slate)">
+        <span class="n">LAYER 3</span><h4>Global prior</h4>
+        <ul><li>Meta-vulnerability</li><li>Regional hierarchy</li><li>Archetype priors</li><li>Uncertainty</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--amber)">
+        <span class="n">LAYER 4</span><h4>Local calibration</h4>
+        <ul><li>Claims updating</li><li>Sparse-data pooling</li><li>Expert priors</li><li>Client view of risk</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--good)">
+        <span class="n">LAYER 5</span><h4>Delivery</h4>
+        <ul><li>Damage distribution</li><li>Ground-up loss</li><li>Confidence score</li><li>API &amp; portfolio batch</li></ul>
+      </div>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:34px">
+      <div class="callout">
+        <h5>Positioning</h5>
+        <p>A universal translation layer between flood intensity and financial damage &mdash; designed to plug into the
+          hazard and catastrophe-model ecosystem you already run, and strengthen the vulnerability component inside it.</p>
+      </div>
+      <div class="callout amber">
+        <h5>Deliberately Out of Scope</h5>
+        <p>We do not rebuild stochastic event sets, terrain models or policy financial modules. Bring depths from Fathom,
+          JBA, Moody&rsquo;s RMS, Verisk, a government map or your own hydrodynamics &mdash; the vulnerability layer is the product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ENGINE CONSOLE ================= -->
+<section class="band band-alt" id="engine">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">FloodVuln Engine</div>
+      <h2 class="sect">Operate the model.</h2>
+      <p class="lede measure">Choose an archetype, a depth and a region. The engine returns a bounded damage
+        distribution fitted to 1,861,852 US flood claims, and separates the width that is the world
+        from the width that is the thinness of your evidence. Only the second one responds to
+        calibration.</p>
+    </div>
+
+    <div class="console rv">
+      <div class="console-bar">
+        <span class="gauge-title">FloodVuln&nbsp;Engine &mdash; Fitted to 1,861,852 Claims</span>
+        <span class="tag plain" id="archId" style="text-transform:none; letter-spacing:.02em">US.RES.SF.WOOD.1STORY.SLAB</span>
+        <span class="live" style="margin-left:auto"><i></i>Recomputing on Every Input</span>
+      </div>
+
+      <div class="console-body">
+        <!-- CONTROLS -->
+        <div class="pane">
+          <span class="fieldlab">Asset Archetype</span>
+          <div class="chips" id="archChips"></div>
+
+          <span class="fieldlab">Effective Depth Above Finished Floor</span>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:22px">
+            <input type="range" id="engDepth" min="-40" max="320" value="70" step="1"
+              aria-label="Effective depth above finished floor, centimetres">
+            <span class="num" id="engDepthOut" style="min-width:66px; text-align:right; font-weight:600">0.70 m</span>
+          </div>
+
+          <span class="fieldlab">Region for Local Calibration</span>
+          <div style="display:flex; gap:10px; margin-bottom:20px">
+            <select id="engRegion" class="chip" style="flex:1; padding:7px 9px"></select>
+            <input id="engValue" class="chip" style="flex:1; padding:7px 9px" value="310000"
+              aria-label="Replacement value in dollars">
+          </div>
+          <p class="cap" style="margin:-10px 0 20px">Region drives the local sample size, the evidence
+            grade and the confidence score. The value on the right is yours, not ours: the engine
+            returns a damage ratio and the money is your number.</p>
+
+          <span class="fieldlab">Calibration Level &mdash; Local Evidence</span>
+          <div class="ladder" id="ladder" role="group" aria-label="Calibration level"></div>
+        </div>
+
+        <!-- CHART -->
+        <div class="pane">
+          <div class="chart-h">
+            <div>
+              <div class="chart-t">Damage-ratio distribution</div>
+              <div class="chart-s">Zero/one-inflated beta. The bars at 0 and 1 are the probability of no damage and of
+                effective total loss; the curve between them is the continuous density.</div>
+            </div>
+          </div>
+          <div class="chartbox" id="densBox">
+            <svg id="densChart" viewBox="0 0 620 348" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+                 role="img" aria-label="Probability density of the damage ratio, with point masses at zero and one and a shaded P10 to P90 interval."></svg>
+            <div class="tip" id="densTip"></div>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--accent); height:9px; opacity:.3; border-radius:1px"></i>P10&ndash;P90 interval</span>
+            <span><i style="background:var(--accent)"></i>Density</span>
+            <span><i style="background:var(--amber)"></i>Mean</span>
+            <span><i style="background:var(--ink-3)"></i>Point masses at 0 / 1</span>
+          </div>
+          <div class="scroll-x" style="margin-top:16px">
+            <table class="tbl" id="quantTable">
+              <caption class="cap" style="text-align:left; padding-bottom:8px">Distribution summary &mdash; the values the API returns</caption>
+            </table>
+          </div>
+        </div>
+
+        <!-- API -->
+        <div class="pane">
+          <span class="fieldlab">Response &mdash; POST /v1/vulnerability</span>
+          <div class="api" id="apiOut"></div>
+          <div class="badge-row" id="evidenceBadges"></div>
+          <p class="cap" style="margin-top:16px">Every response carries its archetype, calibration level, evidence grade
+            and model version. Pin the version and the result reproduces next year, after the model has moved on.</p>
+          <div style="margin-top:18px; padding-top:16px; border-top:var(--hairline)">
+            <span class="fieldlab">What Widened the Interval</span>
+            <ul class="small" id="whyList" style="margin:0; padding-left:17px; font-size:13px"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="cap rv" style="margin-top:14px">Live engine. Coefficients are the maximum-likelihood fit to 1,861,852
+      OpenFEMA NFIP claims, with hierarchical offsets per archetype and region and Laplace posteriors
+      behind the confidence score. Model version 1.0.0.</p>
+  </div>
+</section>
+
+<!-- ================= CALIBRATION ================= -->
+<section class="band" id="calibration">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow amber">Global-to-Local Calibration</div>
+      <h2 class="sect">The differentiator is not another curve.<br>It is knowing what to do with ten observations.</h2>
+      <p class="lede measure">Local data update the global prior in proportion to their quality and sample size, and the
+        fitted model shows it: Florida (n=63,780) carries a large offset, Utah (n=4) is shrunk to within 0.02 of the
+        archetype. What that buys is a correctly located answer and a far smaller epistemic term &mdash; not a narrower
+        range of outcomes, and not, on this evidence, a better forecast for an event unlike the ones already seen.</p>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:44px; align-items:start">
+      <div class="card">
+        <div class="chart-h">
+          <div>
+            <div class="chart-t">Sparse-data learning curve</div>
+            <div class="chart-s">Blind hold-out error against the number of local depth&ndash;damage observations used
+              for calibration. The band is the spread across resampled training sets.</div>
+          </div>
+          <div class="tag">Measured</div>
+        </div>
+        <div class="chartbox" id="learnBox">
+          <svg id="learnChart" viewBox="0 0 620 330" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+               role="img" aria-label="Mean absolute error of predicted damage ratio falling as the number of local calibration observations increases from zero to five hundred."></svg>
+          <div class="tip" id="learnTip"></div>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--amber)"></i>Hierarchical posterior (partial pooling)</span>
+          <span><i style="background:var(--slate)"></i>Local-only refit</span>
+          <span><i style="background:var(--ink-3)"></i>Global prior, no local data</span>
+        </div>
+        <p class="cap" style="margin-top:12px">Measured on a withheld region, eight resamples per point. The unpooled refit
+          is competitive from about ten local records; tracing that to an offset carrying the level of the curve but not its
+          slope led to a shape offset that restores the pooling advantage below about fifty records. Both are in the evidence
+          section.</p>
+      </div>
+
+      <div style="display:grid; gap:18px">
+        <div class="card">
+          <h3 style="font-size:19px; margin-bottom:14px">What counts as local evidence</h3>
+          <div class="scroll-x">
+            <table class="tbl">
+              <thead><tr><th>Level</th><th>Minimum Evidence</th><th>Model Behaviour</th></tr></thead>
+              <tbody>
+                <tr><td><b class="mono" style="color:var(--amber)">G0</b></td><td>Location, sector, depth</td><td>Global / continental prior</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G1</b></td><td>Building characteristics</td><td>Archetype prior</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G2</b></td><td>Structured local expert evidence</td><td>Informative prior modifiers</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G3</b></td><td>Tens of depth&ndash;damage pairs</td><td>Hierarchical posterior, shrunk</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G4</b></td><td>Hundreds of quality records</td><td>Market-specific posterior</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G5</b></td><td>Carrier portfolio history</td><td>Client-specific layer</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout amber">
+          <h5>Where Claims Are Scarce</h5>
+          <p>We elicit distributions, not curve edits &mdash; the proportion of masonry in the local stock, typical
+            first-floor height, basement prevalence, code era, repair practice. Expert statements are stored as auditable
+            priors with source, date and confidence, and they move the answer by exactly as much as they should.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSURANCE ================= -->
+<section class="band band-alt" id="insurance">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Insurance Workflows</div>
+      <h2 class="sect">Five desks, one vulnerability view.</h2>
+      <p class="lede measure">The same versioned engine answers the underwriter, the pricing actuary, the accumulation
+        team, the model-validation function and the claims unit &mdash; which is the point. Today those five desks
+        usually disagree because they are quietly running different vulnerability assumptions.</p>
+    </div>
+
+    <div class="tabs rv" role="tablist" aria-label="Insurance workflows">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="tp-uw" id="tb-uw">Underwriting</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-pr" id="tb-pr">Pricing</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-ac" id="tb-ac">Accumulation</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-mv" id="tb-mv">Model validation</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-cl" id="tb-cl">Claims triage</button>
+    </div>
+
+    <!-- UNDERWRITING -->
+    <div class="panel-body rv" id="tp-uw" role="tabpanel" aria-labelledby="tb-uw">
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">Two risks, one hazard score, different answers</h3>
+          <p class="small" style="font-size:16px">Both properties sit in the same 1-in-100 depth band, and a depth-only
+            curve prices them identically. The archetype split is where the underwriting decision actually lives:
+            the same 0.90&nbsp;m of water does about twice the proportional damage to one as to the other, and
+            the fitted model says so from 1.86 million claims rather than from judgement.</p>
+          <div class="callout" style="margin-top:22px">
+            <h5>What the Underwriter Sees</h5>
+            <p>Not a score. A severity distribution, the archetype it was drawn from, the evidence grade behind it, and
+              a warning if the depth sits outside the calibrated domain.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="scroll-x">
+            <table class="tbl">
+              <thead><tr><th>Risk</th><th>Archetype</th><th class="n">Mean DR</th><th class="n">P90</th><th class="n">P(&gt;50%)</th><th>Grade</th></tr></thead>
+              <tbody id="uwTable"></tbody>
+            </table>
+          </div>
+          <p class="cap" id="uwCaption" style="margin-top:12px">Depth 0.90&nbsp;m above the lowest floor; fitted engine output.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="panel-body rv" id="tp-pr" role="tabpanel" aria-labelledby="tb-pr" hidden>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">Technical price from the whole distribution</h3>
+          <p class="small" style="font-size:16px">Expected loss comes off the mean; the risk load comes off the tail. A
+            point estimate gives you the first and forces you to guess the second, usually through a flat regional
+            factor that is wrong in both directions at once.</p>
+          <p class="small" style="font-size:16px; margin-top:14px">Because ground-up damage is kept strictly separate
+            from policy terms, the deductible and limit apply <i>downstream</i> of the vulnerability layer &mdash; so a
+            change in attachment does not silently rewrite the physics.</p>
+        </div>
+        <div class="tiles" id="prTiles" style="grid-template-columns:repeat(2,1fr)"></div>
+      </div>
+    </div>
+
+    <!-- ACCUMULATION -->
+    <div class="panel-body rv" id="tp-ac" role="tabpanel" aria-labelledby="tb-ac" hidden>
+      <h3 style="font-size:23px; margin-bottom:8px">One consistent view across a multinational book</h3>
+      <p class="small measure" style="font-size:16px; margin-bottom:22px">Each country arrives with its own national
+        classification and its own local functions. The taxonomy crosswalk makes the books comparable; the evidence grade
+        stops that comparability from being mistaken for equal confidence.</p>
+      <div class="card" style="padding:8px 0 0">
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Territory</th><th>Dominant Archetype</th><th class="n">Exposure</th><th class="n">Mean DR</th><th class="n">AAL (bps)</th><th class="n">1-in-200</th><th>Evidence</th></tr></thead>
+            <tbody id="portTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:12px">Illustrative portfolio. AAL expressed in basis points of total insured value;
+        1-in-200 is the modelled portfolio ground-up loss at that return period.</p>
+    </div>
+
+    <!-- MODEL VALIDATION -->
+    <div class="panel-body rv" id="tp-mv" role="tabpanel" aria-labelledby="tb-mv" hidden>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">An independent challenge to the vulnerability component</h3>
+          <p class="small" style="font-size:16px">This is where most first engagements start, because independence is an
+            asset to a validation team rather than a threat. FloodVuln Compare benchmarks your incumbent vendor curve, your
+            own internal curve and the harmonized global families against the same observations, on the same hold-out.</p>
+          <p class="small" style="font-size:16px; margin-top:14px">You get the disagreement, the size of it, and the
+            evidence behind each side &mdash; in a form a regulator will accept as model-risk documentation.</p>
+        </div>
+        <div class="card">
+          <div class="chart-h"><div class="chart-t">Eleven withheld events &mdash; measured bias</div></div>
+          <div class="chartbox" id="cmpBox">
+            <svg id="cmpChart" viewBox="0 0 560 250" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+                 role="img" aria-label="Bar chart of portfolio loss error against a held-out event for four vulnerability assumptions."></svg>
+            <div class="tip" id="cmpTip"></div>
+          </div>
+          <p class="cap" style="margin-top:10px">Mean signed error in damage ratio, averaged over eleven named events
+            each withheld from training in turn. Negative is under-prediction. Measured, not illustrative &mdash; the
+            underlying table is in the evidence section.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLAIMS -->
+    <div class="panel-body rv" id="tp-cl" role="tabpanel" aria-labelledby="tb-cl" hidden>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">Triage before the adjusters arrive</h3>
+          <p class="small" style="font-size:16px">Post-event observed depth plus the exposure file gives a probable
+            severity for every affected location within hours. Not to settle claims &mdash; to sequence them, staff them
+            and reserve for them while the water is still in the street.</p>
+          <div class="callout" style="margin-top:22px">
+            <h5>Reserve Intelligence</h5>
+            <p>Because the output is a distribution, the reserving question &ldquo;what is the chance this book runs past
+              our booked figure&rdquo; is answerable on day two, not month three.</p>
+          </div>
+        </div>
+        <div class="tiles" style="grid-template-columns:repeat(2,1fr)">
+          <div class="tile"><span class="k">Locations Inundated</span><span class="v">4,180</span><span class="d">Matched to observed depth grid within 6 hours of peak.</span></div>
+          <div class="tile"><span class="k">P(&gt;50% Damage)</span><span class="v" style="color:var(--alarm)">612</span><span class="d">Risks above 25% probability of severe damage &mdash; adjuster priority.</span></div>
+          <div class="tile"><span class="k">Likely Zero-Claim</span><span class="v">1,905</span><span class="d">Inundated but below floor level; de-prioritised, not closed.</span></div>
+          <div class="tile"><span class="k">Indicated Reserve</span><span class="v">$71m</span><span class="d">Mean ground-up, with a P90 of $154m carried alongside it.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BANKS ================= -->
+<section class="band" id="banks">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow slate">Banks &mdash; Physical Climate Risk</div>
+      <h2 class="sect">A mortgage book is a portfolio<br>of building vulnerabilities.</h2>
+      <p class="lede measure">Banks are asked to quantify physical climate risk on collateral they did not underwrite for
+        flood, using hazard layers that stop at the water&rsquo;s edge. The missing step is the same one insurers are
+        missing: what a given depth does to a given building, with the uncertainty stated. Damage on collateral is what
+        moves valuation, LTV, loss given default and, ultimately, expected credit loss.</p>
+    </div>
+
+    <div class="card rv" style="margin-top:44px; padding:0; overflow:hidden">
+      <div class="console-bar" style="border-bottom:var(--hairline)">
+        <span class="gauge-title">Mortgage Book &mdash; Physical Risk Stress</span>
+        <div class="chips" style="margin:0; margin-left:auto" id="scenChips">
+          <button class="chip" aria-pressed="true" data-scen="0">Current climate</button>
+          <button class="chip" aria-pressed="false" data-scen="1">+1.5&deg;C &middot; 2050</button>
+          <button class="chip" aria-pressed="false" data-scen="2">+3.0&deg;C &middot; 2050</button>
+        </div>
+        <button class="chip" id="adaptBtn" aria-pressed="false" style="margin:0">Adaptation programme</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr">
+        <div class="grid-2" style="gap:0; align-items:stretch">
+          <div style="padding:26px; border-bottom:var(--hairline)">
+            <div class="chart-h">
+              <div>
+                <div class="chart-t">Expected annual collateral damage</div>
+                <div class="chart-s">Basis points of exposure at default, on a 42,000-loan residential book concentrated
+                  in three flood-exposed regions.</div>
+              </div>
+            </div>
+            <div class="chartbox" id="bankBox">
+              <svg id="bankChart" viewBox="0 0 620 320" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+                   role="img" aria-label="Expected annual collateral damage in basis points of exposure, from 2025 to 2055, under three warming scenarios."></svg>
+              <div class="tip" id="bankTip"></div>
+            </div>
+            <div class="legend" id="bankLegend"></div>
+          </div>
+
+          <div style="padding:26px; border-bottom:var(--hairline); border-left:var(--hairline)">
+            <div class="chart-h">
+              <div>
+                <div class="chart-t">Where the number comes from</div>
+                <div class="chart-s">Vulnerability is the only link in this chain that is not already in the bank&rsquo;s
+                  stack &mdash; and it is the one that decides the size of everything downstream.</div>
+              </div>
+            </div>
+            <div id="chain" style="display:grid; gap:9px; margin-top:18px"></div>
+          </div>
+        </div>
+
+        <div class="tiles" style="border:none; border-radius:0; border-top:var(--hairline)" id="bankTiles"></div>
+      </div>
+    </div>
+
+    <div class="grid-3 rv" style="margin-top:26px">
+      <div class="card">
+        <div class="tag slate">Regulatory</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Stress testing and ICAAP</h3>
+        <p class="small">Hold vulnerability fixed and move the hazard, or evolve adaptation and hold the hazard &mdash; the
+          two are separable, so a supervisor can see which assumption is doing the work.</p>
+      </div>
+      <div class="card">
+        <div class="tag slate">Accounting</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">IFRS 9 and collateral valuation</h3>
+        <p class="small">Damage distributions feed a forward-looking haircut on collateral value, and therefore LGD, with
+          provenance a model-validation function can trace back to source evidence.</p>
+      </div>
+      <div class="card">
+        <div class="tag slate">Origination</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Lending policy and green finance</h3>
+        <p class="small">Quantified avoided loss from elevation, floodproofing or utility relocation turns a resilience
+          retrofit into a priceable adjustment rather than a marketing claim.</p>
+      </div>
+    </div>
+
+    <div class="callout rv" style="margin-top:26px">
+      <h5>Why Banks and Insurers Should Use the Same Layer</h5>
+      <p>When the lender and the insurer of the same building disagree about its flood vulnerability, one of them is
+        mispricing and neither can prove which. A shared, versioned, independently validated vulnerability layer makes
+        that disagreement visible and testable &mdash; which is a precondition for insurance-linked lending terms,
+        resilience-linked mortgages and any credible transfer of physical risk between the two balance sheets.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= EVIDENCE (generated from the calibration run) ================= -->
+<section class="band" id="evidence">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Built and Measured</div>
+      <h2 class="sect">Measured against<br>1.86 million claims.</h2>
+      <p class="lede measure">Output from a reproducible run against public data:
+        1,927,948 NFIP claim records and the published JRC global depth&ndash;damage
+        database, with the full benchmark programme run out of sample.</p>
+    </div>
+
+    <div class="tiles rv" style="margin-top:44px">
+      <div class="tile"><span class="k">Claims Ingested</span><span class="v">1,927,948</span><span class="d">OpenFEMA NFIP redacted claims v3, frozen 1 June 2026.</span></div>
+      <div class="tile"><span class="k">Admissible After QA</span><span class="v">1,861,852</span><span class="d">Every exclusion is counted and reversible.</span></div>
+      <div class="tile"><span class="k">Archetype Groups Fitted</span><span class="v">142</span><span class="d">Plus 4,483 archetype &times; region units.</span></div>
+      <div class="tile"><span class="k">Published Curve Points</span><span class="v">270</span><span class="d">JRC continental curves, ingested from the source workbook.</span></div>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:26px; align-items:start">
+      <div class="card">
+        <h3 style="font-size:19px; margin-bottom:6px">What the validation established</h3>
+        <ol class="small" style="padding-left:18px; margin-top:14px; line-height:1.7">
+          <li style="margin-bottom:12px"><b>Local calibration does not narrow the distribution.</b>
+            It moves it. At 0.61&nbsp;m the P10&ndash;P90 width is 0.72 with no local evidence and
+            0.73 with 63,780 local claims. The width is irreducible building-to-building
+            variability. What local evidence buys down is the <i>epistemic</i> component, and that
+            falls from 0.111 to 0.001 &mdash; a factor of about 100.</li>
+          <li style="margin-bottom:12px"><b>Region calibration did not generalise to a new event.</b>
+            Across eleven withheld events the archetype model scored CRPS 0.149 and the
+            region-calibrated model 0.154. A region offset partly encodes that region&rsquo;s event
+            history, so it transfers the wrong severity to an event of different character.</li>
+          <li style="margin-bottom:12px"><b>The zero point mass is not observable in claims data.</b>
+            A building that was inundated and not damaged rarely becomes a claim, so
+            P(no damage) fitted here is conditional on a claim being filed and is a lower bound.
+            Estimating it properly needs an exposure file, not a claims file.</li>
+          <li style="margin-bottom:12px"><b>What is missing is the event, not the building.</b> Adding
+            the only extra hazard variable NFIP carries at scale changed MAE by 0.0000. Giving the model
+            a single four-parameter event-level shift cut CRPS by 22.8% and removed the bias entirely.</li>
+          <li><b>Partial pooling under-performed an unpooled refit &mdash; and we fixed it.</b>
+            Regional variation turned out to sit in the <i>slope</i> of the depth response, which a
+            level-only offset cannot express. Adding a shape offset improved CRPS by 4.2% and restored
+            the pooling advantage below about fifty local records.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3 style="font-size:19px; margin-bottom:6px">The published global prior, measured</h3>
+        <p class="small">The JRC North America residential curve is the standard fallback where no
+          local function exists. Against 1.86 million US claims it runs high by roughly 0.2 to 0.3 in
+          absolute damage ratio between 0.5 and 3&nbsp;m &mdash; the size of the correction a
+          calibration layer exists to supply.</p>
+        <div class="callout amber" style="margin-top:18px">
+          <h5>Why This Matters Commercially</h5>
+          <p>A portfolio priced on an uncorrected global curve carries a systematic, measurable bias
+            &mdash; here toward over-reserving. Direction and size are both testable.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card rv" style="margin-top:26px"><div class="scroll-x"><table class="tbl"><caption class="cap" style="text-align:left;padding-bottom:8px">Leave-one-event-out, mean over 11 withheld events</caption><thead><tr><th>Vulnerability Assumption</th><th class="n">MAE</th><th class="n">RMSE</th><th class="n">Bias</th><th class="n">CRPS</th><th class="n">80% Cov</th><th class="n">Cal. Slope</th></tr></thead><tbody><tr><td>FloodVuln archetype prior</td><td class="n">0.2169</td><td class="n">0.2695</td><td class="n">-0.0460</td><td class="n">0.1489</td><td class="n">0.786</td><td class="n">1.065</td></tr><tr style="background:var(--accent-wash)"><td>FloodVuln region calibrated</td><td class="n">0.2193</td><td class="n">0.2775</td><td class="n">-0.0599</td><td class="n">0.1540</td><td class="n">0.753</td><td class="n">1.052</td></tr><tr><td>FloodVuln global fit (no archetype)</td><td class="n">0.2324</td><td class="n">0.2827</td><td class="n">-0.0487</td><td class="n">0.1583</td><td class="n">0.789</td><td class="n">0.826</td></tr><tr><td>Single depth-damage curve fitted on training data</td><td class="n">0.2305</td><td class="n">0.2859</td><td class="n">-0.0727</td><td class="n">0.2305</td><td class="n">n/a</td><td class="n">0.829</td></tr><tr><td>Constant mean (naive)</td><td class="n">0.2469</td><td class="n">0.2986</td><td class="n">-0.0712</td><td class="n">0.2469</td><td class="n">n/a</td><td class="n">n/a</td></tr><tr><td>JRC North America residential (published)</td><td class="n">0.2493</td><td class="n">0.3031</td><td class="n">0.0910</td><td class="n">0.2493</td><td class="n">n/a</td><td class="n">0.360</td></tr></tbody></table></div>
+      <p class="cap" style="margin-top:12px">All models scored identically; a deterministic curve is a
+        degenerate forecast, so its CRPS is its mean absolute error. Lower is better for MAE, RMSE and
+        CRPS; 80% coverage should be 0.80 and calibration slope 1.0.</p>
+    </div>
+
+    <div class="card rv" style="margin-top:20px"><div class="scroll-x"><table class="tbl"><caption class="cap" style="text-align:left;padding-bottom:8px">Leave-one-region-out, mean over 9 withheld states, no local evidence available in the held-out region</caption><thead><tr><th>Vulnerability Assumption</th><th class="n">MAE</th><th class="n">RMSE</th><th class="n">Bias</th><th class="n">CRPS</th><th class="n">80% Cov</th><th class="n">Cal. Slope</th></tr></thead><tbody><tr><td>FloodVuln archetype prior</td><td class="n">0.1912</td><td class="n">0.2439</td><td class="n">0.0164</td><td class="n">0.1237</td><td class="n">0.836</td><td class="n">0.881</td></tr><tr><td>FloodVuln global fit (no archetype)</td><td class="n">0.2111</td><td class="n">0.2584</td><td class="n">0.0353</td><td class="n">0.1332</td><td class="n">0.840</td><td class="n">0.759</td></tr><tr><td>Single depth-damage curve fitted on training data</td><td class="n">0.2028</td><td class="n">0.2560</td><td class="n">0.0108</td><td class="n">0.2028</td><td class="n">n/a</td><td class="n">0.764</td></tr><tr><td>Constant mean (naive)</td><td class="n">0.2141</td><td class="n">0.2618</td><td class="n">0.0134</td><td class="n">0.2141</td><td class="n">n/a</td><td class="n">n/a</td></tr><tr><td>JRC North America residential (published)</td><td class="n">0.2695</td><td class="n">0.3239</td><td class="n">0.1657</td><td class="n">0.2695</td><td class="n">n/a</td><td class="n">0.339</td></tr></tbody></table></div>
+      <p class="cap" style="margin-top:12px">This is the zero-local-data test: the held-out state
+        contributes nothing to training, so it measures what a new market gets on day one.</p>
+    </div>
+
+    <div class="card rv" style="margin-top:20px"><div class="scroll-x"><table class="tbl"><caption class="cap" style="text-align:left;padding-bottom:8px">Sparse-data learning curve in a withheld region</caption><thead><tr><th class="n">Local Records</th><th class="n">Pooled MAE</th><th class="n">Pooled CRPS</th><th class="n">Local-Only MAE</th><th class="n">Local-Only CRPS</th></tr></thead><tbody><tr><td class="n">0</td><td class="n">0.2745</td><td class="n">0.1888</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr><tr><td class="n">5</td><td class="n">0.2714</td><td class="n">0.1811</td><td class="n">0.2598</td><td class="n">0.2185</td></tr><tr><td class="n">10</td><td class="n">0.2718</td><td class="n">0.1831</td><td class="n">0.2483</td><td class="n">0.1792</td></tr><tr><td class="n">25</td><td class="n">0.2697</td><td class="n">0.1765</td><td class="n">0.2324</td><td class="n">0.1551</td></tr><tr><td class="n">50</td><td class="n">0.2679</td><td class="n">0.1738</td><td class="n">0.2303</td><td class="n">0.1526</td></tr><tr><td class="n">100</td><td class="n">0.2666</td><td class="n">0.1681</td><td class="n">0.2272</td><td class="n">0.1485</td></tr><tr><td class="n">250</td><td class="n">0.2666</td><td class="n">0.1648</td><td class="n">0.2244</td><td class="n">0.1462</td></tr><tr><td class="n">500</td><td class="n">0.2674</td><td class="n">0.1641</td><td class="n">0.2274</td><td class="n">0.1456</td></tr><tr><td class="n">1000</td><td class="n">0.2674</td><td class="n">0.1640</td><td class="n">0.2276</td><td class="n">0.1456</td></tr><tr><td class="n">2500</td><td class="n">0.2673</td><td class="n">0.1636</td><td class="n">0.2281</td><td class="n">0.1454</td></tr></tbody></table></div>
+      <p class="cap" style="margin-top:12px">The pooled model is never worse than the prior it starts
+        from. An unpooled local refit on the same records is worse until it has enough data to earn
+        its variance, which is the entire argument for partial pooling.</p>
+    </div>
+
+    <div class="card rv" style="margin-top:20px">
+      <h3 style="font-size:17px; margin-bottom:12px">Source register, as actually obtained</h3>
+      <div class="scroll-x"><table class="tbl">
+        <thead><tr><th>Source</th><th>Title</th><th>Licence</th><th>Status in This Build</th></tr></thead>
+        <tbody><tr><td><b>JRC_GLOBAL_2017</b></td><td class="small" style="font-size:12.5px">Global flood depth-damage functions: methodology and the database with guideli</td><td><span class="tag ">Open</span></td><td><span class="tag ">Ingested</span></td></tr><tr><td><b>NFIP_CLAIMS_V3</b></td><td class="small" style="font-size:12.5px">NFIP Redacted Claims v3 (OpenFEMA)</td><td><span class="tag ">Open</span></td><td><span class="tag ">Ingested</span></td></tr><tr><td><b>HAZUS_FLOOD</b></td><td class="small" style="font-size:12.5px">Hazus Flood Model Technical Manual (depth-damage function library)</td><td><span class="tag ">Open</span></td><td><span class="tag alarm">Not Obtained</span></td></tr><tr><td><b>USACE_NACCS</b></td><td class="small" style="font-size:12.5px">North Atlantic Coast Comprehensive Study physical depth-damage functions</td><td><span class="tag ">Open</span></td><td><span class="tag alarm">Not Obtained</span></td></tr><tr><td><b>HOWAS21</b></td><td class="small" style="font-size:12.5px">HOWAS21 object-specific flood damage database</td><td><span class="tag plain">Reference Only</span></td><td><span class="tag alarm">Not Obtained</span></td></tr><tr><td><b>MCM_UK</b></td><td class="small" style="font-size:12.5px">Multi-Coloured Manual property and economic loss functions</td><td><span class="tag plain">Licensed</span></td><td><span class="tag alarm">Not Obtained</span></td></tr><tr><td><b>INSYDE</b></td><td class="small" style="font-size:12.5px">INSYDE: a synthetic, probabilistic flood damage model based on explicit cost a</td><td><span class="tag ">Open</span></td><td><span class="tag ">Benchmark Only</span></td></tr></tbody></table></div>
+      <p class="cap" style="margin-top:12px">Two public documents refused automated retrieval; two more
+        require a licence or data agreement. None were scraped around.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VALIDATION ================= -->
+<section class="band band-alt" id="validation">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Validation and Governance</div>
+      <h2 class="sect">We would rather be checkable than impressive.</h2>
+      <p class="lede measure">A vulnerability layer that cannot be independently tested is worth nothing to a model-risk
+        function, whatever it scores. The benchmark programme is pre-specified, reproducible and open to review &mdash;
+        and the marketing language is held to what it has actually passed.</p>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:44px; align-items:start">
+      <div class="card" style="padding:8px 0 0">
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Benchmark</th><th>Design</th><th>Primary Metrics</th></tr></thead>
+            <tbody>
+              <tr><td><b>Curve reproduction</b></td><td>Harmonized function vs source implementation</td><td class="mono" style="font-size:11.5px">transform error, datum QA</td></tr>
+              <tr><td><b>Hold-out event</b></td><td>Exclude an event, predict its losses</td><td class="mono" style="font-size:11.5px">MAE, RMSE, bias, CRPS</td></tr>
+              <tr><td><b>Leave-region-out</b></td><td>Train elsewhere, predict a held-out region</td><td class="mono" style="font-size:11.5px">transfer error, calibration</td></tr>
+              <tr><td><b>Leave-country-out</b></td><td>Zero-local-data global coverage test</td><td class="mono" style="font-size:11.5px">vs JRC / transferred baseline</td></tr>
+              <tr><td><b>Learning curve</b></td><td>n = 0, 5, 10, 25, 50, 100, 500 local records</td><td class="mono" style="font-size:11.5px">error reduction per record</td></tr>
+              <tr><td><b>Portfolio blind test</b></td><td>Insurer withholds event and supplies allowed inputs only</td><td class="mono" style="font-size:11.5px">portfolio error, severity calibration</td></tr>
+              <tr><td><b>Uncertainty</b></td><td>Evaluate the probability forecasts themselves</td><td class="mono" style="font-size:11.5px">PIT, CRPS, coverage, slope</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:grid; gap:18px">
+        <div class="card">
+          <h3 style="font-size:19px; margin-bottom:6px">Coverage is global. Confidence is not.</h3>
+          <p class="small" style="margin-bottom:18px">The API returns a scientifically documented answer anywhere on
+            earth. What changes by geography is the evidence grade attached to it &mdash; and we would rather show you a
+            D than dress it up as an A.</p>
+          <div style="display:grid; gap:8px" id="grades"></div>
+        </div>
+        <div class="card" style="background:var(--panel-3); border-color:var(--rule-2)">
+          <span class="fieldlab">Claim Discipline</span>
+          <div class="grid-2" style="gap:14px; margin-top:6px">
+            <div>
+              <div class="tag" style="margin-bottom:9px">Say Now</div>
+              <p class="small" style="font-size:13px">&ldquo;Globally harmonized, locally calibratable, probabilistic
+                flood vulnerability, built for transparent benchmarking.&rdquo;</p>
+            </div>
+            <div>
+              <div class="tag alarm" style="margin-bottom:9px">Not Until Proven</div>
+              <p class="small" style="font-size:13px">&ldquo;The most accurate flood model in the world.&rdquo;
+                &ldquo;Uncertainty eliminated.&rdquo; &ldquo;Guaranteed accurate at every property.&rdquo;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODULES ================= -->
+<section class="band" id="modules">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">The Platform</div>
+      <h2 class="sect">Six modules, one evidence base.</h2>
+    </div>
+    <div class="grid-3 rv" style="margin-top:40px" id="modGrid"></div>
+  </div>
+</section>
+
+<!-- ================= PILOT ================= -->
+<section class="band band-alt" id="pilot">
+  <div class="wrap">
+    <div class="grid-2" style="align-items:start; gap:44px">
+      <div class="rv">
+        <div class="eyebrow">Minimum Pilot</div>
+        <h2 class="sect">Prove it on your own withheld event.</h2>
+        <p class="lede">A first engagement replaces nothing. You supply a historical sample &mdash; property attributes,
+          event depth or an agreed hazard layer, ground-up or normalised loss, and the policy metadata needed to strip out
+          financial terms. We run blind against your current vulnerability assumption.</p>
+        <div class="callout" style="margin-top:26px">
+          <h5>The Question the Pilot Answers</h5>
+          <p>Does FloodVuln reduce blind portfolio loss error and improve probabilistic calibration relative to your
+            current vulnerability assumption &mdash; while staying explainable enough for model governance?</p>
+        </div>
+        <div class="hero-cta">
+          <a class="btn" href="https://entanglix.tech/#contact">Request the Pilot Protocol &rarr;</a>
+          <a class="btn ghost" href="#engine">Back to the Engine</a>
+        </div>
+      </div>
+      <div class="card rv" style="padding:8px 0 0">
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Workstream</th><th>Deliverable</th></tr></thead>
+            <tbody>
+              <tr><td><b>Data audit</b></td><td class="small" style="font-size:13px">Coverage, missingness, depth datum, loss normalisation, leakage checks</td></tr>
+              <tr><td><b>Baseline reproduction</b></td><td class="small" style="font-size:13px">Your incumbent curve&rsquo;s performance on the agreed hold-out</td></tr>
+              <tr><td><b>Global prior</b></td><td class="small" style="font-size:13px">FloodVuln with no client-specific calibration at all</td></tr>
+              <tr><td><b>Sparse calibration</b></td><td class="small" style="font-size:13px">Learning curve at n = 10, 25, 50, 100, 500</td></tr>
+              <tr><td><b>Full calibration</b></td><td class="small" style="font-size:13px">Client-specific posterior on the approved training subset</td></tr>
+              <tr><td><b>Blind evaluation</b></td><td class="small" style="font-size:13px">Location-level and portfolio-level predictive metrics</td></tr>
+              <tr><td><b>Governance pack</b></td><td class="small" style="font-size:13px">Methodology, evidence, limitations, version IDs, reproducibility bundle</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="color:#fff; margin-bottom:14px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M2 15.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M2 19.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity=".45"/>
+            <path d="M6.5 10.5V4.2h11v6.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M4.6 4.2h14.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          FloodVuln <em style="color:var(--accent-2)">Global</em>
+        </div>
+        <p style="font-size:14.5px; max-width:36ch; line-height:1.6; color:#a9c2be">Global knowledge. Local calibration.
+          Insurance-grade uncertainty.</p>
+        <p style="font-size:14.5px; line-height:1.6; margin-top:14px"><a href="https://entanglix.tech/" style="color:#e9f2f1">A product of Entanglix</a>
+          &middot; <a href="https://github.com/alanhuang116/floodvuln" style="color:#a9c2be">Code and records</a></p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="#engine">Engine</a><a href="#calibration">Local calibration</a><a href="#modules">Atlas &amp; Compare</a><a href="#validation">Validation</a>
+      </div>
+      <div>
+        <h4>Sectors</h4>
+        <a href="#insurance">Insurance &amp; reinsurance</a><a href="#banks">Banks &amp; lenders</a><a href="#banks">Public sector</a><a href="#pilot">Model validation teams</a>
+      </div>
+      <div>
+        <h4>Governance</h4>
+        <a href="#validation">Benchmark programme</a><a href="#validation">Evidence grading</a><a href="#pilot">Pilot protocol</a><a href="#architecture">Versioning policy</a>
+      </div>
+    </div>
+
+    <div style="margin-top:52px; padding-top:22px; border-top:1px solid rgba(255,255,255,.11)">
+      <h4 style="margin-bottom:14px">Evidence foundation</h4>
+      <div class="refs">
+        <div>[1] Gerl et&nbsp;al. (2016) A Review of Flood Loss Models. PLOS ONE 11(7) e0159791.</div>
+        <div>[2] Huizinga, de Moel &amp; Szewczyk (2017) Global flood depth&ndash;damage functions. JRC EUR 28552 EN.</div>
+        <div>[3] Wing et&nbsp;al. (2020) New insights into US flood vulnerability. Nat. Commun. 11:1444.</div>
+        <div>[4] Wagenaar, de Jong &amp; Bouwer (2017) Multi-variable flood damage modelling. NHESS 17:1683.</div>
+        <div>[5] Dottori et&nbsp;al. (2016) INSYDE. NHESS 16:2577.</div>
+        <div>[6] Kellermann et&nbsp;al. (2020) HOWAS21. NHESS 20:2503.</div>
+        <div>[7] FEMA. Hazus Flood Model Technical Manual.</div>
+        <div>[8] Wagenaar et&nbsp;al. (2018) Transferability of Multivariable Flood Damage Models. WRR.</div>
+      </div>
+    </div>
+
+    <div class="foot-bot">
+      <span>Product concept &middot; Specification v1.0 &middot; Model version 1.0.0 &middot; August 2026</span>
+      <span>Engine fitted to 1,861,852 OpenFEMA NFIP claims; benchmark figures are out-of-sample. Calibration is US-only &mdash; see the evidence section for scope and limitations.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=(v,d)=>v.toFixed(d===undefined?3:d);
+const REDRAW=[];
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---- design tokens read live so charts follow the theme ---- */
+function tok(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function T(){
+  return {ink:tok("--ink"),ink2:tok("--ink-2"),ink3:tok("--ink-3"),grid:tok("--grid"),rule:tok("--rule"),
+    rule2:tok("--rule-2"),acc:tok("--accent"),acc2:tok("--accent-2"),amb:tok("--amber"),sl:tok("--slate"),
+    al:tok("--alarm"),good:tok("--good"),surf:tok("--surface"),panel:tok("--panel"),
+    d1:tok("--d1"),d2:tok("--d2"),d3:tok("--d3"),d4:tok("--d4")};
+}
+
+/* =================== THEME =================== */
+const tb=$("#themeBtn");
+tb.addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme");
+  const sysDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next);
+  requestAnimationFrame(()=>REDRAW.forEach(f=>{try{f();}catch(e){}}));
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{
+  if(!document.documentElement.getAttribute("data-theme")) REDRAW.forEach(f=>{try{f();}catch(e){}});
+});
+
+/* =================== REVEAL =================== */
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} });
+},{rootMargin:"0px 0px -8% 0px",threshold:.06});
+$$(".rv").forEach((n,i)=>{ n.style.transitionDelay=(Math.min(i,3)*55)+"ms"; io.observe(n); });
+
+/* =================== STAFF-GAUGE RAIL =================== */
+(function(){
+  const marks=[["#problem","0.5"],["#architecture","1.0"],["#engine","1.5"],["#calibration","2.0"],
+               ["#insurance","2.5"],["#banks","3.0"],["#validation","3.5"],["#pilot","4.0"]];
+  const ticks=$("#railTicks"), fill=$("#railFill"), head=$("#railHead");
+  if(!ticks) return;
+  function build(){
+    ticks.innerHTML="";
+    const H=window.innerHeight;
+    for(let i=0;i<=40;i++){
+      const y=(i/40)*H, major=i%5===0;
+      const t=document.createElement("div");
+      t.className="rail-tick"+(major?" major":"");
+      t.style.top=y+"px"; ticks.appendChild(t);
+      if(major && i<40){
+        const l=document.createElement("div");
+        l.className="rail-lab"; l.style.top=y+"px";
+        const m=marks[i/5]; l.textContent=m?m[1]+" m":"";
+        ticks.appendChild(l);
+      }
+    }
+  }
+  let ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(()=>{
+      const max=document.body.scrollHeight-window.innerHeight;
+      const p=max>0?clamp(window.scrollY/max,0,1):0;
+      const y=p*window.innerHeight;
+      fill.style.height=y+"px"; head.style.top=y+"px";
+      ticking=false;
+    });
+  }
+  build(); onScroll();
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",()=>{build();onScroll();});
+})();
+
+/* =================== BETA / INCOMPLETE-BETA MATH =================== */
+const GC=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+function gammaln(x){
+  let y=x, t=x+5.5; t-=(x+0.5)*Math.log(t);
+  let s=1.000000000190015;
+  for(let j=0;j<6;j++) s+=GC[j]/++y;
+  return -t+Math.log(2.5066282746310005*s/x);
+}
+function betacf(a,b,x){
+  const FPMIN=1e-300, EPS=3e-12;
+  let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;
+  if(Math.abs(d)<FPMIN) d=FPMIN;
+  d=1/d; let h=d;
+  for(let m=1;m<=200;m++){
+    const m2=2*m;
+    let aa=m*(b-m)*x/((qam+m2)*(a+m2));
+    d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
+    d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d; const del=d*c; h*=del;
+    if(Math.abs(del-1)<EPS) break;
+  }
+  return h;
+}
+/* regularised incomplete beta I_x(a,b) */
+function ibeta(x,a,b){
+  if(x<=0) return 0; if(x>=1) return 1;
+  const bt=Math.exp(gammaln(a+b)-gammaln(a)-gammaln(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x < (a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b;
+}
+function ibetaInv(p,a,b){
+  let lo=0,hi=1,mid=0.5;
+  for(let i=0;i<70;i++){ mid=(lo+hi)/2; (ibeta(mid,a,b)<p)?lo=mid:hi=mid; }
+  return mid;
+}
+function betapdf(x,a,b){
+  if(x<=0||x>=1) return 0;
+  return Math.exp((a-1)*Math.log(x)+(b-1)*Math.log(1-x)+gammaln(a+b)-gammaln(a)-gammaln(b));
+}
+window.__FV_MATH={ibeta:ibeta,ibetaInv:ibetaInv,betapdf:betapdf,tok:tok,T:T,REDRAW:REDRAW,
+  clamp:clamp,fmt:fmt,$:$,$$:$$,reduced:reduced};
+})();
+</script>
+
+<script>window.__FV_MODEL = {"model_version":"1.0.0","knots":[-0.6,-0.15,0.15,0.45,0.8,1.25,1.9,2.8,4.2],"width":0.42,"theta":[-4.422816,-13.447209,-10.405461,-6.413798,1.833576,0.917626,-5.371092,-5.464935,-4.162564,-1.840517,-5.966645,0.609823,-1.409015,-2.934093,-3.370247,0.287692,1.727809,-2.486779,-0.254415,-0.744837,-1.907869,-8.295654,-7.859193,-0.156687,0.191615,-20.440757,-25.305266,-18.00347,-0.541475,0.053716,1.037466,-0.305187],"tau_arch":[0.6,0.6,0.5,0.3895],"tau_local":[0.6,0.6,0.3137,0.3296],"conf_scale":0.055,"meta":{"n_global":1861852.0,"nll_global":-749611.0761318684,"bin_width":0.1,"snapshot":"84ba7f41f0b000eb"},"archetypes":[{"key":"RES.SF.1.SLAB","label":"Single-family, 1 storey, slab","offsets":[0.77643,-0.58658,0.55088,0.09009],"cov":[[0.0007499,-0.0,0.0,0.0],[-0.0,0.00058821,0.0,-0.0],[0.0,0.0,7.37e-06,-2.27e-06],[0.0,-0.0,-2.27e-06,1.044e-05]],"cov_unseen":[[0.3607499,-0.0,0.0,0.0],[-0.0,0.36058821,0.0,-0.0],[0.0,0.0,0.09842422,-2.27e-06],[0.0,-0.0,-2.27e-06,0.10861508]],"n":153338,"empirical":[{"d":-0.955,"n":1689,"mean":0.2216,"p10":0.012,"p90":0.545},{"d":-0.301,"n":6620,"mean":0.2798,"p10":0.0214,"p90":0.5883},{"d":-0.007,"n":41538,"mean":0.2735,"p10":0.0149,"p90":0.5919},{"d":0.126,"n":3535,"mean":0.4443,"p10":0.1476,"p90":0.7096},{"d":0.316,"n":54212,"mean":0.3465,"p10":0.0381,"p90":0.6496},{"d":0.714,"n":29383,"mean":0.4687,"p10":0.1016,"p90":0.7747},{"d":1.202,"n":6847,"mean":0.5231,"p10":0.1092,"p90":0.8807},{"d":1.657,"n":4866,"mean":0.5041,"p10":0.0615,"p90":0.9347},{"d":2.389,"n":3126,"mean":0.4473,"p10":0.057,"p90":0.9334},{"d":3.148,"n":1504,"mean":0.5046,"p10":0.0988,"p90":1.0}]},{"key":"RES.SF.1.CRAWL","label":"Single-family, 1 storey, crawlspace","offsets":[-0.04986,-0.7277,0.18165,-0.02168],"cov":[[0.00958973,0.0,-0.0,-0.0],[0.0,0.00510048,0.0,0.0],[-0.0,0.0,6.442e-05,-3.235e-05],[-0.0,0.0,-3.235e-05,8.017e-05]],"cov_unseen":[[0.36958973,0.0,-0.0,-0.0],[0.0,0.36510048,0.0,0.0],[-0.0,0.0,0.09848127,-3.235e-05],[-0.0,0.0,-3.235e-05,0.10868482]],"n":21953,"empirical":[{"d":-1.009,"n":2087,"mean":0.1728,"p10":0.0146,"p90":0.5253},{"d":-0.362,"n":1442,"mean":0.2027,"p10":0.0215,"p90":0.5821},{"d":-0.002,"n":6718,"mean":0.1979,"p10":0.018,"p90":0.5554},{"d":0.134,"n":189,"mean":0.3256,"p10":0.0355,"p90":0.7072},{"d":0.321,"n":5673,"mean":0.2382,"p10":0.0206,"p90":0.6284},{"d":0.708,"n":3813,"mean":0.3168,"p10":0.0307,"p90":0.7441},{"d":1.202,"n":800,"mean":0.4127,"p10":0.0443,"p90":0.8474},{"d":1.649,"n":611,"mean":0.4233,"p10":0.0316,"p90":0.9129},{"d":2.394,"n":425,"mean":0.3539,"p10":0.0175,"p90":0.9072},{"d":3.149,"n":191,"mean":0.3776,"p10":0.0275,"p90":0.947}]},{"key":"RES.SF.2.SLAB","label":"Single-family, 2 storey, slab","offsets":[0.80349,-1.32953,0.02819,0.29838],"cov":[[0.00220251,-0.0,-0.0,0.0],[-0.0,0.00331979,0.0,-0.0],[-0.0,0.0,2.383e-05,-1.249e-05],[0.0,-0.0,-1.249e-05,3.554e-05]],"cov_unseen":[[0.36220251,-0.0,-0.0,0.0],[-0.0,0.36331979,0.0,-0.0],[-0.0,0.0,0.09844068,-1.249e-05],[0.0,-0.0,-1.249e-05,0.10864019]],"n":50902,"empirical":[{"d":-1.005,"n":1439,"mean":0.1367,"p10":0.0079,"p90":0.3916},{"d":-0.326,"n":2406,"mean":0.1911,"p10":0.0138,"p90":0.4449},{"d":-0.007,"n":12392,"mean":0.1752,"p10":0.0085,"p90":0.4303},{"d":0.135,"n":1156,"mean":0.3014,"p10":0.0576,"p90":0.5514},{"d":0.321,"n":16708,"mean":0.2279,"p10":0.0203,"p90":0.4856},{"d":0.72,"n":10504,"mean":0.3163,"p10":0.0363,"p90":0.6187},{"d":1.196,"n":2489,"mean":0.3822,"p10":0.0596,"p90":0.7285},{"d":1.651,"n":2033,"mean":0.3754,"p10":0.0429,"p90":0.7827},{"d":2.384,"n":1260,"mean":0.3114,"p10":0.0358,"p90":0.7187},{"d":3.151,"n":498,"mean":0.3684,"p10":0.0433,"p90":0.8751}]},{"key":"RES.SF.2.BASEMENT","label":"Single-family, 2 storey, basement","offsets":[-0.53701,-1.06007,-0.33917,0.26493],"cov":[[0.00241689,0.0,0.0,0.0],[0.0,0.00058867,-0.0,0.0],[0.0,-0.0,9.2e-06,-5.88e-06],[0.0,0.0,-5.88e-06,1.203e-05]],"cov_unseen":[[0.36241689,0.0,0.0,0.0],[0.0,0.36058867,-0.0,0.0],[0.0,-0.0,0.09842605,-5.88e-06],[0.0,0.0,-5.88e-06,0.10861668]],"n":168579,"empirical":[{"d":-1.266,"n":11474,"mean":0.0999,"p10":0.0145,"p90":0.2129},{"d":-0.307,"n":5024,"mean":0.1026,"p10":0.0098,"p90":0.2376},{"d":-0.0,"n":51560,"mean":0.1473,"p10":0.0106,"p90":0.4232},{"d":0.131,"n":251,"mean":0.1375,"p10":0.0078,"p90":0.3903},{"d":0.325,"n":37852,"mean":0.155,"p10":0.0123,"p90":0.4506},{"d":0.733,"n":28431,"mean":0.1905,"p10":0.0181,"p90":0.5382},{"d":1.202,"n":10249,"mean":0.2084,"p10":0.022,"p90":0.6021},{"d":1.676,"n":12300,"mean":0.2149,"p10":0.0244,"p90":0.6124},{"d":2.348,"n":8508,"mean":0.2717,"p10":0.0258,"p90":0.7733},{"d":3.144,"n":2707,"mean":0.4069,"p10":0.0266,"p90":0.9783},{"d":5.314,"n":223,"mean":0.7691,"p10":0.2693,"p90":1.0}]},{"key":"RES.SF.1.ELEV_ENCL","label":"Single-family, elevated w/ enclosure","offsets":[-0.20655,-1.54365,-0.28741,0.17145],"cov":[[0.01561752,0.0,-0.0,0.0],[0.0,0.00961513,-0.0,0.0],[-0.0,-0.0,8.983e-05,-5.641e-05],[0.0,0.0,-5.641e-05,0.00011311]],"cov_unseen":[[0.37561752,0.0,-0.0,0.0],[0.0,0.36961513,-0.0,0.0],[-0.0,-0.0,0.09850668,-5.641e-05],[0.0,0.0,-5.641e-05,0.10871776]],"n":17700,"empirical":[{"d":-1.397,"n":1487,"mean":0.1086,"p10":0.0152,"p90":0.248},{"d":-0.343,"n":252,"mean":0.1294,"p10":0.0166,"p90":0.285},{"d":-0.001,"n":5304,"mean":0.1383,"p10":0.0093,"p90":0.43},{"d":0.139,"n":278,"mean":0.1865,"p10":0.0186,"p90":0.5036},{"d":0.329,"n":3778,"mean":0.1808,"p10":0.0113,"p90":0.5291},{"d":0.735,"n":3446,"mean":0.1962,"p10":0.0133,"p90":0.5781},{"d":1.194,"n":1128,"mean":0.2206,"p10":0.0186,"p90":0.6165},{"d":1.656,"n":1082,"mean":0.2257,"p10":0.0227,"p90":0.6331},{"d":2.367,"n":714,"mean":0.2711,"p10":0.0231,"p90":0.7261},{"d":3.189,"n":217,"mean":0.3274,"p10":0.0178,"p90":0.8408}]},{"key":"RES.SF.MH.UNK","label":"Manufactured home","offsets":[-0.78813,0.66883,0.74234,-0.49233],"cov":[[0.02446595,-0.0,-0.0,0.0],[-0.0,0.00112283,-0.0,0.0],[-0.0,-0.0,7.065e-05,-1.361e-05],[0.0,0.0,-1.361e-05,6.605e-05]],"cov_unseen":[[0.38446595,-0.0,-0.0,0.0],[-0.0,0.36112283,-0.0,0.0],[-0.0,-0.0,0.0984875,-1.361e-05],[0.0,0.0,-1.361e-05,0.1086707]],"n":21590,"empirical":[{"d":-1.001,"n":627,"mean":0.4072,"p10":0.0441,"p90":0.989},{"d":-0.326,"n":462,"mean":0.2644,"p10":0.028,"p90":0.878},{"d":-0.0,"n":6203,"mean":0.3238,"p10":0.0272,"p90":0.8824},{"d":0.317,"n":6486,"mean":0.3545,"p10":0.0323,"p90":0.913},{"d":0.735,"n":4212,"mean":0.4697,"p10":0.0536,"p90":0.9751},{"d":1.208,"n":1199,"mean":0.5791,"p10":0.0679,"p90":0.9971},{"d":1.657,"n":1135,"mean":0.6088,"p10":0.0773,"p90":0.9999},{"d":2.381,"n":838,"mean":0.6632,"p10":0.0998,"p90":1.0},{"d":3.124,"n":379,"mean":0.6373,"p10":0.0711,"p90":1.0}]},{"key":"RES.MF2_4.2.UNK","label":"Small multifamily, 2 storey","offsets":[-0.41366,0.48973,-0.11044,0.08111],"cov":[[0.01414562,0.0,-0.0,-0.0],[0.0,0.00094997,0.0,-0.0],[-0.0,0.0,5.616e-05,-3.163e-05],[-0.0,-0.0,-3.163e-05,7.051e-05]],"cov_unseen":[[0.37414562,0.0,-0.0,-0.0],[0.0,0.36094997,0.0,-0.0],[-0.0,0.0,0.09847301,-3.163e-05],[-0.0,-0.0,-3.163e-05,0.10867516]],"n":27187,"empirical":[{"d":-1.099,"n":303,"mean":0.1027,"p10":0.0067,"p90":0.3163},{"d":-0.314,"n":421,"mean":0.0989,"p10":0.0068,"p90":0.3402},{"d":-0.0,"n":9017,"mean":0.1482,"p10":0.0091,"p90":0.3893},{"d":0.316,"n":7422,"mean":0.1848,"p10":0.0111,"p90":0.4871},{"d":0.725,"n":4731,"mean":0.2713,"p10":0.0188,"p90":0.7088},{"d":1.211,"n":1576,"mean":0.3953,"p10":0.0364,"p90":0.9637},{"d":1.668,"n":1854,"mean":0.4882,"p10":0.0432,"p90":1.0},{"d":2.386,"n":1277,"mean":0.5955,"p10":0.0831,"p90":1.0},{"d":3.122,"n":522,"mean":0.6347,"p10":0.1115,"p90":1.0}]},{"key":"COM.MIXED.1.UNK","label":"Commercial, 1 storey","offsets":[-0.74516,-0.84288,-0.21305,0.12401],"cov":[[0.01013952,-0.0,0.0,-0.0],[-0.0,0.00137967,-0.0,0.0],[0.0,-0.0,2.695e-05,-1.572e-05],[-0.0,0.0,-1.572e-05,3.347e-05]],"cov_unseen":[[0.37013952,-0.0,0.0,-0.0],[-0.0,0.36137967,-0.0,0.0],[0.0,-0.0,0.0984438,-1.572e-05],[-0.0,0.0,-1.572e-05,0.10863812]],"n":57071,"empirical":[{"d":-0.986,"n":335,"mean":0.1567,"p10":0.0092,"p90":0.4222},{"d":-0.307,"n":752,"mean":0.1318,"p10":0.0066,"p90":0.3644},{"d":-0.0,"n":16421,"mean":0.1755,"p10":0.0088,"p90":0.4966},{"d":0.319,"n":16068,"mean":0.1547,"p10":0.0101,"p90":0.4021},{"d":0.733,"n":12067,"mean":0.2058,"p10":0.0172,"p90":0.5165},{"d":1.208,"n":3959,"mean":0.2672,"p10":0.0261,"p90":0.6771},{"d":1.661,"n":3791,"mean":0.3121,"p10":0.0295,"p90":0.7692},{"d":2.392,"n":2376,"mean":0.3705,"p10":0.0364,"p90":0.8856},{"d":3.139,"n":1164,"mean":0.4477,"p10":0.0562,"p90":0.9781},{"d":5.642,"n":115,"mean":0.8291,"p10":0.4352,"p90":1.0}]}],"locals":{"RES.SF.1.SLAB@TX":{"offsets":[0.17569,-1.69867,0.00899,0.0055],"cov":[[0.00233699,0.0,0.0,-0.0],[0.0,0.01163998,0.0,0.0],[0.0,0.0,2.66e-05,-8.15e-06],[-0.0,0.0,-8.15e-06,3.788e-05]],"n":41948},"RES.SF.1.SLAB@LA":{"offsets":[0.1891,0.61602,-0.00431,0.05273],"cov":[[0.0033623,0.0,0.0,-0.0],[0.0,0.00118313,-0.0,0.0],[0.0,-0.0,3.481e-05,-9.4e-06],[-0.0,0.0,-9.4e-06,5.034e-05]],"n":31927},"RES.SF.1.SLAB@FL":{"offsets":[-0.25697,0.04526,0.08026,-0.0045],"cov":[[0.0021681,0.0,-0.0,0.0],[0.0,0.00162183,0.0,0.0],[-0.0,0.0,1.719e-05,-4.97e-06],[0.0,0.0,-4.97e-06,2.493e-05]],"n":63780},"RES.SF.1.SLAB@NJ":{"offsets":[-1.15321,-0.5959,-0.0907,-0.0039],"cov":[[0.14354257,0.0,-0.0,0.0],[0.0,0.08173207,0.0,-0.0],[-0.0,0.0,0.00075992,-0.0002608],[0.0,-0.0,-0.0002608,0.00102753]],"n":1543},"RES.SF.1.SLAB@NY":{"offsets":[-0.2268,-0.74412,-0.19179,0.11815],"cov":[[0.11960145,-0.0,0.0,-0.0],[-0.0,0.09398062,-0.0,-0.0],[0.0,-0.0,0.00113509,-0.000377],[-0.0,-0.0,-0.000377,0.00161931]],"n":981},"RES.SF.1.SLAB@NC":{"offsets":[0.01668,-0.81256,-0.37743,-0.07526],"cov":[[0.06421742,-0.0,0.0,0.0],[-0.0,0.11197296,-0.0,0.0],[0.0,-0.0,0.00100051,-0.00049006],[0.0,0.0,-0.00049006,0.00127535]],"n":1351},"RES.SF.1.SLAB@MO":{"offsets":[-0.45793,-0.78739,-0.36266,0.11655],"cov":[[0.24742108,-0.0,-0.0,-0.0],[-0.0,0.20369755,0.0,0.0],[-0.0,0.0,0.00417354,-0.0017514],[-0.0,0.0,-0.0017514,0.00581183]],"n":273},"RES.SF.1.SLAB@PA":{"offsets":[-0.4108,-0.53956,-0.19055,0.30755],"cov":[[0.25569663,-0.0,0.0,0.0],[-0.0,0.23630764,-0.0,-0.0],[0.0,-0.0,0.00457347,-0.00174881],[0.0,-0.0,-0.00174881,0.00792744]],"n":201},"RES.SF.1.SLAB@SC":{"offsets":[0.23426,-0.9467,-0.57584,0.08306],"cov":[[0.06273439,-0.0,0.0,-0.0],[-0.0,0.12043128,-0.0,0.0],[0.0,-0.0,0.00116008,-0.00064458],[-0.0,0.0,-0.00064458,0.00155205]],"n":1184},"RES.SF.1.SLAB@VA":{"offsets":[0.26716,-0.36778,-0.40569,0.16136],"cov":[[0.0916529,0.0,-0.0,0.0],[0.0,0.1308638,-0.0,-0.0],[-0.0,-0.0,0.00188636,-0.00096157],[0.0,-0.0,-0.00096157,0.00273627]],"n":650},"RES.SF.1.CRAWL@TX":{"offsets":[0.85484,-0.69536,-0.08733,-0.09719],"cov":[[0.065723,-0.0,-0.0,-0.0],[-0.0,0.13137518,-0.0,-0.0],[-0.0,-0.0,0.00140124,-0.00075468],[-0.0,-0.0,-0.00075468,0.00161512]],"n":1117},"RES.SF.1.CRAWL@LA":{"offsets":[0.0994,1.37414,0.27119,-0.12208],"cov":[[0.10577315,0.0,0.0,-0.0],[0.0,0.01512702,-0.0,0.0],[0.0,-0.0,0.00093858,-0.00032158],[-0.0,0.0,-0.00032158,0.00110435]],"n":1458},"RES.SF.1.CRAWL@FL":{"offsets":[0.0419,0.55265,0.33264,-0.11964],"cov":[[0.05387569,0.0,0.0,-0.0],[0.0,0.02067568,0.0,-0.0],[0.0,0.0,0.000383,-0.0001354],[-0.0,-0.0,-0.0001354,0.00046557]],"n":3387},"RES.SF.1.CRAWL@NJ":{"offsets":[-0.14534,-0.83425,0.12175,-0.01612],"cov":[[0.09854963,-0.0,0.0,-0.0],[-0.0,0.09998579,-0.0,0.0],[0.0,-0.0,0.0006758,-0.00030028],[-0.0,0.0,-0.00030028,0.00083885]],"n":1980},"RES.SF.1.CRAWL@NY":{"offsets":[-0.44051,-1.10516,-0.07933,0.0158],"cov":[[0.16697621,0.0,-0.0,0.0],[0.0,0.12867024,-0.0,0.0],[-0.0,-0.0,0.00109476,-0.00053272],[0.0,0.0,-0.00053272,0.00136058]],"n":1242},"RES.SF.1.CRAWL@NC":{"offsets":[-0.31635,-0.35735,0.01916,-0.03445],"cov":[[0.06029194,0.0,-0.0,0.0],[0.0,0.05126838,-0.0,0.0],[-0.0,-0.0,0.00041405,-0.00021861],[0.0,0.0,-0.00021861,0.00050782]],"n":3533},"RES.SF.1.CRAWL@MO":{"offsets":[-0.27003,-0.15416,0.03419,-0.0636],"cov":[[0.28373754,0.0,0.0,-0.0],[0.0,0.19479195,0.0,-0.0],[0.0,0.0,0.00530858,-0.00224024],[-0.0,-0.0,-0.00224024,0.0063326]],"n":243},"RES.SF.1.CRAWL@PA":{"offsets":[-0.3771,-0.54577,-0.24401,0.1524],"cov":[[0.26177262,-0.0,0.0,-0.0],[-0.0,0.23430166,0.0,0.0],[0.0,0.0,0.00437767,-0.0025668],[-0.0,0.0,-0.0025668,0.00593035]],"n":304},"RES.SF.1.CRAWL@SC":{"offsets":[-0.497,-1.0199,-0.43589,0.29232],"cov":[[0.19419748,-0.0,0.0,-0.0],[-0.0,0.15277638,0.0,0.0],[0.0,0.0,0.0016738,-0.00106258],[-0.0,0.0,-0.00106258,0.00222504]],"n":891},"RES.SF.1.CRAWL@VA":{"offsets":[0.3388,-0.89403,-0.70969,0.63239],"cov":[[0.12826143,-0.0,-0.0,0.0],[-0.0,0.1614895,-0.0,0.0],[-0.0,-0.0,0.00173293,-0.00126456],[0.0,0.0,-0.00126456,0.00269596]],"n":809},"RES.SF.2.SLAB@TX":{"offsets":[0.123,-1.24325,0.19221,0.00801],"cov":[[0.006598,0.0,0.0,0.0],[0.0,0.03324851,0.0,0.0],[0.0,0.0,6.871e-05,-3.005e-05],[0.0,0.0,-3.005e-05,0.00010771]],"n":15886},"RES.SF.2.SLAB@LA":{"offsets":[0.16238,1.38742,0.17333,-0.13437],"cov":[[0.01678762,-0.0,-0.0,0.0],[-0.0,0.00599416,-0.0,-0.0],[-0.0,-0.0,0.00020219,-8.627e-05],[0.0,-0.0,-8.627e-05,0.00028105]],"n":6111},"RES.SF.2.SLAB@FL":{"offsets":[-0.18885,-0.1146,-0.11667,0.01023],"cov":[[0.00862357,-0.0,0.0,0.0],[-0.0,0.01838667,0.0,0.0],[0.0,0.0,0.00010027,-6.012e-05],[0.0,0.0,-6.012e-05,0.00014853]],"n":12919},"RES.SF.2.SLAB@NJ":{"offsets":[-1.32555,-0.77392,-0.07971,0.2028],"cov":[[0.09581567,0.0,0.0,-0.0],[0.0,0.09210625,-0.0,-0.0],[0.0,-0.0,0.00033874,-0.00018812],[-0.0,-0.0,-0.00018812,0.00056896]],"n":3229},"RES.SF.2.SLAB@NY":{"offsets":[-0.69015,-1.07371,0.04557,0.23317],"cov":[[0.07332065,-0.0,0.0,-0.0],[-0.0,0.08563651,-0.0,0.0],[0.0,-0.0,0.00032207,-0.00014416],[-0.0,0.0,-0.00014416,0.0005599]],"n":3090},"RES.SF.2.SLAB@NC":{"offsets":[-0.03573,-0.51618,-0.18537,-0.04877],"cov":[[0.06361751,0.0,-0.0,0.0],[0.0,0.13950059,-0.0,-0.0],[-0.0,-0.0,0.00095499,-0.00057219],[0.0,-0.0,-0.00057219,0.00131996]],"n":1445},"RES.SF.2.SLAB@MO":{"offsets":[0.12385,-0.54746,-0.19796,0.12264],"cov":[[0.2265603,0.0,0.0,-0.0],[0.0,0.23424346,0.0,-0.0],[0.0,0.0,0.00529653,-0.00268197],[-0.0,-0.0,-0.00268197,0.00772374]],"n":218},"RES.SF.2.SLAB@PA":{"offsets":[0.79655,-0.14054,-0.24398,0.34521],"cov":[[0.0963959,-0.0,-0.0,0.0],[-0.0,0.19518188,0.0,0.0],[-0.0,0.0,0.00261759,-0.00155997],[0.0,0.0,-0.00155997,0.0045938]],"n":415},"RES.SF.2.SLAB@SC":{"offsets":[0.04495,-0.78218,-0.62637,0.37859],"cov":[[0.07394519,-0.0,-0.0,0.0],[-0.0,0.16894131,0.0,-0.0],[-0.0,0.0,0.00113059,-0.00081713],[0.0,-0.0,-0.00081713,0.00181082]],"n":1187},"RES.SF.2.SLAB@VA":{"offsets":[-0.4393,-0.57894,-0.35071,0.39215],"cov":[[0.12566575,0.0,-0.0,0.0],[0.0,0.18684997,-0.0,0.0],[-0.0,-0.0,0.00138525,-0.00091527],[0.0,0.0,-0.00091527,0.00242041]],"n":822},"RES.SF.2.BASEMENT@TX":{"offsets":[-0.18391,0.01091,0.27896,-0.38878],"cov":[[0.06153589,0.0,-0.0,0.0],[0.0,0.00667814,-0.0,0.0],[-0.0,-0.0,0.000196,-9.357e-05],[0.0,0.0,-9.357e-05,0.00020629]],"n":8262},"RES.SF.2.BASEMENT@LA":{"offsets":[-0.60304,1.71467,0.21605,-0.20978],"cov":[[0.10592293,-0.0,-0.0,-0.0],[-0.0,0.00382106,0.0,-0.0],[-0.0,0.0,0.00029591,-0.00017342],[-0.0,-0.0,-0.00017342,0.00037676]],"n":5455},"RES.SF.2.BASEMENT@FL":{"offsets":[0.33892,0.26095,-0.31869,0.12899],"cov":[[0.04598043,0.0,0.0,-0.0],[0.0,0.01753181,0.0,-0.0],[0.0,0.0,0.00032883,-0.00024357],[-0.0,-0.0,-0.00024357,0.00043261]],"n":5420},"RES.SF.2.BASEMENT@NJ":{"offsets":[-0.35857,-0.86674,-0.01506,0.10962],"cov":[[0.02801599,-0.0,-0.0,0.0],[-0.0,0.01262376,0.0,-0.0],[-0.0,0.0,7.405e-05,-4.789e-05],[0.0,-0.0,-4.789e-05,0.00010326]],"n":19540},"RES.SF.2.BASEMENT@NY":{"offsets":[-0.03973,-0.89796,-0.12418,0.19742],"cov":[[0.01897023,-0.0,-0.0,0.0],[-0.0,0.01030856,0.0,-0.0],[-0.0,0.0,6.357e-05,-4.242e-05],[0.0,-0.0,-4.242e-05,9.167e-05]],"n":22416},"RES.SF.2.BASEMENT@NC":{"offsets":[0.37362,-0.18805,-0.18059,0.05698],"cov":[[0.03495023,-0.0,0.0,0.0],[-0.0,0.02114183,0.0,-0.0],[0.0,0.0,0.000241,-0.0001705],[0.0,-0.0,-0.0001705,0.00031479]],"n":7060},"RES.SF.2.BASEMENT@MO":{"offsets":[-0.55124,-0.89488,0.23324,-0.1746],"cov":[[0.07526159,0.0,0.0,-0.0],[0.0,0.01872784,0.0,-0.0],[0.0,0.0,0.00017523,-9.076e-05],[-0.0,-0.0,-9.076e-05,0.0002073]],"n":8555},"RES.SF.2.BASEMENT@PA":{"offsets":[0.32574,-0.41522,0.02276,0.07037],"cov":[[0.02144113,0.0,0.0,-0.0],[0.0,0.01261503,0.0,-0.0],[0.0,0.0,0.0001222,-7.835e-05],[-0.0,-0.0,-7.835e-05,0.00016703]],"n":12088},"RES.SF.2.BASEMENT@SC":{"offsets":[0.97323,-0.75483,-0.36453,0.34441],"cov":[[0.08332062,0.0,-0.0,0.0],[0.0,0.08528829,0.0,0.0],[-0.0,0.0,0.00085276,-0.0006147],[0.0,0.0,-0.0006147,0.00126216]],"n":1726},"RES.SF.2.BASEMENT@VA":{"offsets":[-0.15681,-0.41222,0.04482,0.04198],"cov":[[0.06183362,0.0,0.0,-0.0],[0.0,0.03193046,0.0,-0.0],[0.0,0.0,0.00026289,-0.00017219],[-0.0,-0.0,-0.00017219,0.00035787]],"n":5717},"RES.SF.1.ELEV_ENCL@TX":{"offsets":[0.41179,-0.61736,-0.05791,0.10437],"cov":[[0.09457874,-0.0,-0.0,0.0],[-0.0,0.13444248,0.0,0.0],[-0.0,0.0,0.00103928,-0.00067006],[0.0,0.0,-0.00067006,0.00136892]],"n":1473},"RES.SF.1.ELEV_ENCL@LA":{"offsets":[-0.69511,0.99445,-0.00999,-0.08579],"cov":[[0.21258953,-0.0,0.0,-0.0],[-0.0,0.0376526,-0.0,-0.0],[0.0,-0.0,0.00129161,-0.00077124],[-0.0,-0.0,-0.00077124,0.00151863]],"n":1279},"RES.SF.1.ELEV_ENCL@FL":{"offsets":[-0.43086,0.3684,-0.24887,0.17803],"cov":[[0.07177971,0.0,0.0,0.0],[0.0,0.02718038,0.0,0.0],[0.0,0.0,0.00038178,-0.00027123],[0.0,0.0,-0.00027123,0.0005066]],"n":4382},"RES.SF.1.ELEV_ENCL@NJ":{"offsets":[-0.85701,-0.29959,0.6984,-0.37967],"cov":[[0.19402484,0.0,-0.0,-0.0],[0.0,0.10499328,0.0,-0.0],[-0.0,0.0,0.00077667,-0.00026656],[-0.0,-0.0,-0.00026656,0.00084848]],"n":1782},"RES.SF.1.ELEV_ENCL@NY":{"offsets":[-0.00086,-0.30659,0.60337,-0.24239],"cov":[[0.20956661,-0.0,-0.0,0.0],[-0.0,0.15208137,-0.0,0.0],[-0.0,-0.0,0.00169713,-0.00055392],[0.0,0.0,-0.00055392,0.00196558]],"n":763},"RES.SF.1.ELEV_ENCL@NC":{"offsets":[0.11516,-0.15918,-0.20543,0.20291],"cov":[[0.08063107,0.0,-0.0,0.0],[0.0,0.08267683,-0.0,-0.0],[-0.0,-0.0,0.00065775,-0.0004599],[0.0,-0.0,-0.0004599,0.00090049]],"n":2395},"RES.SF.1.ELEV_ENCL@MO":{"offsets":[0.43085,-0.39265,-0.17257,0.27234],"cov":[[0.2190096,-0.0,-0.0,0.0],[-0.0,0.20679755,-0.0,0.0],[-0.0,-0.0,0.00363495,-0.0023055],[0.0,0.0,-0.0023055,0.00507016]],"n":385},"RES.SF.1.ELEV_ENCL@PA":{"offsets":[0.04371,-0.4276,-0.19177,0.44047],"cov":[[0.27381144,0.0,0.0,-0.0],[0.0,0.25319,0.0,-0.0],[0.0,0.0,0.00437051,-0.00286731],[-0.0,-0.0,-0.00286731,0.00695097]],"n":280},"RES.SF.1.ELEV_ENCL@SC":{"offsets":[0.40629,-0.61395,-0.50327,0.59679],"cov":[[0.15105775,-0.0,-0.0,0.0],[-0.0,0.22383163,0.0,-0.0],[-0.0,0.0,0.00199276,-0.00154832],[0.0,-0.0,-0.00154832,0.00319504]],"n":716},"RES.SF.1.ELEV_ENCL@VA":{"offsets":[0.17613,-0.46948,-0.14991,0.15231],"cov":[[0.2336192,-0.0,-0.0,0.0],[-0.0,0.24605903,0.0,-0.0],[-0.0,0.0,0.00411775,-0.00274079],[0.0,-0.0,-0.00274079,0.00541512]],"n":374},"RES.SF.MH.UNK@TX":{"offsets":[0.28733,0.18402,0.17085,-0.15371],"cov":[[0.16754625,-0.0,0.0,-0.0],[-0.0,0.01820919,-0.0,0.0],[0.0,-0.0,0.00125457,-0.0001662],[-0.0,0.0,-0.0001662,0.00110192]],"n":1251},"RES.SF.MH.UNK@LA":{"offsets":[0.16893,0.19027,0.05338,-0.04257],"cov":[[0.07006254,0.0,-0.0,0.0],[0.0,0.0035892,0.0,-0.0],[-0.0,0.0,0.00028455,-4.63e-05],[0.0,-0.0,-4.63e-05,0.0002602]],"n":5465},"RES.SF.MH.UNK@FL":{"offsets":[-0.06695,-0.45093,-0.17119,0.27518],"cov":[[0.09135905,-0.0,0.0,0.0],[-0.0,0.00883114,0.0,-0.0],[0.0,0.0,0.00029087,-8.784e-05],[0.0,-0.0,-8.784e-05,0.00032647]],"n":4691},"RES.SF.MH.UNK@NJ":{"offsets":[-0.07984,0.89663,0.3337,-0.27167],"cov":[[0.3334321,0.0,0.0,0.0],[0.0,0.07620557,0.0,0.0],[0.0,0.0,0.0105608,0.00016019],[0.0,0.0,0.00016019,0.00877805]],"n":143},"RES.SF.MH.UNK@NY":{"offsets":[-0.11092,0.3063,-0.10766,0.05842],"cov":[[0.32413037,-0.0,-0.0,0.0],[-0.0,0.08578355,0.0,-0.0],[-0.0,0.0,0.00731226,-0.00181131],[0.0,-0.0,-0.00181131,0.0073538]],"n":190},"RES.SF.MH.UNK@NC":{"offsets":[0.52171,0.57411,0.1447,-0.03273],"cov":[[0.18804827,-0.0,0.0,-0.0],[-0.0,0.02006182,-0.0,0.0],[0.0,-0.0,0.00181506,-0.00015561],[-0.0,0.0,-0.00015561,0.00113468]],"n":844},"RES.SF.MH.UNK@MO":{"offsets":[-0.47937,-0.44833,0.27789,-0.01803],"cov":[[0.24347107,-0.0,0.0,-0.0],[-0.0,0.02353876,-0.0,0.0],[0.0,-0.0,0.00116643,-3.799e-05],[-0.0,0.0,-3.799e-05,0.00108015]],"n":1235},"RES.SF.MH.UNK@PA":{"offsets":[-0.09093,0.47625,0.13732,-0.18852],"cov":[[0.24828943,0.0,0.0,-0.0],[0.0,0.01918522,-0.0,0.0],[0.0,-0.0,0.00200343,-0.00021771],[-0.0,0.0,-0.00021771,0.0016833]],"n":809},"RES.SF.MH.UNK@SC":{"offsets":[-0.11482,-0.25955,0.1302,-0.17018],"cov":[[0.32300182,-0.0,-0.0,0.0],[-0.0,0.1251129,0.0,-0.0],[-0.0,0.0,0.00775113,-0.00105494],[0.0,-0.0,-0.00105494,0.0068465]],"n":183},"RES.SF.MH.UNK@VA":{"offsets":[0.25496,0.06845,-0.02535,-0.02496],"cov":[[0.32587201,-0.0,0.0,-0.0],[-0.0,0.12827877,0.0,0.0],[0.0,0.0,0.01127493,-0.0023214],[-0.0,0.0,-0.0023214,0.01049772]],"n":124},"RES.MF2_4.2.UNK@TX":{"offsets":[0.35434,-2.11976,0.00501,0.05576],"cov":[[0.12871704,-0.0,-0.0,0.0],[-0.0,0.1047116,-0.0,-0.0],[-0.0,-0.0,0.00105817,-0.00059412],[0.0,-0.0,-0.00059412,0.00135665]],"n":1346},"RES.MF2_4.2.UNK@LA":{"offsets":[-0.1425,0.80427,0.41739,-0.17388],"cov":[[0.04734599,-0.0,-0.0,0.0],[-0.0,0.00128687,-0.0,-0.0],[-0.0,-0.0,0.00015351,-5.796e-05],[0.0,-0.0,-5.796e-05,0.00018648]],"n":9362},"RES.MF2_4.2.UNK@FL":{"offsets":[0.332,-1.51301,-0.21954,0.17092],"cov":[[0.06758659,0.0,-0.0,0.0],[0.0,0.03567927,0.0,0.0],[-0.0,0.0,0.00051227,-0.00033585],[0.0,0.0,-0.00033585,0.00067769]],"n":3023},"RES.MF2_4.2.UNK@NJ":{"offsets":[-1.15211,-1.18371,-0.42506,0.34161],"cov":[[0.14340045,0.0,0.0,-0.0],[0.0,0.02328585,0.0,-0.0],[0.0,0.0,0.00033424,-0.00024047],[-0.0,-0.0,-0.00024047,0.00046699]],"n":4738},"RES.MF2_4.2.UNK@NY":{"offsets":[-0.50186,-1.60509,-0.0625,0.41145],"cov":[[0.19353406,0.0,-0.0,0.0],[0.0,0.05600515,-0.0,0.0],[-0.0,-0.0,0.00064915,-0.00036365],[0.0,0.0,-0.00036365,0.0010542]],"n":1743},"RES.MF2_4.2.UNK@NC":{"offsets":[1.18573,-1.49711,-0.62002,0.53951],"cov":[[0.06970974,-0.0,0.0,-0.0],[-0.0,0.07336658,0.0,-0.0],[0.0,0.0,0.00115959,-0.0008745],[-0.0,-0.0,-0.0008745,0.00172013]],"n":1335},"RES.MF2_4.2.UNK@MO":{"offsets":[-0.10973,-0.92846,-0.16295,0.30642],"cov":[[0.32451804,-0.0,0.0,-0.0],[-0.0,0.19149572,-0.0,0.0],[0.0,-0.0,0.00873873,-0.00509618],[-0.0,0.0,-0.00509618,0.01307819]],"n":132},"RES.MF2_4.2.UNK@PA":{"offsets":[-0.15151,-1.02723,-0.34853,0.54739],"cov":[[0.31276326,-0.0,-0.0,0.0],[-0.0,0.18120794,-0.0,0.0],[-0.0,-0.0,0.00627497,-0.00424063],[0.0,0.0,-0.00424063,0.01027172]],"n":191},"RES.MF2_4.2.UNK@SC":{"offsets":[0.87841,-1.85186,-0.17234,0.02583],"cov":[[0.12056517,0.0,0.0,-0.0],[0.0,0.07882666,0.0,-0.0],[0.0,0.0,0.00139407,-0.00080273],[-0.0,-0.0,-0.00080273,0.00168247]],"n":1105},"RES.MF2_4.2.UNK@VA":{"offsets":[-0.25625,-1.0103,-0.35637,0.41043],"cov":[[0.28673404,-0.0,-0.0,0.0],[-0.0,0.13621822,-0.0,-0.0],[-0.0,-0.0,0.00413022,-0.00284838],[0.0,-0.0,-0.00284838,0.00619973]],"n":328},"COM.MIXED.1.UNK@TX":{"offsets":[-0.03648,-0.72084,-0.12463,0.19975],"cov":[[0.05935608,0.0,0.0,0.0],[0.0,0.02046741,-0.0,0.0],[0.0,-0.0,0.00017447,-0.00011074],[0.0,0.0,-0.00011074,0.00024112]],"n":8217},"COM.MIXED.1.UNK@LA":{"offsets":[-0.57082,0.44479,0.15846,-0.05811],"cov":[[0.08808757,-0.0,0.0,-0.0],[-0.0,0.00519443,-0.0,0.0],[0.0,-0.0,0.00015509,-8.041e-05],[-0.0,0.0,-8.041e-05,0.00019362]],"n":9213},"COM.MIXED.1.UNK@FL":{"offsets":[0.80959,-0.23424,-0.09626,0.10899],"cov":[[0.03650485,0.0,-0.0,0.0],[0.0,0.02359404,-0.0,-0.0],[-0.0,-0.0,0.0002772,-0.00017999],[0.0,-0.0,-0.00017999,0.00036567]],"n":5579},"COM.MIXED.1.UNK@NJ":{"offsets":[0.18933,-0.14689,-0.09175,0.10501],"cov":[[0.10830322,-0.0,-0.0,0.0],[-0.0,0.0405504,0.0,-0.0],[-0.0,0.0,0.00053486,-0.00034159],[0.0,-0.0,-0.00034159,0.00070065]],"n":2872},"COM.MIXED.1.UNK@NY":{"offsets":[-0.0532,-0.77196,-0.00739,0.04915],"cov":[[0.16895906,0.0,0.0,0.0],[0.0,0.06385281,0.0,-0.0],[0.0,0.0,0.00069272,-0.00039347],[0.0,-0.0,-0.00039347,0.00087948]],"n":2101},"COM.MIXED.1.UNK@NC":{"offsets":[0.48839,-0.36175,0.043,0.05408],"cov":[[0.10644292,-0.0,0.0,-0.0],[-0.0,0.05442992,-0.0,0.0],[0.0,-0.0,0.00067948,-0.00039939],[-0.0,0.0,-0.00039939,0.00087416]],"n":2178},"COM.MIXED.1.UNK@MO":{"offsets":[-0.52333,-0.33861,0.18589,-0.26809],"cov":[[0.1912723,0.0,-0.0,0.0],[0.0,0.0267359,-0.0,-0.0],[-0.0,-0.0,0.00059014,-0.0002775],[0.0,-0.0,-0.0002775,0.00060527]],"n":2783},"COM.MIXED.1.UNK@PA":{"offsets":[0.08497,-0.70823,-0.16889,0.13092],"cov":[[0.15309796,0.0,0.0,0.0],[0.0,0.06076298,0.0,0.0],[0.0,0.0,0.00076579,-0.00048239],[0.0,0.0,-0.00048239,0.00097439]],"n":2046},"COM.MIXED.1.UNK@SC":{"offsets":[0.07056,-0.35915,0.02515,-0.18078],"cov":[[0.27933367,-0.0,-0.0,-0.0],[-0.0,0.13099929,0.0,0.0],[-0.0,0.0,0.00321177,-0.00173267],[-0.0,0.0,-0.00173267,0.00354403]],"n":496},"COM.MIXED.1.UNK@VA":{"offsets":[-0.4406,-1.06461,-0.22303,0.17334],"cov":[[0.25001194,0.0,0.0,-0.0],[0.0,0.10403781,0.0,0.0],[0.0,0.0,0.0012632,-0.00079679],[-0.0,0.0,-0.00079679,0.00162686]],"n":1213}},"jrc":{"Residential buildings":{"AFRICA":[[0.0,0.0],[0.5,0.2199254009329045],[1.0,0.3782268460928099],[1.5,0.5305890817622265],[2.0,0.635636732936187],[3.0,0.8169397798520446],[4.0,0.9034346883994496],[5.0,0.9571521730123568],[6.0,1.0]],"ASIA":[[0.0,0.0],[0.5,0.32655650202936],[1.0,0.4940503235404516],[1.5,0.6165721244538469],[2.0,0.7207117644253294],[3.0,0.8695282125617129],[4.0,0.93148708390482],[5.0,0.983604148013016],[6.0,1.0]],"Centr&South AMERICA":[[0.0,0.0],[0.5,0.4908859507565592],[1.0,0.7112940666211631],[1.5,0.842026010706856],[2.0,0.9493690958164642],[3.0,0.9836369770580298],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"EUROPE":[[0.0,0.0],[0.5,0.25],[1.0,0.4],[1.5,0.5],[2.0,0.6],[3.0,0.75],[4.0,0.85],[5.0,0.95],[6.0,1.0]],"North AMERICA":[[0.0,0.2018045434827977],[0.5,0.4432698565670273],[1.0,0.582754693231323],[1.5,0.6825219115800791],[2.0,0.783957148211158],[3.0,0.8543489222586077],[4.0,0.9236701008849424],[5.0,0.9585227725931244],[6.0,1.0]],"OCEANIA":[[0.0,0.0],[0.5,0.4754181191669913],[1.0,0.6403931243607716],[1.5,0.7146146615077392],[2.0,0.7877263475521771],[3.0,0.928779884269488],[4.0,0.9673818525004227],[5.0,0.9827954437588988],[6.0,1.0]]},"Commercial buildings":{"ASIA":[[0.0,0.0],[0.5,0.3767896231835675],[1.0,0.5376816186459964],[1.5,0.6593366839515573],[2.0,0.7628452324986368],[3.0,0.8833486558294331],[4.0,0.9418548948983456],[5.0,0.9807593802222822],[6.0,1.0]],"Centr&South AMERICA":[[0.0,0.0],[0.5,0.6114775866089124],[1.0,0.8395310944604374],[1.5,0.9235884574511016],[2.0,0.9919724770642202],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"EUROPE":[[0.0,0.0],[0.5,0.15],[1.0,0.3],[1.5,0.45],[2.0,0.55],[3.0,0.75],[4.0,0.9],[5.0,1.0],[6.0,1.0]],"GLOBAL":[[0.0,0.0],[0.5,0.3232969176045094],[1.0,0.506529104729667],[1.5,0.6345955803090766],[2.0,0.7443096564319989],[3.0,0.8640930440493222],[4.0,0.9327881568937796],[5.0,0.9777469680689964],[6.0,1.0]],"North AMERICA":[[0.0,0.0184049079754601],[0.5,0.2392638036809815],[1.0,0.3742331288343558],[1.5,0.4662576687116564],[2.0,0.5521472392638037],[3.0,0.6871165644171779],[4.0,0.8220858895705521],[5.0,0.9079754601226996],[6.0,1.0]],"OCEANIA":[[0.0,0.0],[0.5,0.2389535745490857],[1.0,0.4811996817075454],[1.5,0.6737950914310677],[2.0,0.8645833333333333],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]]},"Industrial buildings":{"AFRICA":[[0.0,0.0],[0.5,0.0626820428336079],[1.0,0.2471960461285008],[1.5,0.4033299835255354],[2.0,0.4944886326194398],[3.0,0.684652388797364],[4.0,0.9185897858319604],[5.0,1.0],[6.0,1.0]],"ASIA":[[0.0,0.0],[0.5,0.2831815239036498],[1.0,0.4816156531424614],[1.5,0.6292188938464128],[2.0,0.7172405880206049],[3.0,0.8566750297600425],[4.0,0.9085770039670126],[5.0,0.9553274630224672],[6.0,1.0]],"Centr&South AMERICA":[[0.0,0.0],[0.5,0.6670194003527335],[1.0,0.8887125220458554],[1.5,0.94673721340388],[2.0,1.0],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"EUROPE":[[0.0,0.0],[0.5,0.15],[1.0,0.27],[1.5,0.4],[2.0,0.52],[3.0,0.7],[4.0,0.85],[5.0,1.0],[6.0,1.0]],"GLOBAL":[[0.0,0.0],[0.5,0.2971480219894268],[1.0,0.4797905585490779],[1.5,0.6032857895837371],[2.0,0.694345844128009],[3.0,0.8202654837114812],[4.0,0.922861929388366],[5.0,0.9870654926044936],[6.0,1.0]],"North AMERICA":[[0.0,0.0257142857142857],[0.5,0.3228571428571429],[1.0,0.5114285714285715],[1.5,0.6371428571428571],[2.0,0.7400000000000001],[3.0,0.8599999999999999],[4.0,0.937142857142857],[5.0,0.98],[6.0,1.0]]},"Transport":{"ASIA":[[0.0,0.0],[0.5,0.357516339869281],[1.0,0.5718954248366014],[1.5,0.7333333333333334],[2.0,0.8472222222222223],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"Centr&South AMERICA":[[0.0,0.0],[0.5,0.087719298245614],[1.0,0.1754385964912281],[1.5,0.5964912280701755],[2.0,0.8421052631578947],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"EUROPE":[[0.0,0.0],[0.5,0.3166666666666666],[1.0,0.5416666666666667],[1.5,0.7016666666666667],[2.0,0.8316666666666667],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"GLOBAL":[[0.0,0.0],[0.5,0.2539674349271872],[1.0,0.4296668959981654],[1.5,0.6771637426900585],[2.0,0.8403313840155945],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]]},"Infrastructure - roads":{"ASIA":[[0.0,0.0],[0.5,0.2144369063772049],[1.0,0.3727544097693351],[1.5,0.6039348710990502],[2.0,0.709659090909091],[3.0,0.808409090909091],[4.0,0.887159090909091],[5.0,0.96875],[6.0,1.0]],"EUROPE":[[0.0,0.0],[0.5,0.25],[1.0,0.42],[1.5,0.55],[2.0,0.65],[3.0,0.8],[4.0,0.9],[5.0,1.0],[6.0,1.0]],"GLOBAL":[[0.0,0.0],[0.5,0.2322184531886024],[1.0,0.3963772048846675],[1.5,0.5769674355495251],[2.0,0.6798295454545455],[3.0,0.8042045454545454],[4.0,0.8935795454545454],[5.0,0.984375],[6.0,1.0]]},"Agriculture":{"AFRICA":[[0.0,0.0],[0.5,0.2428735632183908],[1.0,0.4718390804597701],[1.5,0.7413793103448275],[2.0,0.9166666666666666],[3.0,1.0],[4.0,1.0],[5.0,1.0],[6.0,1.0]],"ASIA":[[0.0,0.0],[0.5,0.135],[1.0,0.37],[1.5,0.524],[2.0,0.558],[3.0,0.66],[4.0,0.834],[5.0,0.988],[6.0,1.0]],"EUROPE":[[0.0,0.0],[0.5,0.3],[1.0,0.55],[1.5,0.65],[2.0,0.75],[3.0,0.85],[4.0,0.95],[5.0,1.0],[6.0,1.0]],"GLOBAL":[[0.0,0.0],[0.5,0.2364178078270429],[1.0,0.466379114483654],[1.5,0.6164850237707068],[2.0,0.7067069924017344],[3.0,0.817514272755266],[4.0,0.9145236506073896],[5.0,0.985518893022301],[6.0,1.0]],"North AMERICA":[[0.0,0.0185753876114148],[0.5,0.267797668089781],[1.0,0.4736773774748458],[1.5,0.5505607847379999],[2.0,0.6021613029402708],[3.0,0.7600570910210638],[4.0,0.8740946024295585],[5.0,0.954075572089204],[6.0,1.0]]}},"validation":{"event":[{"model":"FloodVuln_G1_archetype","MAE":0.2169,"RMSE":0.2695,"bias":-0.046,"CRPS":0.1489,"coverage_80":0.7859,"PIT_KS":0.146,"calibration_slope":1.0647},{"model":"FloodVuln_G4_local","MAE":0.2193,"RMSE":0.2775,"bias":-0.0599,"CRPS":0.154,"coverage_80":0.7528,"PIT_KS":0.1604,"calibration_slope":1.0515},{"model":"FloodVuln_G0_global_fit","MAE":0.2324,"RMSE":0.2827,"bias":-0.0487,"CRPS":0.1583,"coverage_80":0.789,"PIT_KS":0.1458,"calibration_slope":0.8262},{"model":"single_curve_fitted_on_train","MAE":0.2305,"RMSE":0.2859,"bias":-0.0727,"CRPS":0.2305,"coverage_80":null,"PIT_KS":null,"calibration_slope":0.8289},{"model":"naive_constant_mean","MAE":0.2469,"RMSE":0.2986,"bias":-0.0712,"CRPS":0.2469,"coverage_80":null,"PIT_KS":null,"calibration_slope":null},{"model":"JRC_NA_residential_published","MAE":0.2493,"RMSE":0.3031,"bias":0.091,"CRPS":0.2493,"coverage_80":null,"PIT_KS":null,"calibration_slope":0.3603}],"event_folds":["Hurricane Florence","Hurricane Harvey","Hurricane Ida","Hurricane Ike","Hurricane Irma","Hurricane Isaac","Hurricane Katrina","Hurricane Matthew","Hurricane Michael","Hurricane Rita","Hurricane Sandy"],"region":[{"model":"FloodVuln_G1_archetype","MAE":0.1912,"RMSE":0.2439,"bias":0.0164,"CRPS":0.1237,"coverage_80":0.8362,"PIT_KS":0.1023,"calibration_slope":0.8808},{"model":"FloodVuln_G0_global_fit","MAE":0.2111,"RMSE":0.2584,"bias":0.0353,"CRPS":0.1332,"coverage_80":0.8398,"PIT_KS":0.1437,"calibration_slope":0.7595},{"model":"single_curve_fitted_on_train","MAE":0.2028,"RMSE":0.256,"bias":0.0108,"CRPS":0.2028,"coverage_80":null,"PIT_KS":null,"calibration_slope":0.7637},{"model":"naive_constant_mean","MAE":0.2141,"RMSE":0.2618,"bias":0.0134,"CRPS":0.2141,"coverage_80":null,"PIT_KS":null,"calibration_slope":null},{"model":"JRC_NA_residential_published","MAE":0.2695,"RMSE":0.3239,"bias":0.1657,"CRPS":0.2695,"coverage_80":null,"PIT_KS":null,"calibration_slope":0.3388}],"region_folds":["FL","IA","LA","MO","NC","NJ","NY","SC","TX"],"learning_curve":[{"method":"hierarchical","n_local":0,"MAE":0.2745,"CRPS":0.1888,"coverage_80":0.7129},{"method":"hierarchical","n_local":5,"MAE":0.2714,"CRPS":0.1811,"coverage_80":0.7426},{"method":"hierarchical","n_local":10,"MAE":0.2718,"CRPS":0.1831,"coverage_80":0.7185},{"method":"hierarchical","n_local":25,"MAE":0.2697,"CRPS":0.1765,"coverage_80":0.754},{"method":"hierarchical","n_local":50,"MAE":0.2679,"CRPS":0.1738,"coverage_80":0.8004},{"method":"hierarchical","n_local":100,"MAE":0.2666,"CRPS":0.1681,"coverage_80":0.8237},{"method":"hierarchical","n_local":250,"MAE":0.2666,"CRPS":0.1648,"coverage_80":0.8529},{"method":"hierarchical","n_local":500,"MAE":0.2674,"CRPS":0.1641,"coverage_80":0.8764},{"method":"hierarchical","n_local":1000,"MAE":0.2674,"CRPS":0.164,"coverage_80":0.8695},{"method":"hierarchical","n_local":2500,"MAE":0.2673,"CRPS":0.1636,"coverage_80":0.8759},{"method":"local_only","n_local":5,"MAE":0.2598,"CRPS":0.2185,"coverage_80":0.4069},{"method":"local_only","n_local":10,"MAE":0.2483,"CRPS":0.1792,"coverage_80":0.6761},{"method":"local_only","n_local":25,"MAE":0.2324,"CRPS":0.1551,"coverage_80":0.7888},{"method":"local_only","n_local":50,"MAE":0.2303,"CRPS":0.1526,"coverage_80":0.789},{"method":"local_only","n_local":100,"MAE":0.2272,"CRPS":0.1485,"coverage_80":0.8018},{"method":"local_only","n_local":250,"MAE":0.2244,"CRPS":0.1462,"coverage_80":0.8306},{"method":"local_only","n_local":500,"MAE":0.2274,"CRPS":0.1456,"coverage_80":0.8509},{"method":"local_only","n_local":1000,"MAE":0.2276,"CRPS":0.1456,"coverage_80":0.8438},{"method":"local_only","n_local":2500,"MAE":0.2281,"CRPS":0.1454,"coverage_80":0.8549}]},"qa":[{"step":"records ingested","records":1927948,"share_of_ingested":1.0},{"step":"depth resolved","records":1920577,"share_of_ingested":0.9962},{"step":"  of which unit inferred","records":1864912,"share_of_ingested":0.9673},{"step":"  of which datum corrected","records":63036,"share_of_ingested":0.0327},{"step":"  ambiguous depth value (12)","records":24729,"share_of_ingested":0.0128},{"step":"  undocumented sentinel depth (99/999)","records":9018,"share_of_ingested":0.0047},{"step":"  depth reported as 0 (water at floor)","records":569377,"share_of_ingested":0.2953},{"step":"damage ratio computed","records":1920896,"share_of_ingested":0.9963},{"step":"  on actual cash value basis","records":1918944,"share_of_ingested":0.9953},{"step":"  on converted replacement cost","records":1952,"share_of_ingested":0.001},{"step":"  damage exceeded value (clipped to 1)","records":2141,"share_of_ingested":0.0011},{"step":"claims settled at the policy limit","records":118062,"share_of_ingested":0.0612},{"step":"admissible to primary calibration","records":1861852,"share_of_ingested":0.9657}],"evidence_snapshot":"84ba7f41f0b000eb","sources":[{"source_id":"JRC_GLOBAL_2017","title":"Global flood depth-damage functions: methodology and the database with guidelines","authors":"Huizinga, J.; de Moel, H.; Szewczyk, W.","year":2017,"geography":"Global, 6 continents, 214 countries","approach":"Normalised continental curves + country max damage","licence_class":"OPEN","citation":"JRC Technical Report EUR 28552 EN. doi:10.2760/16510","obtained":"Downloaded from the JRC publications repository as the published .xlsx database","status":"INGESTED"},{"source_id":"NFIP_CLAIMS_V3","title":"NFIP Redacted Claims v3 (OpenFEMA)","authors":"Federal Emergency Management Agency","year":2026,"geography":"United States","approach":"Empirical, object level, adjuster assessed","licence_class":"OPEN","citation":"FEMA OpenFEMA dataset NfipClaims v3, data frozen 2026-06-01","obtained":"Downloaded via the OpenFEMA API with keyset pagination","status":"INGESTED"},{"source_id":"HAZUS_FLOOD","title":"Hazus Flood Model Technical Manual (depth-damage function library)","authors":"Federal Emergency Management Agency","year":2025,"geography":"United States","approach":"Empirical/synthetic by occupancy, storeys, foundation","licence_class":"OPEN","citation":"FEMA Hazus 7.0 Flood Model Technical Manual, June 2025","obtained":"Document endpoint returned HTTP 403 to automated retrieval in this environment","status":"NOT_OBTAINED"},{"source_id":"USACE_NACCS","title":"North Atlantic Coast Comprehensive Study physical depth-damage functions","authors":"US Army Corps of Engineers","year":2015,"geography":"US North Atlantic coast","approach":"Empirical, triangular min/most-likely/max","licence_class":"OPEN","citation":"USACE NACCS, Physical Depth Damage Function Summary Report, 26 Jan 2015","obtained":"Document endpoint returned HTTP 403 to automated retrieval in this environment","status":"NOT_OBTAINED"},{"source_id":"HOWAS21","title":"HOWAS21 object-specific flood damage database","authors":"Kellermann, P.; Schroeter, K.; Thieken, A. H.; Haubrock, S.-N.; Kreibich, H.","year":2020,"geography":"Germany, Austria","approach":"Object-level empirical database","licence_class":"REFERENCE_ONLY","citation":"Nat. Hazards Earth Syst. Sci. 20, 2503-2519. doi:10.5194/nhess-20-2503-2020","obtained":"Access requires registration and a data agreement; not automatable here","status":"NOT_OBTAINED"},{"source_id":"MCM_UK","title":"Multi-Coloured Manual property and economic loss functions","authors":"Penning-Rowsell, E. et al.","year":2013,"geography":"United Kingdom","approach":"Detailed synthetic property loss functions","licence_class":"LICENSED","citation":"Flood Hazard Research Centre, Middlesex University","obtained":"Commercial licence required before ingestion; deliberately not scraped","status":"NOT_OBTAINED"},{"source_id":"INSYDE","title":"INSYDE: a synthetic, probabilistic flood damage model based on explicit cost analysis","authors":"Dottori, F.; Figueiredo, R.; Martina, M. L. V.; Molinari, D.; Scorzini, A. R.","year":2016,"geography":"Italy, adaptable","approach":"Component-based synthetic engineering model","licence_class":"OPEN","citation":"Nat. Hazards Earth Syst. Sci. 16, 2577-2591. doi:10.5194/nhess-16-2577-2016","obtained":"Method reimplementable from the paper; not ingested in this build","status":"BENCHMARK_ONLY"}]};</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, $=M.$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const MONO="500 9px \"IBM Plex Mono\", monospace";
+const MONOB="600 11px \"IBM Plex Mono\", monospace";
+
+/* =================== FITTED MODEL =================== */
+/* Parameters below are fitted to 1,861,852 NFIP claims. Nothing here is
+   illustrative: theta is the maximum-likelihood monotone ZOIB parameter
+   vector, the offsets are hierarchical partial-pooling shifts, and the
+   covariances are Laplace posteriors under the shrinkage prior. */
+const FV = window.__FV_MODEL;
+const NK = FV.knots.length, PB = NK + 1;
+
+function expit(x){ return 1 / (1 + Math.exp(-x)); }
+function softplus(x){ return x > 30 ? x : Math.log1p(Math.exp(x)); }
+
+function ramps(d){
+  const B = new Array(NK);
+  for (let k = 0; k < NK; k++) B[k] = expit((d - FV.knots[k]) / FV.width);
+  return B;
+}
+
+/* (p0, p1c, mu, phi) at one depth, given a 4-vector offset */
+function paramsAt(d, off){
+  const t = FV.theta, B = ramps(d);
+  let s0 = 0, s1 = 0, sm = 0;
+  for (let k = 0; k < NK; k++){
+    s0 += B[k] * softplus(t[1 + k]);
+    s1 += B[k] * softplus(t[PB + 1 + k]);
+    sm += B[k] * softplus(t[2 * PB + 1 + k]);
+  }
+  const dc = Math.max(-2, Math.min(8, d));
+  return {
+    p0:  clamp(expit(t[0]        - s0 + off[0]), 1e-6, 1 - 1e-6),
+    p1c: clamp(expit(t[PB]       + s1 + off[1]), 1e-6, 1 - 1e-6),
+    mu:  clamp(expit(t[2 * PB]   + sm + off[2]), 1e-4, 1 - 1e-4),
+    phi: clamp(Math.exp(t[3 * PB] + t[3 * PB + 1] * dc + off[3]), 0.6, 400)
+  };
+}
+
+function distAt(d, off){
+  const P = paramsAt(d, off);
+  const p1 = (1 - P.p0) * P.p1c, rest = (1 - P.p0) * (1 - P.p1c);
+  const a = P.mu * P.phi, b = (1 - P.mu) * P.phi;
+  const q = function(p){
+    if (p <= P.p0) return 0;
+    if (p >= 1 - p1) return 1;
+    return M.ibetaInv((p - P.p0) / rest, a, b);
+  };
+  const mean = p1 + rest * P.mu;
+  const varAleatory = p1 + rest * (P.mu * (1 - P.mu) / (P.phi + 1) + P.mu * P.mu) - mean * mean;
+  return {
+    p0: P.p0, p1c: P.p1c, p1: p1, rest: rest, m: P.mu, phi: P.phi, a: a, b: b,
+    mean: mean, med: q(0.5), p10: q(0.1), p90: q(0.9),
+    pgt50: p1 + rest * (1 - M.ibeta(0.5, a, b)),
+    sdAleatory: Math.sqrt(Math.max(varAleatory, 0)), q: q
+  };
+}
+
+/* Epistemic sd of the predicted mean, delta method through the offset posterior.
+   This is the component that local evidence actually reduces. */
+function epistemicSd(d, off, cov){
+  if (!cov) return 0;
+  const h = 1e-3, base = distAt(d, off).mean, g = [0, 0, 0, 0];
+  for (let i = 0; i < 4; i++){
+    const o2 = off.slice(); o2[i] += h;
+    g[i] = (distAt(d, o2).mean - base) / h;
+  }
+  let v = 0;
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) v += g[i] * cov[i][j] * g[j];
+  return Math.sqrt(Math.max(v, 0));
+}
+
+/* =================== ARCHETYPES AND LADDER =================== */
+const ARCH = FV.archetypes;
+const REGIONS = (function(){
+  const set = {};
+  Object.keys(FV.locals).forEach(function(k){
+    const st = k.split("@")[1];
+    set[st] = (set[st] || 0) + FV.locals[k].n;
+  });
+  return Object.keys(set).sort(function(a, b){ return set[b] - set[a]; });
+})();
+
+const LVL = [
+  {g:"G0", t:"Published global prior", n:"JRC continental curve", mode:"jrc"},
+  {g:"G1", t:"Archetype prior",        n:"US claims, region unseen", mode:"arch"},
+  {g:"G4", t:"Region calibrated",      n:"local claims for this region", mode:"local"}
+];
+
+function jrcCurve(d){
+  const pts = FV.jrc["Residential buildings"]["North AMERICA"];
+  if (d <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++){
+    if (d <= pts[i][0]){
+      const f = (d - pts[i-1][0]) / (pts[i][0] - pts[i-1][0]);
+      return pts[i-1][1] + f * (pts[i][1] - pts[i-1][1]);
+    }
+  }
+  return pts[pts.length - 1][1];
+}
+
+/* between-continent spread of the published curves: a citable measure of how
+   little a global prior pins down, used instead of inventing a distribution */
+function jrcSpread(d){
+  const byC = FV.jrc["Residential buildings"], vals = [];
+  Object.keys(byC).forEach(function(c){
+    const pts = byC[c];
+    let v = pts[pts.length-1][1];
+    if (d <= pts[0][0]) v = pts[0][1];
+    else for (let i = 1; i < pts.length; i++){
+      if (d <= pts[i][0]){
+        const f = (d - pts[i-1][0]) / (pts[i][0] - pts[i-1][0]);
+        v = pts[i-1][1] + f * (pts[i][1] - pts[i-1][1]); break;
+      }
+    }
+    vals.push(v);
+  });
+  const m = vals.reduce(function(s,v){return s+v;},0) / vals.length;
+  return Math.sqrt(vals.reduce(function(s,v){return s+(v-m)*(v-m);},0) / vals.length);
+}
+
+/* The engine. Returns the same shape the page already consumes, plus the
+   uncertainty decomposition and the real evidence counts. */
+function engine(archIdx, depth, levelIdx, region){
+  const A = ARCH[archIdx], L = LVL[levelIdx];
+  const notes = [], warnings = [];
+  const domain = depth < -1.5 || depth > 5.0;
+
+  if (L.mode === "jrc"){
+    const mean = clamp(jrcCurve(depth), 0, 1), sd = jrcSpread(depth);
+    notes.push("The published curve is a single expected value. It carries no distribution, so the band shown is the spread <em>between continents</em> of the published curves &mdash; a measure of how little a global prior pins down.");
+    notes.push("Fitted against 1.86m US claims this curve runs high: see the evidence section.");
+    return {jrc:true, mean:mean, med:mean, p10:Math.max(0,mean-1.2816*sd), p90:Math.min(1,mean+1.2816*sd),
+      sdEpistemic:sd, sdAleatory:NaN, pgt50:NaN, p0:NaN, p1:NaN, rest:NaN,
+      grade:"D", conf:13, nLocal:0, nArch:0, lvl:L, arch:A, notes:notes,
+      warnings:["global_prior_only_no_local_evidence","published_curve_has_no_distribution"], domain:domain};
+  }
+
+  let off = A.offsets.slice(), cov = A.cov_unseen, nLocal = 0;
+  if (L.mode === "local"){
+    const key = A.key + "@" + region;
+    const lo = FV.locals[key];
+    if (lo){
+      off = [off[0]+lo.offsets[0], off[1]+lo.offsets[1], off[2]+lo.offsets[2], off[3]+lo.offsets[3]];
+      cov = lo.cov; nLocal = lo.n;
+    } else {
+      notes.push("No local evidence for this archetype in " + region + "; the answer falls back to the archetype prior.");
+    }
+  }
+
+  const r = distAt(depth, off);
+  r.sdEpistemic = epistemicSd(depth, off, cov);
+  r.sdTotal = Math.sqrt(r.sdAleatory*r.sdAleatory + r.sdEpistemic*r.sdEpistemic);
+  r.nLocal = nLocal; r.nArch = A.n; r.arch = A; r.lvl = L; r.jrc = false;
+  r.domain = domain;
+
+  let conf = 100 * Math.exp(-r.sdEpistemic / FV.conf_scale);
+  if (domain) conf -= 15;
+  conf -= 6;                                  // construction level is assumed
+  r.conf = Math.max(5, Math.min(98, Math.round(conf)));
+
+  if (L.mode === "arch") r.grade = A.n >= 5000 ? "C" : "D";
+  else if (nLocal >= 1000) r.grade = "A";
+  else if (nLocal >= 100) r.grade = "B";
+  else r.grade = "C";
+  if (domain && r.grade === "A") r.grade = "B";
+  r.lvlShown = (L.mode === "local") ? (nLocal >= 1000 ? "G4" : "G3") : L.g;
+
+  notes.push("Aleatory spread is <b>" + r.sdAleatory.toFixed(3) + "</b> and does not fall with more evidence: it is genuine building-to-building variability at this depth.");
+  const ratio = r.sdEpistemic > 1e-9 ? (jrcSpread(depth) / r.sdEpistemic) : null;
+  notes.push("Epistemic spread is <b>" + r.sdEpistemic.toFixed(4) + "</b>: the part local evidence buys down"
+    + (ratio && ratio > 1.5 ? ", about <b>" + Math.round(ratio) + "&times;</b> narrower than the published global prior at this depth" : "") + ".");
+  if (nLocal > 0) notes.push("Partial pooling on <b>" + nLocal.toLocaleString() + "</b> local claims; the shift is shrunk toward the archetype in proportion to that count.");
+  if (L.mode === "arch") notes.push("The region is unseen, so the offset that would apply to it is unknown with the full between-region prior variance.");
+  if (domain) notes.push("Depth is outside the calibrated domain of &minus;1.5 to 5.0 m; uncertainty widened and confidence cut.");
+  notes.push("P(no damage) is conditional on a claim being filed &mdash; see the limitation in the evidence section.");
+  r.notes = notes;
+  r.warnings = warnings;
+  if (domain) r.warnings.push("out_of_domain_depth");
+  r.warnings.push("p_zero_damage_conditional_on_claim_filed");
+  if (nLocal === 0 && L.mode === "local") r.warnings.push("no_local_evidence_for_this_archetype_in_region");
+  return r;
+}
+
+/* Convenience for the workflow sections: resolve by taxonomy key, apply the
+   region offset if one exists, and return the full distribution. */
+function byKey(key){
+  for (let i = 0; i < ARCH.length; i++) if (ARCH[i].key === key) return ARCH[i];
+  return ARCH[0];
+}
+function distFor(key, depth, region){
+  const A = byKey(key);
+  let off = A.offsets.slice();
+  const lo = region ? FV.locals[key + "@" + region] : null;
+  if (lo) off = [off[0]+lo.offsets[0], off[1]+lo.offsets[1], off[2]+lo.offsets[2], off[3]+lo.offsets[3]];
+  const r = distAt(depth, off);
+  r.nLocal = lo ? lo.n : 0;
+  r.grade = r.nLocal >= 1000 ? "A" : (r.nLocal >= 100 ? "B" : "C");
+  return r;
+}
+
+window.__FV_ENGINE = {ARCH:ARCH, LVL:LVL, REGIONS:REGIONS, engine:engine,
+                      distAt:distAt, paramsAt:paramsAt, jrcCurve:jrcCurve,
+                      byKey:byKey, distFor:distFor};
+
+/* =================== HERO GAUGE =================== */
+(function(){
+  const cv=$("#gaugeCanvas"); if(!cv) return;
+  const ctx=cv.getContext("2d");
+  const slider=$("#heroDepth"), out=$("#heroDepthOut");
+  let W=0,H=0,phase=0,depth=.55;
+
+  function size(){
+    const r=cv.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
+    W=r.width; H=r.height; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function wave(px,wy){ return wy+Math.sin(px*0.031+phase)*2.6+Math.sin(px*0.017-phase*0.7)*1.7; }
+
+  function draw(){
+    const t=T(); if(!W) size();
+    ctx.clearRect(0,0,W,H);
+    const groundY=H-30, floorY=groundY-26, roofY=44;
+    const bx=W*0.30, bw=W*0.40;
+    ctx.strokeStyle=t.grid; ctx.lineWidth=1;
+    for(let d=0;d<=3.5;d+=.5){
+      const y=floorY-(d/3.5)*(floorY-roofY);
+      ctx.beginPath(); ctx.moveTo(38,Math.round(y)+.5); ctx.lineTo(W-14,Math.round(y)+.5); ctx.stroke();
+      ctx.fillStyle=t.ink3; ctx.font=MONO; ctx.textAlign="right";
+      ctx.fillText(d.toFixed(1),32,y+3);
+    }
+    ctx.fillStyle=t.rule; ctx.fillRect(0,groundY,W,H-groundY);
+    ctx.fillStyle=t.panel; ctx.strokeStyle=t.ink2; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.rect(bx,floorY-96,bw,96); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx-14,floorY-96); ctx.lineTo(bx+bw/2,roofY+4); ctx.lineTo(bx+bw+14,floorY-96);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=t.rule2; ctx.fillRect(bx,floorY,bw,groundY-floorY);
+    ctx.strokeStyle=t.rule2; ctx.lineWidth=1.2;
+    ctx.strokeRect(bx+bw*0.13,floorY-72,bw*0.22,34);
+    ctx.strokeRect(bx+bw*0.65,floorY-72,bw*0.22,34);
+    ctx.strokeRect(bx+bw*0.40,floorY-46,bw*0.20,46);
+    ctx.setLineDash([4,4]); ctx.strokeStyle=t.amb; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(38,floorY+.5); ctx.lineTo(W-14,floorY+.5); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=t.amb; ctx.font=MONO; ctx.textAlign="left";
+    ctx.fillText("Finished Floor \u2014 Datum 0.00", 42, floorY-7);
+    const wy=floorY-(depth/3.5)*(floorY-roofY);
+    const grad=ctx.createLinearGradient(0,wy,0,H);
+    grad.addColorStop(0,t.acc+"66"); grad.addColorStop(1,t.acc+"22");
+    ctx.fillStyle=grad;
+    ctx.beginPath(); ctx.moveTo(0,wy);
+    for(let px=0;px<=W;px+=6) ctx.lineTo(px,wave(px,wy));
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle=t.acc; ctx.lineWidth=1.8; ctx.beginPath();
+    for(let px=0;px<=W;px+=6){ const y=wave(px,wy); px===0?ctx.moveTo(px,y):ctx.lineTo(px,y); }
+    ctx.stroke();
+    ctx.fillStyle=t.acc; ctx.font=MONOB; ctx.textAlign="right";
+    ctx.fillText(depth.toFixed(2)+" m", W-16, wy-9);
+  }
+  function tick(){ phase+=0.035; draw(); requestAnimationFrame(tick); }
+  function update(){
+    depth=parseInt(slider.value,10)/100;
+    out.textContent=depth.toFixed(2)+" m";
+    const r=engine(0,depth,2,"TX");
+    $("#roMean").textContent=r.mean.toFixed(3);
+    $("#roBand").textContent=r.p10.toFixed(2).slice(1)+"\u2013"+r.p90.toFixed(2).slice(1);
+    $("#roTail").textContent=(r.pgt50*100).toFixed(1)+"%";
+    const loss=r.mean*310000;
+    $("#roLoss").textContent="$"+(loss/1000).toFixed(1)+"k";
+    if(M.reduced) draw();
+  }
+  size(); slider.addEventListener("input",update); update();
+  window.addEventListener("resize",function(){size();draw();});
+  REDRAW.push(draw);
+  if(M.reduced){ draw(); } else { tick(); }
+})();
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M = window.__FV_MATH, E = window.__FV_ENGINE, $ = M.$, clamp = M.clamp,
+      T = M.T, REDRAW = M.REDRAW;
+const FV = window.__FV_MODEL;
+
+const svg = $("#cloudChart"); if (!svg) return;
+const W = 900, H = 380, L = 62, R = 150, TOP = 18, B = 46;
+const PW = W - L - R, PH = H - TOP - B;
+const DMAX = 3.2;
+const px = function(d){ return L + (d / DMAX) * PW; };
+const py = function(v){ return TOP + (1 - v) * PH; };
+
+/* Observed bins for the largest archetype, straight from the calibration run. */
+const A = FV.archetypes.filter(function(a){ return a.key === "RES.SF.1.SLAB"; })[0]
+       || FV.archetypes[0];
+const OBS = A.empirical.filter(function(e){ return e.d >= -0.1 && e.d <= DMAX; });
+
+const tipBox = $("#cloudBox"), tipEl = $("#cloudTip");
+
+function draw(){
+  const t = T(), o = [];
+
+  for (let g = 0; g <= 5; g++){
+    const v = g/5, y = py(v);
+    o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${L+PW}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+    o.push(`<text x="${L-10}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.ink3}">${v.toFixed(1)}</text>`);
+  }
+  for (let d = 0; d <= DMAX; d += 0.5){
+    o.push(`<text x="${px(d).toFixed(1)}" y="${H-22}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.ink3}">${d.toFixed(1)}</text>`);
+  }
+  o.push(`<text x="${L}" y="${H-4}" font-family="IBM Plex Mono, monospace" font-size="10" fill="${t.ink3}" letter-spacing="0.2">Depth Above Lowest Floor (m)</text>`);
+  o.push(`<text transform="translate(16,${TOP+118}) rotate(-90)" font-family="IBM Plex Mono, monospace" font-size="10" fill="${t.ink3}" letter-spacing="0.2">Damage Ratio</text>`);
+
+  /* observed P10-P90 whiskers: the actual spread in the claims */
+  OBS.forEach(function(e){
+    const x = px(e.d);
+    o.push(`<line x1="${x.toFixed(1)}" y1="${py(e.p10).toFixed(1)}" x2="${x.toFixed(1)}" y2="${py(e.p90).toFixed(1)}" stroke="${t.ink3}" stroke-width="9" stroke-linecap="round" opacity=".28"/>`);
+  });
+
+  /* fitted mean */
+  let fp = "";
+  const off = A.offsets;
+  for (let i = 0; i <= 80; i++){
+    const d = (i/80)*DMAX;
+    fp += (i ? " L" : "M") + px(d).toFixed(1) + " " + py(E.distAt(d, off).mean).toFixed(1);
+  }
+  o.push(`<path d="${fp}" fill="none" stroke="${t.acc}" stroke-width="2.8" stroke-linecap="round"/>`);
+
+  /* published JRC North America residential */
+  let jp = "";
+  for (let i = 0; i <= 80; i++){
+    const d = (i/80)*DMAX;
+    jp += (i ? " L" : "M") + px(d).toFixed(1) + " " + py(E.jrcCurve(d)).toFixed(1);
+  }
+  o.push(`<path d="${jp}" fill="none" stroke="${t.al}" stroke-width="2.4" stroke-dasharray="7 5" stroke-linecap="round"/>`);
+
+  /* observed means */
+  OBS.forEach(function(e){
+    o.push(`<circle cx="${px(e.d).toFixed(1)}" cy="${py(e.mean).toFixed(1)}" r="5" fill="${t.ink}" stroke="${t.surf}" stroke-width="1.8"/>`);
+  });
+
+  const last = OBS[OBS.length-1] || {d:2.5};
+  o.push(`<text x="${(L+PW+10)}" y="${py(E.jrcCurve(DMAX)).toFixed(1)}" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.al}">JRC published</text>`);
+  o.push(`<text x="${(L+PW+10)}" y="${(py(E.distAt(DMAX, off).mean)+4).toFixed(1)}" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="${t.acc}">FloodVuln fitted</text>`);
+  o.push(`<g id="cloudHover"></g>`);
+  svg.innerHTML = o.join("");
+}
+draw(); REDRAW.push(draw);
+
+svg.addEventListener("mousemove", function(ev){
+  const rc = svg.getBoundingClientRect(), sx = (ev.clientX - rc.left) * (W / rc.width);
+  let best = null, bd = 1e9;
+  OBS.forEach(function(e){ const dd = Math.abs(px(e.d) - sx); if (dd < bd){ bd = dd; best = e; } });
+  if (!best || bd > 46){ tipEl.classList.remove("on"); return; }
+  const t = T();
+  const g = svg.querySelector("#cloudHover");
+  const fit = E.distAt(best.d, A.offsets).mean, jrc = E.jrcCurve(best.d);
+  if (g) g.innerHTML =
+    `<line x1="${px(best.d)}" y1="${TOP}" x2="${px(best.d)}" y2="${TOP+PH}" stroke="${t.ink2}" stroke-width="1" stroke-dasharray="3 3"/>`;
+  tipEl.innerHTML = `<b>${best.d.toFixed(2)} m</b> &nbsp;n = ${best.n.toLocaleString()}<br>` +
+    `observed mean <b>${best.mean.toFixed(3)}</b><br>` +
+    `observed P10&ndash;P90 ${best.p10.toFixed(2)} &ndash; ${best.p90.toFixed(2)}<br>` +
+    `fitted ${fit.toFixed(3)} &nbsp;&middot;&nbsp; JRC ${jrc.toFixed(3)}`;
+  tipEl.classList.add("on");
+  const bw = tipBox.clientWidth, tw = tipEl.offsetWidth;
+  tipEl.style.left = clamp((px(best.d)/W)*bw - tw/2, 4, Math.max(4, bw-tw-4)) + "px";
+  tipEl.style.top = "10px";
+});
+svg.addEventListener("mouseleave", function(){
+  tipEl.classList.remove("on");
+  const g = svg.querySelector("#cloudHover"); if (g) g.innerHTML = "";
+});
+})();
+
+</script>
+
+<script>
+(function(){
+"use strict";
+const M = window.__FV_MATH, E = window.__FV_ENGINE, $ = M.$, $$ = M.$$, clamp = M.clamp,
+      T = M.T, REDRAW = M.REDRAW;
+const ARCH = E.ARCH, LVL = E.LVL, engine = E.engine, FV = window.__FV_MODEL;
+
+const state = {ai:0, depth:0.61, lvl:2, region:"TX", value:310000};
+
+/* ---------- archetype chips ---------- */
+const chipWrap = $("#archChips");
+ARCH.forEach(function(a, i){
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button";
+  b.innerHTML = a.label + ' <span style="opacity:.65">n=' + (a.n/1000).toFixed(0) + 'k</span>';
+  b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+  b.addEventListener("click", function(){
+    state.ai = i;
+    $$(".chip", chipWrap).forEach(function(c, j){
+      c.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+    render();
+  });
+  chipWrap.appendChild(b);
+});
+
+/* ---------- region select and asset value ---------- */
+const regSel = $("#engRegion");
+E.REGIONS.forEach(function(st){
+  const o = document.createElement("option");
+  o.value = st; o.textContent = st;
+  regSel.appendChild(o);
+});
+regSel.value = "TX";
+regSel.addEventListener("change", function(){ state.region = regSel.value; render(); });
+
+const valIn = $("#engValue");
+valIn.addEventListener("input", function(){
+  const v = parseFloat(valIn.value.replace(/[^0-9.]/g, ""));
+  state.value = isFinite(v) && v > 0 ? v : 310000;
+  render();
+});
+
+/* ---------- ladder ---------- */
+const ladder = $("#ladder");
+LVL.forEach(function(l, i){
+  const b = document.createElement("button");
+  b.className = "rung"; b.type = "button";
+  b.setAttribute("aria-pressed", i === 2 ? "true" : "false");
+  b.innerHTML = '<span class="g">' + l.g + '</span><span class="t">' + l.t +
+                '</span><span class="n">' + l.n + '</span>';
+  b.addEventListener("click", function(){
+    state.lvl = i;
+    $$(".rung", ladder).forEach(function(c, j){
+      c.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+    render();
+  });
+  ladder.appendChild(b);
+});
+
+const dep = $("#engDepth"), depOut = $("#engDepthOut");
+dep.addEventListener("input", function(){
+  state.depth = parseInt(dep.value, 10) / 100; render();
+});
+
+/* ---------- density chart ---------- */
+const svg = $("#densChart");
+const W = 620, H = 348, L = 48, R = 16, TOP = 22, B = 62;
+const PW = W - L - R, PH = H - TOP - B;
+const NB = 20, SLOT = PW / (NB + 2.6);
+const tipBox = $("#densBox"), tipEl = $("#densTip");
+let lastBars = [];
+
+function showTip(html, cx, cy){
+  tipEl.innerHTML = html; tipEl.classList.add("on");
+  const bw = tipBox.clientWidth, tw = tipEl.offsetWidth;
+  tipEl.style.left = clamp(cx - tw/2, 4, Math.max(4, bw - tw - 4)) + "px";
+  tipEl.style.top = Math.max(4, cy - tipEl.offsetHeight - 12) + "px";
+}
+
+function drawEmptyJrc(r){
+  const t = T(), o = [];
+  o.push(`<rect x="${L}" y="${TOP}" width="${PW}" height="${PH}" fill="${t.grid}" opacity=".35" rx="3"/>`);
+  const cx = L + PW/2, cy = TOP + PH/2;
+  o.push(`<text x="${cx}" y="${cy - 26}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="${t.ink2}" letter-spacing="0.2">No Distribution Published</text>`);
+  o.push(`<text x="${cx}" y="${cy - 4}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.ink3}">The JRC global product publishes one expected value per depth.</text>`);
+  const x = L + r.mean * PW;
+  o.push(`<line x1="${x.toFixed(1)}" y1="${TOP}" x2="${x.toFixed(1)}" y2="${TOP+PH}" stroke="${t.alarm||t.amb}" stroke-width="2.4"/>`);
+  o.push(`<text x="${clamp(x, L+46, W-R-46).toFixed(1)}" y="${TOP-7}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${t.amb}">published ${r.mean.toFixed(3)}</text>`);
+  const x10 = L + r.p10 * PW, x90 = L + r.p90 * PW;
+  o.push(`<rect x="${x10.toFixed(1)}" y="${TOP}" width="${Math.max(1.5,x90-x10).toFixed(1)}" height="${PH}" fill="${t.amb}" opacity=".14"/>`);
+  o.push(`<text x="${((x10+x90)/2).toFixed(1)}" y="${TOP+PH+22}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">between-continent spread of the published curves</text>`);
+  [0,0.25,0.5,0.75,1].forEach(function(v){
+    o.push(`<text x="${(L+v*PW).toFixed(1)}" y="${(TOP+PH+15).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${v.toFixed(2)}</text>`);
+  });
+  o.push(`<text x="${(L+PW/2).toFixed(1)}" y="${H-10}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}" letter-spacing="0.2">Damage Ratio</text>`);
+  svg.innerHTML = o.join("");
+  lastBars = [];
+}
+
+function drawDensity(r){
+  if (r.jrc) return drawEmptyJrc(r);
+  const t = T(), o = [];
+  const bins = [];
+  for (let i = 0; i < NB; i++){
+    bins.push(r.rest * (M.ibeta((i+1)/NB, r.a, r.b) - M.ibeta(i/NB, r.a, r.b)));
+  }
+  const ymax = Math.max(r.p0, r.p1, Math.max.apply(null, bins)) * 1.18;
+  const yy = function(v){ return TOP + PH - (v/ymax)*PH; };
+  const xBins = L + SLOT*1.5, xSpike0 = L + SLOT*0.12, xSpike1 = xBins + NB*SLOT + SLOT*0.35;
+
+  for (let g = 0; g <= 4; g++){
+    const v = (g/4)*ymax, y = yy(v);
+    o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+    o.push(`<text x="${L-8}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${(v*100).toFixed(0)}%</text>`);
+  }
+  const x10 = xBins + r.p10*NB*SLOT, x90 = xBins + r.p90*NB*SLOT;
+  o.push(`<rect x="${x10.toFixed(1)}" y="${TOP}" width="${Math.max(1.5,x90-x10).toFixed(1)}" height="${PH}" fill="${t.acc}" opacity=".13"/>`);
+
+  lastBars = [];
+  const bw = SLOT - 2;
+  bins.forEach(function(p, i){
+    const x = xBins + i*SLOT, y = yy(p), h = Math.max(0, TOP+PH-y);
+    o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(4,h/2).toFixed(1)}" fill="${t.acc}" opacity=".92"/>`);
+    lastBars.push({x:x, w:bw, p:p, lo:i/NB, hi:(i+1)/NB, kind:"bin"});
+  });
+  function spike(x, p, lab, kind){
+    const y = yy(p), h = Math.max(0, TOP+PH-y), sw = SLOT*1.05;
+    o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${sw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${t.ink3}"/>`);
+    o.push(`<text x="${(x+sw/2).toFixed(1)}" y="${(y-7).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${t.ink2}">${(p*100).toFixed(1)}%</text>`);
+    o.push(`<text x="${(x+sw/2).toFixed(1)}" y="${(TOP+PH+15).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${lab}</text>`);
+    lastBars.push({x:x, w:sw, p:p, kind:kind});
+  }
+  spike(xSpike0, r.p0, "D = 0", "zero");
+  spike(xSpike1, r.p1, "D = 1", "total");
+
+  o.push(`<line x1="${L}" y1="${TOP+PH}" x2="${W-R}" y2="${TOP+PH}" stroke="${t.rule2}" stroke-width="1"/>`);
+  [0,0.25,0.5,0.75,1].forEach(function(v){
+    o.push(`<text x="${(xBins+v*NB*SLOT).toFixed(1)}" y="${(TOP+PH+15).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${v.toFixed(2)}</text>`);
+  });
+  o.push(`<text x="${(xBins+NB*SLOT/2).toFixed(1)}" y="${H-10}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}" letter-spacing="0.2">Damage Ratio</text>`);
+  o.push(`<text transform="translate(12,${TOP+96}) rotate(-90)" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}" letter-spacing="1">PROBABILITY</text>`);
+
+  const by = TOP + PH + 30;
+  o.push(`<line x1="${x10.toFixed(1)}" y1="${by}" x2="${x90.toFixed(1)}" y2="${by}" stroke="${t.acc}" stroke-width="2" stroke-linecap="round"/>`);
+  o.push(`<text x="${((x10+x90)/2).toFixed(1)}" y="${by+13}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.acc}">P10 &#8211; P90 (aleatory)</text>`);
+
+  const xm = xBins + r.mean*NB*SLOT;
+  const xe = (r.sdEpistemic/1) * NB * SLOT;
+  o.push(`<rect x="${(xm-xe*1.96).toFixed(1)}" y="${TOP}" width="${Math.max(1.2,2*1.96*xe).toFixed(1)}" height="${PH}" fill="${t.amb}" opacity=".30"/>`);
+  o.push(`<line x1="${xm.toFixed(1)}" y1="${TOP}" x2="${xm.toFixed(1)}" y2="${(TOP+PH).toFixed(1)}" stroke="${t.amb}" stroke-width="2"/>`);
+  o.push(`<text x="${clamp(xm, L+52, W-R-52).toFixed(1)}" y="${(TOP-7).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${t.amb}">mean ${r.mean.toFixed(3)} &#177; ${r.sdEpistemic.toFixed(3)}</text>`);
+  svg.innerHTML = o.join("");
+}
+
+svg.addEventListener("mousemove", function(ev){
+  const rc = svg.getBoundingClientRect(), sx = (ev.clientX - rc.left) * (W / rc.width);
+  let hit = null;
+  lastBars.forEach(function(b){ if (sx >= b.x-1 && sx <= b.x+b.w+1) hit = b; });
+  if (!hit){ tipEl.classList.remove("on"); return; }
+  let label;
+  if (hit.kind === "zero") label = `<b>No assessed damage</b><br>P(D = 0) = ${(hit.p*100).toFixed(2)}%<br><span style="opacity:.7">given a claim was filed</span>`;
+  else if (hit.kind === "total") label = `<b>Effective total loss</b><br>P(D = 1) = ${(hit.p*100).toFixed(2)}%`;
+  else label = `<b>DR ${hit.lo.toFixed(2)} &#8211; ${hit.hi.toFixed(2)}</b><br>P = ${(hit.p*100).toFixed(1)}%`;
+  showTip(label, ((hit.x+hit.w/2)/W)*tipBox.clientWidth, tipBox.clientHeight*0.42);
+});
+svg.addEventListener("mouseleave", function(){ tipEl.classList.remove("on"); });
+
+/* ---------- summary table ---------- */
+function renderTable(r){
+  const na = '<span style="opacity:.5">not published</span>';
+  const f = function(v, d){ return isFinite(v) ? v.toFixed(d === undefined ? 3 : d) : na; };
+  const pc = function(v){ return isFinite(v) ? (v*100).toFixed(1) + "%" : na; };
+  const rows = [
+    ["Mean damage ratio", f(r.mean), "Technical pricing and expected loss"],
+    ["Median damage ratio", f(r.med), "Central outcome, less tail-sensitive"],
+    ["P10 / P90", f(r.p10) + " / " + f(r.p90), "Outcome range at this depth"],
+    ["P(damage &gt; 50%)", pc(r.pgt50), "Severity screening in underwriting"],
+    ["P(effective total loss)", pc(r.p1), "Tail modelling and claims planning"],
+    ["P(no damage | claim filed)", pc(r.p0), "Lower bound only &mdash; see limitations"],
+    ["SD aleatory", f(r.sdAleatory), "Irreducible: evidence does not shrink this"],
+    ["SD epistemic", f(r.sdEpistemic, 4), "What local evidence buys down"]
+  ];
+  $("#quantTable").innerHTML =
+    `<caption class="cap" style="text-align:left; padding-bottom:8px">Distribution summary &#8212; fitted to 1,861,852 NFIP claims</caption><tbody>` +
+    rows.map(function(x){
+      return `<tr><td>${x[0]}</td><td class="n"><b>${x[1]}</b></td><td class="small" style="font-size:12.5px">${x[2]}</td></tr>`;
+    }).join("") + `</tbody>`;
+}
+
+/* ---------- api panel ---------- */
+function renderApi(r){
+  const A = r.arch;
+  const f = function(v, d){ return isFinite(v) ? v.toFixed(d === undefined ? 3 : d) : "null"; };
+  const loss = isFinite(r.mean) ? Math.round(r.mean * state.value) : 0;
+  const rows = [
+    ["asset_archetype", `<span class="ss">US.${A.key}</span>`],
+    ["region", `<span class="ss">${r.lvl.mode === "local" ? state.region : "unseen"}</span>`],
+    ["effective_depth_m", `<span class="vv">${state.depth.toFixed(2)}</span>`],
+    ["mean_damage_ratio", `<span class="vv">${f(r.mean)}</span>`],
+    ["p10", `<span class="vv">${f(r.p10)}</span>`],
+    ["p90", `<span class="vv">${f(r.p90)}</span>`],
+    ["p_damage_gt_50pct", `<span class="vv">${f(r.pgt50)}</span>`],
+    ["sd_aleatory", `<span class="vv">${f(r.sdAleatory)}</span>`],
+    ["sd_epistemic", `<span class="vv">${f(r.sdEpistemic, 4)}</span>`],
+    ["expected_ground_up_loss", `<span class="vv">${loss}</span> <span class="ss">USD</span>`],
+    ["evidence_grade", `<span class="ss">${r.grade}</span>`],
+    ["confidence_score", `<span class="vv">${r.conf}</span>`],
+    ["calibration_level", `<span class="ss">${r.lvlShown || r.lvl.g}</span>`],
+    ["local_sample_size", `<span class="vv">${r.nLocal}</span>`],
+    ["archetype_sample_size", `<span class="vv">${r.nArch}</span>`],
+    ["model_version", `<span class="ss">1.0.0</span>`],
+    ["evidence_snapshot", `<span class="ss">${FV.evidence_snapshot}</span>`]
+  ];
+  (r.warnings || []).forEach(function(w){
+    rows.push(["warning", `<span class="ss">${w}</span>`]);
+  });
+  $("#apiOut").innerHTML = rows.map(function(x){
+    return `<span class="kk">${x[0]}</span>: ${x[1]}`; }).join("<br>");
+
+  const gradeCls = {A:"", B:"", C:"amber", D:"alarm"}[r.grade];
+  $("#evidenceBadges").innerHTML =
+    `<span class="tag ${gradeCls}">Evidence Grade ${r.grade}</span>` +
+    `<span class="tag plain">Confidence ${r.conf} / 100</span>` +
+    `<span class="tag amber">${r.lvlShown || r.lvl.g} &#183; ${r.lvl.t}</span>` +
+    (r.domain ? `<span class="tag alarm">Out of Domain</span>` : "");
+  $("#whyList").innerHTML = (r.notes || []).map(function(n){
+    return `<li>${n}</li>`; }).join("");
+}
+
+function render(){
+  const r = engine(state.ai, state.depth, state.lvl, state.region);
+  depOut.textContent = state.depth.toFixed(2) + " m";
+  $("#archId").textContent = "US." + ARCH[state.ai].key;
+  regSel.disabled = (LVL[state.lvl].mode !== "local");
+  drawDensity(r); renderTable(r); renderApi(r);
+}
+render();
+REDRAW.push(render);
+})();
+
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, E=window.__FV_ENGINE, $=M.$, $$=M.$$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const ARCH=E.ARCH, engine=E.engine;
+const FF="IBM Plex Mono, monospace";
+
+function tipFactory(boxSel,tipSel){
+  const box=$(boxSel), tip=$(tipSel);
+  return {
+    show:function(html,cx,cy){
+      tip.innerHTML=html; tip.classList.add("on");
+      const bw=box.clientWidth, tw=tip.offsetWidth;
+      tip.style.left=clamp(cx-tw/2,4,Math.max(4,bw-tw-4))+"px";
+      tip.style.top=Math.max(4,cy-tip.offsetHeight-12)+"px";
+    },
+    hide:function(){ tip.classList.remove("on"); },
+    box:box
+  };
+}
+
+/* =================== LEARNING CURVE =================== */
+(function(){
+  const svg=$("#learnChart"); if(!svg) return;
+  const W=620,H=330,L=54,R=88,TOP=20,B=50, PW=W-L-R, PH=H-TOP-B;
+  const NS=[0, 5, 10, 25, 50, 100, 250, 500, 1000, 2500];
+  const POOL=[0.2745,0.2714,0.2718,0.2697,0.2679,0.2666,0.2666,0.2674,0.2674,0.2673];
+  const LOCAL=[null,0.2598,0.2483,0.2324,0.2303,0.2272,0.2244,0.2274,0.2276,0.2281];
+  const SPREAD=[0.0,0.0026,0.0026,0.0022,0.0020,0.0015,0.0016,0.0013,0.0009,0.0005];
+  const PRIOR=0.2745, YMAX=0.37;
+  const xi=function(i){ return L+(i/(NS.length-1))*PW; };
+  const yv=function(v){ return TOP+PH-(v/YMAX)*PH; };
+  const tip=tipFactory("#learnBox","#learnTip");
+  let prog=0;
+
+  function draw(){
+    const t=T(), o=[];
+    for(let g=0;g<=4;g++){
+      const v=(g/4)*YMAX, y=yv(v);
+      o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+      o.push(`<text x="${L-9}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${v.toFixed(2)}</text>`);
+    }
+    NS.forEach(function(n,i){
+      o.push(`<text x="${xi(i).toFixed(1)}" y="${(TOP+PH+16).toFixed(1)}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${n}</text>`);
+    });
+    o.push(`<text x="${(L+PW/2).toFixed(1)}" y="${H-12}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}" letter-spacing="0.2">Local Observations Used for Calibration</text>`);
+    o.push(`<text transform="translate(11,${TOP+112}) rotate(-90)" font-family="${FF}" font-size="9.5" fill="${t.ink3}" letter-spacing="1">HOLD-OUT MAE</text>`);
+
+    const k=Math.max(1,Math.round(prog*(NS.length-1))+1);
+    let up="",dn="";
+    for(let i=0;i<k;i++){ up+=(i?" L":"M")+xi(i).toFixed(1)+" "+yv(POOL[i]+SPREAD[i]).toFixed(1); }
+    for(let i=k-1;i>=0;i--){ dn+=" L"+xi(i).toFixed(1)+" "+yv(Math.max(0,POOL[i]-SPREAD[i])).toFixed(1); }
+    o.push(`<path d="${up+dn} Z" fill="${t.amb}" opacity=".16"/>`);
+
+    o.push(`<line x1="${L}" y1="${yv(PRIOR).toFixed(1)}" x2="${W-R}" y2="${yv(PRIOR).toFixed(1)}" stroke="${t.ink3}" stroke-width="1.8" stroke-dasharray="6 5"/>`);
+    o.push(`<text x="${(W-R+7)}" y="${(yv(PRIOR)+4).toFixed(1)}" font-family="${FF}" font-size="9.5" fill="${t.ink3}">global prior</text>`);
+
+    let lp="";
+    for(let i=1;i<k;i++){ lp+=(i===1?"M":" L")+xi(i).toFixed(1)+" "+yv(LOCAL[i]).toFixed(1); }
+    if(lp) o.push(`<path d="${lp}" fill="none" stroke="${t.sl}" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4"/>`);
+
+    let pp="";
+    for(let i=0;i<k;i++){ pp+=(i?" L":"M")+xi(i).toFixed(1)+" "+yv(POOL[i]).toFixed(1); }
+    o.push(`<path d="${pp}" fill="none" stroke="${t.amb}" stroke-width="2.6" stroke-linecap="round"/>`);
+    for(let i=0;i<k;i++){
+      o.push(`<circle cx="${xi(i).toFixed(1)}" cy="${yv(POOL[i]).toFixed(1)}" r="4" fill="${t.amb}" stroke="${t.surf}" stroke-width="2"/>`);
+    }
+    if(k>=NS.length){
+      o.push(`<text x="${(W-R+7)}" y="${(yv(POOL[6])+4).toFixed(1)}" font-family="${FF}" font-size="9.5" font-weight="600" fill="${t.amb}">pooled</text>`);
+      o.push(`<text x="${(W-R+7)}" y="${(yv(LOCAL[6])+15).toFixed(1)}" font-family="${FF}" font-size="9.5" fill="${t.sl}">local only</text>`);
+    }
+    svg.innerHTML=o.join("");
+  }
+  draw(); REDRAW.push(draw);
+
+  if(M.reduced){ prog=1; draw(); }
+  else{
+    const ob=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          ob.disconnect();
+          const t0=performance.now();
+          (function step(now){
+            prog=clamp((now-t0)/1100,0,1); draw();
+            if(prog<1) requestAnimationFrame(step);
+          })(t0);
+        }
+      });
+    },{threshold:.35});
+    ob.observe(svg);
+  }
+
+  svg.addEventListener("mousemove",function(ev){
+    const rc=svg.getBoundingClientRect(), sx=(ev.clientX-rc.left)*(W/rc.width);
+    let bi=0, bd=1e9;
+    NS.forEach(function(n,i){ const d=Math.abs(xi(i)-sx); if(d<bd){bd=d;bi=i;} });
+    if(bd>44){ tip.hide(); return; }
+    const loc = LOCAL[bi]===null ? "n/a" : LOCAL[bi].toFixed(3);
+    tip.show(`<b>n = ${NS[bi]}</b><br>pooled MAE ${POOL[bi].toFixed(3)}<br>local-only ${loc}<br>prior ${PRIOR.toFixed(3)}`,
+      (xi(bi)/W)*tip.box.clientWidth, (yv(POOL[bi])/H)*tip.box.clientHeight);
+  });
+  svg.addEventListener("mouseleave",tip.hide);
+})();
+
+(function(){
+"use strict";
+const M = window.__FV_MATH, $ = M.$, clamp = M.clamp, T = M.T, REDRAW = M.REDRAW;
+const FV = window.__FV_MODEL;
+
+const svg = $("#cmpChart"); if (!svg) return;
+const rows = ((FV.validation || {}).event || []).slice();
+if (!rows.length) return;
+
+const NICE = {
+  JRC_NA_residential_published: "JRC published global curve",
+  naive_constant_mean: "Constant mean (naive)",
+  single_curve_fitted_on_train: "Single fitted depth curve",
+  FloodVuln_G0_global_fit: "FloodVuln global fit",
+  FloodVuln_G1_archetype: "FloodVuln archetype",
+  FloodVuln_G4_local: "FloodVuln region calibrated"
+};
+const D = rows.map(function(r){
+  return {n: NICE[r.model] || r.model, v: r.bias, hi: r.model.indexOf("FloodVuln") === 0};
+}).sort(function(a, b){ return a.v - b.v; });
+
+const W = 560, H = 250, L = 186, R = 40, TOP = 14, B = 40;
+const PW = W - L - R, PH = H - TOP - B;
+const MX = Math.max.apply(null, D.map(function(d){ return Math.abs(d.v); })) * 1.25;
+const zx = L + PW / 2;
+const bw = (PH - D.length * 8) / D.length;
+const tipBox = $("#cmpBox"), tipEl = $("#cmpTip");
+
+function draw(){
+  const t = T(), o = [];
+  const ticks = [-MX, -MX/2, 0, MX/2, MX];
+  ticks.forEach(function(v){
+    const x = zx + (v / MX) * (PW / 2);
+    o.push(`<line x1="${x.toFixed(1)}" y1="${TOP}" x2="${x.toFixed(1)}" y2="${TOP+PH}" stroke="${v===0?t.rule2:t.grid}" stroke-width="1"/>`);
+    o.push(`<text x="${x.toFixed(1)}" y="${(TOP+PH+16).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${v>0?"+":""}${v.toFixed(2)}</text>`);
+  });
+  D.forEach(function(d, i){
+    const y = TOP + i * (bw + 8);
+    const x = Math.min(zx, zx + (d.v / MX) * (PW / 2));
+    const w = Math.abs((d.v / MX) * (PW / 2));
+    const c = d.hi ? t.acc : t.ink3;
+    o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(2,w).toFixed(1)}" height="${bw.toFixed(1)}" rx="3" fill="${c}" opacity="${d.hi?"1":".55"}"/>`);
+    o.push(`<text x="${L-12}" y="${(y+bw/2+4).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="${d.hi?t.ink:t.ink2}" font-weight="${d.hi?"600":"400"}">${d.n}</text>`);
+    const lx = d.v > 0 ? zx + w + 7 : zx - w - 7;
+    o.push(`<text x="${lx.toFixed(1)}" y="${(y+bw/2+4).toFixed(1)}" text-anchor="${d.v>0?"start":"end"}" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${d.hi?t.acc:t.ink2}">${d.v>0?"+":""}${d.v.toFixed(3)}</text>`);
+  });
+  o.push(`<text x="${zx}" y="${H-6}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="${t.ink3}" letter-spacing="0.2">Mean Bias in Damage Ratio, 11 Withheld Events</text>`);
+  svg.innerHTML = o.join("");
+}
+draw(); REDRAW.push(draw);
+
+svg.addEventListener("mousemove", function(ev){
+  const rc = svg.getBoundingClientRect(), sy = (ev.clientY - rc.top) * (H / rc.height);
+  const i = Math.floor((sy - TOP) / (bw + 8));
+  if (i < 0 || i >= D.length){ tipEl.classList.remove("on"); return; }
+  const d = D[i];
+  tipEl.innerHTML = `<b>${d.n}</b><br>mean bias ${d.v > 0 ? "+" : ""}${d.v.toFixed(4)}<br>` +
+    `<span style="opacity:.75">${d.v > 0 ? "over" : "under"}-predicts damage</span>`;
+  tipEl.classList.add("on");
+  const tw = tipEl.offsetWidth;
+  tipEl.style.left = clamp(tipBox.clientWidth / 2 - tw / 2, 4, Math.max(4, tipBox.clientWidth - tw - 4)) + "px";
+  tipEl.style.top = "6px";
+});
+svg.addEventListener("mouseleave", function(){ tipEl.classList.remove("on"); });
+})();
+
+/* =================== PORTFOLIO TABLE =================== */
+(function(){
+  const tb=$("#portTable"); if(!tb) return;
+  const rows=[
+    ["United States","Wood frame, slab","$4.2bn",0.184,7.4,"$310m","A",1],
+    ["United Kingdom","Masonry, raised floor","$1.8bn",0.121,4.1,"$96m","B",2],
+    ["Germany","Masonry, basement","$1.1bn",0.229,9.8,"$121m","B",2],
+    ["Japan","RC, multi-storey","$2.6bn",0.087,2.9,"$88m","B",2],
+    ["Australia","Wood frame, elevated","$0.9bn",0.104,3.6,"$41m","C",3],
+    ["Viet Nam","Mixed, low-rise","$0.4bn",0.263,12.7,"$63m","D",4]
+  ];
+  const cols=["good","good","amber","alarm"];
+  function draw(){
+    const t=T();
+    const gc=[t.good,t.good,t.amb,t.al];
+    tb.innerHTML=rows.map(function(r){
+      return `<tr><td><b>${r[0]}</b></td><td class="mono" style="font-size:11.5px">${r[1]}</td>`+
+        `<td class="n">${r[2]}</td><td class="n">${r[3].toFixed(3)}</td><td class="n">${r[4].toFixed(1)}</td>`+
+        `<td class="n">${r[5]}</td><td><span class="sev"><i style="background:${gc[r[7]-1]}"></i>${r[6]}</span></td></tr>`;
+    }).join("");
+  }
+  draw(); REDRAW.push(draw);
+})();
+
+/* =================== EVIDENCE GRADES =================== */
+(function(){
+  const el=$("#grades"); if(!el) return;
+  const G=[
+    ["A","Locally validated","Large local dataset across multiple events, plus external validation.",100],
+    ["B","Locally calibrated","Moderate local observations and / or strong engineering evidence.",74],
+    ["C","Regionally calibrated","Evidence transferred from demonstrably comparable regions.",48],
+    ["D","Global transfer","Global or continental prior with limited local evidence.",26]
+  ];
+  function draw(){
+    const t=T(), c=[t.good,t.good,t.amb,t.al];
+    el.innerHTML=G.map(function(g,i){
+      return `<div style="display:grid; grid-template-columns:26px 1fr; gap:12px; align-items:start">`+
+        `<div style="font-family:${FF}; font-weight:600; font-size:15px; color:${c[i]}">${g[0]}</div>`+
+        `<div><div style="display:flex; justify-content:space-between; gap:10px; align-items:baseline">`+
+        `<b style="font-family:var(--f-display); font-size:13.5px">${g[1]}</b></div>`+
+        `<div style="height:5px; border-radius:3px; background:var(--panel-3); margin:7px 0 6px; overflow:hidden">`+
+        `<div style="height:100%; width:${g[3]}%; background:${c[i]}; border-radius:3px"></div></div>`+
+        `<div class="small" style="font-size:12.5px">${g[2]}</div></div></div>`;
+    }).join("");
+  }
+  draw(); REDRAW.push(draw);
+})();
+
+/* =================== MODULES =================== */
+(function(){
+  const el=$("#modGrid"); if(!el) return;
+  const MODS=[
+    ["FloodVuln Atlas","Search, compare and audit the harmonized function library and every source behind it.","Model validation, R&amp;D, engineering"],
+    ["FloodVuln Engine","Production API for property- and portfolio-level probabilistic vulnerability.","Underwriting, pricing, cat modelling"],
+    ["FloodVuln Local","Turn claims, surveys and structured expert knowledge into a calibrated local view.","Insurers, reinsurers, local markets"],
+    ["FloodVuln Compare","Benchmark client and vendor curves against observations and alternative model families.","Model governance and validation"],
+    ["FloodVuln Resilience","Quantify the change in damage from elevation, floodproofing and utility relocation.","Underwriting, lending, public sector"],
+    ["FloodVuln Portfolio","High-volume batch scoring with stable, machine-readable, Oasis-compatible outputs.","Accumulation and capital teams"]
+  ];
+  el.innerHTML=MODS.map(function(m,i){
+    return `<div class="card"><span class="fieldlab">Module ${String(i+1).padStart(2,"0")}</span>`+
+      `<h3 style="font-size:19px; margin:2px 0 10px">${m[0]}</h3>`+
+      `<p class="small">${m[1]}</p>`+
+      `<p class="cap" style="margin-top:14px; padding-top:12px; border-top:var(--hairline)">${m[2]}</p></div>`;
+  }).join("");
+})();
+
+/* =================== TABS =================== */
+(function(){
+  const tabs=$$(".tab");
+  tabs.forEach(function(tb){
+    tb.addEventListener("click",function(){
+      tabs.forEach(function(o){
+        const on=o===tb;
+        o.setAttribute("aria-selected",on?"true":"false");
+        const p=document.getElementById(o.getAttribute("aria-controls"));
+        if(p){ p.hidden=!on; if(on) p.classList.add("in"); }
+      });
+      REDRAW.forEach(function(f){ try{f();}catch(e){} });
+    });
+    tb.addEventListener("keydown",function(ev){
+      const i=tabs.indexOf(tb);
+      if(ev.key==="ArrowRight"||ev.key==="ArrowLeft"){
+        ev.preventDefault();
+        const n=tabs[(i+(ev.key==="ArrowRight"?1:tabs.length-1))%tabs.length];
+        n.focus(); n.click();
+      }
+    });
+  });
+})();
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M = window.__FV_MATH, E = window.__FV_ENGINE, $ = M.$, $$ = M.$$, clamp = M.clamp,
+      T = M.T, REDRAW = M.REDRAW;
+const FF = "IBM Plex Mono, monospace";
+
+/* Book assumptions are illustrative; the damage ratio at every depth is the
+   fitted model, so the vulnerability link in the chain is real even though the
+   portfolio around it is a worked example. */
+const RP = [20, 50, 100, 200, 500];
+const BASED = [0.14, 0.40, 0.66, 0.95, 1.35];
+const SCEN = [{lab:"Current climate", s:0.05},
+              {lab:"+1.5°C · 2050", s:0.34},
+              {lab:"+3.0°C · 2050", s:0.74}];
+const EXPOSED = 0.18, EAD = 18.4e9, PD = 0.011, STRUCT = 0.58;
+const ARCH_KEY = "RES.SF.1.SLAB";
+const st = {scen:0, adapt:false};
+
+function depthAt(i, scen, year){ return BASED[i] * (1 + SCEN[scen].s * (year - 2025) / 30); }
+function drAt(d, adapt){
+  const base = E.distFor(ARCH_KEY, d, null).mean;
+  if (!adapt) return base;
+  const lifted = E.distFor(ARCH_KEY, Math.max(-0.6, d - 0.35), null).mean;
+  return 0.45 * lifted + 0.55 * base;
+}
+function aalBps(scen, year, adapt){
+  let a = 0;
+  for (let i = 0; i < RP.length; i++){
+    const w = (1/RP[i]) - (i + 1 < RP.length ? 1/RP[i+1] : 0);
+    a += w * drAt(depthAt(i, scen, year), adapt);
+  }
+  return a * EXPOSED * 10000;
+}
+
+const svg = $("#bankChart");
+const W = 620, H = 320, L = 52, R = 76, TOP = 18, B = 46;
+const PW = W - L - R, PH = H - TOP - B;
+const YEARS = [2025, 2030, 2035, 2040, 2045, 2050, 2055];
+const tipBox = $("#bankBox"), tipEl = $("#bankTip");
+function xy(yr){ return L + ((yr - 2025) / 30) * PW; }
+
+function drawBank(){
+  const t = T(), o = [];
+  const ramp = [t.d2, t.d3, t.d4];
+  let ymax = 0;
+  const series = SCEN.map(function(s, si){
+    return YEARS.map(function(y){ const v = aalBps(si, y, st.adapt); if (v > ymax) ymax = v; return v; });
+  });
+  const ghost = st.adapt ? SCEN.map(function(s, si){
+    return YEARS.map(function(y){ const v = aalBps(si, y, false); if (v > ymax) ymax = v; return v; });
+  }) : null;
+  ymax = Math.max(1, Math.ceil(ymax * 1.15));
+  const yv = function(v){ return TOP + PH - (v / ymax) * PH; };
+
+  for (let g = 0; g <= 4; g++){
+    const v = (g/4) * ymax, y = yv(v);
+    o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+    o.push(`<text x="${L-9}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${v.toFixed(1)}</text>`);
+  }
+  YEARS.forEach(function(y){
+    o.push(`<text x="${xy(y).toFixed(1)}" y="${(TOP+PH+16).toFixed(1)}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${y}</text>`);
+  });
+  o.push(`<text transform="translate(11,${TOP+130}) rotate(-90)" font-family="${FF}" font-size="9.5" fill="${t.ink3}" letter-spacing="0.2">Basis Points of Exposure</text>`);
+
+  if (ghost){
+    ghost.forEach(function(vals, si){
+      let p = "";
+      vals.forEach(function(v, i){ p += (i ? " L" : "M") + xy(YEARS[i]).toFixed(1) + " " + yv(v).toFixed(1); });
+      o.push(`<path d="${p}" fill="none" stroke="${ramp[si]}" stroke-width="1.4" stroke-dasharray="3 4" opacity=".5"/>`);
+    });
+  }
+  series.forEach(function(vals, si){
+    let p = "";
+    vals.forEach(function(v, i){ p += (i ? " L" : "M") + xy(YEARS[i]).toFixed(1) + " " + yv(v).toFixed(1); });
+    const on = si === st.scen;
+    o.push(`<path d="${p}" fill="none" stroke="${ramp[si]}" stroke-width="${on?3.2:2}" stroke-linecap="round" opacity="${on?1:.55}"/>`);
+    o.push(`<circle cx="${xy(2055).toFixed(1)}" cy="${yv(vals[6]).toFixed(1)}" r="${on?5:3.6}" fill="${ramp[si]}" stroke="${t.surf}" stroke-width="2"/>`);
+    o.push(`<text x="${(W-R+8)}" y="${(yv(vals[6])+4).toFixed(1)}" font-family="${FF}" font-size="9.5" font-weight="${on?"600":"400"}" fill="${ramp[si]}" opacity="${on?1:.7}">${vals[6].toFixed(1)} bps</text>`);
+  });
+  svg.innerHTML = o.join("");
+
+  $("#bankLegend").innerHTML = SCEN.map(function(s, si){
+    return `<span><i style="background:${ramp[si]}"></i>${s.lab}</span>`;
+  }).join("") + (st.adapt ? `<span><i style="background:${t.ink3}; height:2px"></i>Dashed: without adaptation</span>` : "");
+}
+
+if (svg) svg.addEventListener("mousemove", function(ev){
+  const rc = svg.getBoundingClientRect(), sx = (ev.clientX - rc.left) * (W / rc.width);
+  let by = YEARS[0], bd = 1e9;
+  YEARS.forEach(function(y){ const d = Math.abs(xy(y) - sx); if (d < bd){ bd = d; by = y; } });
+  if (bd > 36){ tipEl.classList.remove("on"); return; }
+  const lines = SCEN.map(function(s, si){ return `${s.lab}: <b>${aalBps(si, by, st.adapt).toFixed(2)} bps</b>`; }).join("<br>");
+  tipEl.innerHTML = `<b>${by}</b><br>${lines}`;
+  tipEl.classList.add("on");
+  const bw = tipBox.clientWidth, tw = tipEl.offsetWidth;
+  tipEl.style.left = clamp((xy(by)/W)*bw - tw/2, 4, Math.max(4, bw-tw-4)) + "px";
+  tipEl.style.top = "8px";
+});
+if (svg) svg.addEventListener("mouseleave", function(){ tipEl.classList.remove("on"); });
+
+function drawChain(){
+  const t = T();
+  const d100 = depthAt(2, st.scen, 2050);
+  const r = E.distFor(ARCH_KEY, d100, null);
+  const dr = drAt(d100, st.adapt);
+  const haircut = dr * STRUCT;
+  const ltvShare = clamp(0.061 + haircut * 0.55, 0, 0.6);
+  const lgdUp = haircut * 0.42 * 100;
+  const eclUp = lgdUp * PD * 100;
+  const steps = [
+    ["Hazard", "1-in-100 inundation depth, 2050", d100.toFixed(2) + " m", t.sl, false],
+    ["Vulnerability", "Mean damage ratio, fitted (P10&ndash;P90 " + r.p10.toFixed(2) + "&ndash;" + r.p90.toFixed(2) + ")", dr.toFixed(3), t.acc, true],
+    ["Collateral", "Forward-looking value haircut", (haircut*100).toFixed(1) + "%", t.acc, false],
+    ["LTV migration", "Exposed book above 80% LTV", (ltvShare*100).toFixed(1) + "%", t.amb, false],
+    ["LGD", "Uplift on loss given default", "+" + lgdUp.toFixed(1) + " pp", t.amb, false],
+    ["ECL", "Uplift on expected credit loss", "+" + eclUp.toFixed(1) + " bps", t.al, false]
+  ];
+  $("#chain").innerHTML = steps.map(function(s, i){
+    const mark = s[4] ? `<span class="tag" style="margin-left:8px">Fitted Layer</span>` : "";
+    return `<div style="display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; padding:11px 13px;` +
+      ` border:1px solid ${s[4]?s[3]:"var(--rule)"}; border-left:3px solid ${s[3]}; border-radius:3px;` +
+      ` background:${s[4]?"var(--accent-wash)":"transparent"}">` +
+      `<div><div style="font-family:var(--f-display); font-weight:600; font-size:13px">${s[0]}${mark}</div>` +
+      `<div class="cap" style="margin-top:3px">${s[1]}</div></div>` +
+      `<div class="num" style="font-family:var(--f-display); font-weight:700; font-size:19px; letter-spacing:-.02em; color:${s[3]}">${s[2]}</div>` +
+      `</div>` +
+      (i < steps.length-1 ? `<div style="height:9px; width:1px; background:var(--rule-2); margin-left:22px"></div>` : "");
+  }).join("");
+}
+
+function drawTiles(){
+  const bps2050 = aalBps(st.scen, 2050, st.adapt);
+  const bpsNow = aalBps(0, 2025, false);
+  const d100 = depthAt(2, st.scen, 2050);
+  const loss100 = drAt(d100, st.adapt) * EAD * EXPOSED;
+  const lgdUp = drAt(d100, st.adapt) * STRUCT * 0.42 * 100;
+  const ecl = lgdUp * PD * 100;
+  const tiles = [
+    ["Exposure at Default", "$18.4bn", "42,000 residential loans; 18% in flood-exposed locations."],
+    ["Annual Collateral Damage 2050", bps2050.toFixed(1) + " bps", "Against " + bpsNow.toFixed(1) + " bps in the current climate."],
+    ["1-in-100 Collateral Loss", "$" + (loss100/1e6).toFixed(0) + "m", "Ground-up damage on exposed collateral at that return period."],
+    ["ECL Uplift", "+" + ecl.toFixed(1) + " bps", "Transmitted through the haircut, LTV migration and LGD."]
+  ];
+  $("#bankTiles").innerHTML = tiles.map(function(t){
+    return `<div class="tile"><span class="k">${t[0]}</span><span class="v">${t[1]}</span><span class="d">${t[2]}</span></div>`;
+  }).join("");
+}
+
+function renderBank(){ if (svg) drawBank(); drawChain(); drawTiles(); }
+
+$$("#scenChips .chip").forEach(function(c){
+  c.addEventListener("click", function(){
+    st.scen = parseInt(c.getAttribute("data-scen"), 10);
+    $$("#scenChips .chip").forEach(function(o){ o.setAttribute("aria-pressed", o === c ? "true" : "false"); });
+    renderBank();
+  });
+});
+const ad = $("#adaptBtn");
+if (ad) ad.addEventListener("click", function(){
+  st.adapt = !st.adapt;
+  ad.setAttribute("aria-pressed", st.adapt ? "true" : "false");
+  renderBank();
+});
+renderBank();
+REDRAW.push(renderBank);
+})();
+
+</script>
+
+<script>
+(function(){
+"use strict";
+const M = window.__FV_MATH, E = window.__FV_ENGINE, $ = M.$, T = M.T, REDRAW = M.REDRAW;
+
+/* Underwriting comparison at a fixed depth. Both rows come from the fitted
+   model, so the contrast is measured rather than asserted. */
+const D = 0.90, REGION = "TX";
+const ROWS = [
+  {tag:"A", key:"RES.SF.1.ELEV_ENCL", label:"Elevated, enclosure below"},
+  {tag:"B", key:"RES.SF.MH.UNK",      label:"Manufactured home"}
+];
+
+function drawUw(){
+  const t = T(), tb = $("#uwTable"); if (!tb) return;
+  const res = ROWS.map(function(r){ return {r:r, x:E.distFor(r.key, D, REGION)}; });
+  let html = res.map(function(o){
+    const g = {A:t.good, B:t.good, C:t.amb, D:t.al}[o.x.grade] || t.ink3;
+    return `<tr><td><b>${o.r.tag}</b> &nbsp;<span class="small" style="font-size:12px">${o.r.label}</span></td>` +
+      `<td class="mono" style="font-size:11px">${o.r.key}</td>` +
+      `<td class="n">${o.x.mean.toFixed(3)}</td>` +
+      `<td class="n">${o.x.p90.toFixed(2)}</td>` +
+      `<td class="n">${(o.x.pgt50*100).toFixed(1)}%</td>` +
+      `<td><span class="sev"><i style="background:${g}"></i>${o.x.grade}</span></td></tr>`;
+  }).join("");
+  const avg = (res[0].x.mean + res[1].x.mean) / 2;
+  html += `<tr style="opacity:.75"><td colspan="2" class="small" style="font-size:12.5px">` +
+    `<i>A depth-only curve, which cannot tell them apart</i></td>` +
+    `<td class="n">${avg.toFixed(3)}</td><td class="n">&#8212;</td><td class="n">&#8212;</td>` +
+    `<td><span class="sev"><i style="background:${t.ink3}"></i>n/a</span></td></tr>`;
+  tb.innerHTML = html;
+
+  const ratio = res[1].x.mean / res[0].x.mean;
+  const cap = $("#uwCaption");
+  if (cap) cap.innerHTML = `Depth ${D.toFixed(2)}&nbsp;m above the lowest floor, region ${REGION}. ` +
+    `Fitted output: the manufactured home takes <b>${ratio.toFixed(1)}&times;</b> the proportional ` +
+    `damage of the elevated dwelling at the same depth.`;
+}
+
+/* Pricing: the deductible is applied by integrating the fitted distribution,
+   not by subtracting it from the mean. */
+function drawPricing(){
+  const el = $("#prTiles"); if (!el) return;
+  const v = 310000, K = 25000, d = 0.55;
+  const r = E.distFor("RES.SF.1.SLAB", d, REGION);
+  const t0 = K / v;
+  const gu = r.mean * v;
+  const tail = r.p90 * v;
+  // E[(vD - K)+] = p1(v-K) + rest*( v*mu*(1 - I_t(a+1,b)) - K*(1 - I_t(a,b)) )
+  const net = r.p1 * (v - K) + r.rest * (v * r.m * (1 - M.ibeta(t0, r.a + 1, r.b))
+                                         - K * (1 - M.ibeta(t0, r.a, r.b)));
+  const noClaim = r.p0 + r.rest * M.ibeta(t0, r.a, r.b);
+  const money = function(x){ return x >= 1e6 ? "$" + (x/1e6).toFixed(2) + "m" : "$" + (x/1000).toFixed(1) + "k"; };
+  const tiles = [
+    ["Expected Ground-Up", money(gu), "Mean DR " + r.mean.toFixed(3) + " on a $310k replacement value."],
+    ["Tail Load Basis", money(tail), "P90 ground-up loss &#8212; the number a flat regional factor misses."],
+    ["Net of $25k Deductible", money(Math.max(0, net)), "Integrated over the whole distribution, not applied to the mean."],
+    ["No Payable Claim", (noClaim*100).toFixed(0) + "%", "Probability the loss never reaches the deductible."]
+  ];
+  el.innerHTML = tiles.map(function(x){
+    return `<div class="tile"><span class="k">${x[0]}</span><span class="v">${x[1]}</span><span class="d">${x[2]}</span></div>`;
+  }).join("");
+}
+
+drawUw(); drawPricing();
+REDRAW.push(function(){ drawUw(); drawPricing(); });
+})();
+
+</script>
+<style>
+html{scroll-behavior:smooth; scroll-padding-top:78px}
+@media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+@media(max-width:600px){
+  .readout{grid-template-columns:repeat(2,1fr)}
+  .readout div:nth-child(2n){border-right:none}
+  .readout div:nth-child(-n+2){border-bottom:var(--hairline)}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  body{font-size:16.5px}
+}
+.stage ul li::marker{color:var(--stage,var(--accent))}
+.tab:focus-visible{outline-offset:-2px}
+.chip:active{transform:translateY(1px)}
+.tbl caption{caption-side:top}
+.api::-webkit-scrollbar{height:7px}
+.api::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18); border-radius:4px}
+</style>

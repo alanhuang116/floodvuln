@@ -1,0 +1,21 @@
+C:\Users\XHUAN40\AppData\Roaming\Python\Python311\site-packages\pandas\core\computation\expressions.py:22: UserWarning: Pandas requires version '2.10.2' or newer of 'numexpr' (version '2.8.4' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+C:\Users\XHUAN40\AppData\Roaming\Python\Python311\site-packages\pandas\core\arrays\masked.py:56: UserWarning: Pandas requires version '1.4.2' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+units: 142 archetypes, 4483 locals
+archetype covariances in 3s
+  1000/4483  (26s)
+  2000/4483  (57s)
+  3000/4483  (90s)
+  4000/4483  (125s)
+local covariances in 140s
+
+=== epistemic sd of the mean at 0.61 m, by local sample size ===
+    FL  n=   63780   epistemic sd = 0.0010
+    TX  n=   41948   epistemic sd = 0.0012
+    LA  n=   31927   epistemic sd = 0.0014
+    MS  n=    2023   epistemic sd = 0.0056
+    WY  n=       8   epistemic sd = 0.0520
+    AK  n=       7   epistemic sd = 0.0532
+    UT  n=       4   epistemic sd = 0.0585
+    MP  n=       1   epistemic sd = 0.0683

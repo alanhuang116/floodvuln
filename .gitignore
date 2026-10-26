@@ -1,0 +1,9 @@
+data/raw/*.csv
+data/raw/*.json
+data/interim/*
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+# Large or re-downloadable data stays local; rebuild with scripts/fetch_*.py and build_dataset.py.
+data/raw/
+data/processed/*.csv

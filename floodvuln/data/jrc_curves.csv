@@ -1,0 +1,271 @@
+damage_class,continent,depth_m,damage_factor
+Residential buildings,EUROPE,0.0,0.0
+Residential buildings,North AMERICA,0.0,0.20180454348279775
+Residential buildings,Centr&South AMERICA,0.0,0.0
+Residential buildings,ASIA,0.0,0.0
+Residential buildings,AFRICA,0.0,0.0
+Residential buildings,OCEANIA,0.0,0.0
+Residential buildings,EUROPE,0.5,0.25
+Residential buildings,North AMERICA,0.5,0.44326985656702733
+Residential buildings,Centr&South AMERICA,0.5,0.4908859507565592
+Residential buildings,ASIA,0.5,0.32655650202936004
+Residential buildings,AFRICA,0.5,0.2199254009329045
+Residential buildings,OCEANIA,0.5,0.47541811916699134
+Residential buildings,EUROPE,1.0,0.4
+Residential buildings,North AMERICA,1.0,0.582754693231323
+Residential buildings,Centr&South AMERICA,1.0,0.7112940666211631
+Residential buildings,ASIA,1.0,0.49405032354045164
+Residential buildings,AFRICA,1.0,0.37822684609280993
+Residential buildings,OCEANIA,1.0,0.6403931243607716
+Residential buildings,EUROPE,1.5,0.5
+Residential buildings,North AMERICA,1.5,0.6825219115800791
+Residential buildings,Centr&South AMERICA,1.5,0.842026010706856
+Residential buildings,ASIA,1.5,0.6165721244538469
+Residential buildings,AFRICA,1.5,0.5305890817622265
+Residential buildings,OCEANIA,1.5,0.7146146615077392
+Residential buildings,EUROPE,2.0,0.6
+Residential buildings,North AMERICA,2.0,0.783957148211158
+Residential buildings,Centr&South AMERICA,2.0,0.9493690958164642
+Residential buildings,ASIA,2.0,0.7207117644253294
+Residential buildings,AFRICA,2.0,0.635636732936187
+Residential buildings,OCEANIA,2.0,0.7877263475521771
+Residential buildings,EUROPE,3.0,0.75
+Residential buildings,North AMERICA,3.0,0.8543489222586077
+Residential buildings,Centr&South AMERICA,3.0,0.9836369770580298
+Residential buildings,ASIA,3.0,0.8695282125617129
+Residential buildings,AFRICA,3.0,0.8169397798520446
+Residential buildings,OCEANIA,3.0,0.9287798842694879
+Residential buildings,EUROPE,4.0,0.85
+Residential buildings,North AMERICA,4.0,0.9236701008849423
+Residential buildings,Centr&South AMERICA,4.0,1.0
+Residential buildings,ASIA,4.0,0.93148708390482
+Residential buildings,AFRICA,4.0,0.9034346883994495
+Residential buildings,OCEANIA,4.0,0.9673818525004227
+Residential buildings,EUROPE,5.0,0.95
+Residential buildings,North AMERICA,5.0,0.9585227725931244
+Residential buildings,Centr&South AMERICA,5.0,1.0
+Residential buildings,ASIA,5.0,0.9836041480130159
+Residential buildings,AFRICA,5.0,0.9571521730123568
+Residential buildings,OCEANIA,5.0,0.9827954437588989
+Residential buildings,EUROPE,6.0,1.0
+Residential buildings,North AMERICA,6.0,1.0
+Residential buildings,Centr&South AMERICA,6.0,1.0
+Residential buildings,ASIA,6.0,1.0
+Residential buildings,AFRICA,6.0,1.0
+Residential buildings,OCEANIA,6.0,1.0
+Commercial buildings,EUROPE,0.0,0.0
+Commercial buildings,North AMERICA,0.0,0.018404907975460124
+Commercial buildings,Centr&South AMERICA,0.0,0.0
+Commercial buildings,ASIA,0.0,0.0
+Commercial buildings,OCEANIA,0.0,0.0
+Commercial buildings,GLOBAL,0.0,0.0
+Commercial buildings,EUROPE,0.5,0.15
+Commercial buildings,North AMERICA,0.5,0.23926380368098157
+Commercial buildings,Centr&South AMERICA,0.5,0.6114775866089124
+Commercial buildings,ASIA,0.5,0.37678962318356757
+Commercial buildings,OCEANIA,0.5,0.23895357454908572
+Commercial buildings,GLOBAL,0.5,0.3232969176045094
+Commercial buildings,EUROPE,1.0,0.3
+Commercial buildings,North AMERICA,1.0,0.37423312883435583
+Commercial buildings,Centr&South AMERICA,1.0,0.8395310944604374
+Commercial buildings,ASIA,1.0,0.5376816186459964
+Commercial buildings,OCEANIA,1.0,0.4811996817075454
+Commercial buildings,GLOBAL,1.0,0.506529104729667
+Commercial buildings,EUROPE,1.5,0.45
+Commercial buildings,North AMERICA,1.5,0.4662576687116564
+Commercial buildings,Centr&South AMERICA,1.5,0.9235884574511017
+Commercial buildings,ASIA,1.5,0.6593366839515573
+Commercial buildings,OCEANIA,1.5,0.6737950914310677
+Commercial buildings,GLOBAL,1.5,0.6345955803090766
+Commercial buildings,EUROPE,2.0,0.55
+Commercial buildings,North AMERICA,2.0,0.5521472392638037
+Commercial buildings,Centr&South AMERICA,2.0,0.9919724770642202
+Commercial buildings,ASIA,2.0,0.7628452324986368
+Commercial buildings,OCEANIA,2.0,0.8645833333333333
+Commercial buildings,GLOBAL,2.0,0.7443096564319989
+Commercial buildings,EUROPE,3.0,0.75
+Commercial buildings,North AMERICA,3.0,0.6871165644171779
+Commercial buildings,Centr&South AMERICA,3.0,1.0
+Commercial buildings,ASIA,3.0,0.8833486558294331
+Commercial buildings,OCEANIA,3.0,1.0
+Commercial buildings,GLOBAL,3.0,0.8640930440493222
+Commercial buildings,EUROPE,4.0,0.9
+Commercial buildings,North AMERICA,4.0,0.8220858895705521
+Commercial buildings,Centr&South AMERICA,4.0,1.0
+Commercial buildings,ASIA,4.0,0.9418548948983457
+Commercial buildings,OCEANIA,4.0,1.0
+Commercial buildings,GLOBAL,4.0,0.9327881568937796
+Commercial buildings,EUROPE,5.0,1.0
+Commercial buildings,North AMERICA,5.0,0.9079754601226995
+Commercial buildings,Centr&South AMERICA,5.0,1.0
+Commercial buildings,ASIA,5.0,0.9807593802222822
+Commercial buildings,OCEANIA,5.0,1.0
+Commercial buildings,GLOBAL,5.0,0.9777469680689963
+Commercial buildings,EUROPE,6.0,1.0
+Commercial buildings,North AMERICA,6.0,1.0
+Commercial buildings,Centr&South AMERICA,6.0,1.0
+Commercial buildings,ASIA,6.0,1.0
+Commercial buildings,OCEANIA,6.0,1.0
+Commercial buildings,GLOBAL,6.0,1.0
+Industrial buildings,EUROPE,0.0,0.0
+Industrial buildings,North AMERICA,0.0,0.025714285714285714
+Industrial buildings,Centr&South AMERICA,0.0,0.0
+Industrial buildings,ASIA,0.0,0.0
+Industrial buildings,AFRICA,0.0,0.0
+Industrial buildings,GLOBAL,0.0,0.0
+Industrial buildings,EUROPE,0.5,0.15
+Industrial buildings,North AMERICA,0.5,0.3228571428571429
+Industrial buildings,Centr&South AMERICA,0.5,0.6670194003527335
+Industrial buildings,ASIA,0.5,0.2831815239036498
+Industrial buildings,AFRICA,0.5,0.06268204283360791
+Industrial buildings,GLOBAL,0.5,0.2971480219894268
+Industrial buildings,EUROPE,1.0,0.27
+Industrial buildings,North AMERICA,1.0,0.5114285714285715
+Industrial buildings,Centr&South AMERICA,1.0,0.8887125220458554
+Industrial buildings,ASIA,1.0,0.4816156531424614
+Industrial buildings,AFRICA,1.0,0.2471960461285008
+Industrial buildings,GLOBAL,1.0,0.4797905585490779
+Industrial buildings,EUROPE,1.5,0.4
+Industrial buildings,North AMERICA,1.5,0.6371428571428571
+Industrial buildings,Centr&South AMERICA,1.5,0.9467372134038801
+Industrial buildings,ASIA,1.5,0.6292188938464128
+Industrial buildings,AFRICA,1.5,0.4033299835255354
+Industrial buildings,GLOBAL,1.5,0.6032857895837371
+Industrial buildings,EUROPE,2.0,0.52
+Industrial buildings,North AMERICA,2.0,0.7400000000000001
+Industrial buildings,Centr&South AMERICA,2.0,1.0
+Industrial buildings,ASIA,2.0,0.7172405880206049
+Industrial buildings,AFRICA,2.0,0.49448863261943987
+Industrial buildings,GLOBAL,2.0,0.694345844128009
+Industrial buildings,EUROPE,3.0,0.7
+Industrial buildings,North AMERICA,3.0,0.8599999999999999
+Industrial buildings,Centr&South AMERICA,3.0,1.0
+Industrial buildings,ASIA,3.0,0.8566750297600425
+Industrial buildings,AFRICA,3.0,0.684652388797364
+Industrial buildings,GLOBAL,3.0,0.8202654837114812
+Industrial buildings,EUROPE,4.0,0.85
+Industrial buildings,North AMERICA,4.0,0.937142857142857
+Industrial buildings,Centr&South AMERICA,4.0,1.0
+Industrial buildings,ASIA,4.0,0.9085770039670126
+Industrial buildings,AFRICA,4.0,0.9185897858319604
+Industrial buildings,GLOBAL,4.0,0.9228619293883661
+Industrial buildings,EUROPE,5.0,1.0
+Industrial buildings,North AMERICA,5.0,0.9800000000000001
+Industrial buildings,Centr&South AMERICA,5.0,1.0
+Industrial buildings,ASIA,5.0,0.9553274630224672
+Industrial buildings,AFRICA,5.0,1.0
+Industrial buildings,GLOBAL,5.0,0.9870654926044935
+Industrial buildings,EUROPE,6.0,1.0
+Industrial buildings,North AMERICA,6.0,1.0
+Industrial buildings,Centr&South AMERICA,6.0,1.0
+Industrial buildings,ASIA,6.0,1.0
+Industrial buildings,AFRICA,6.0,1.0
+Industrial buildings,GLOBAL,6.0,1.0
+Transport,EUROPE,0.0,0.0
+Transport,Centr&South AMERICA,0.0,0.0
+Transport,ASIA,0.0,0.0
+Transport,GLOBAL,0.0,0.0
+Transport,EUROPE,0.5,0.31666666666666665
+Transport,Centr&South AMERICA,0.5,0.08771929824561404
+Transport,ASIA,0.5,0.35751633986928105
+Transport,GLOBAL,0.5,0.25396743492718726
+Transport,EUROPE,1.0,0.5416666666666667
+Transport,Centr&South AMERICA,1.0,0.1754385964912281
+Transport,ASIA,1.0,0.5718954248366014
+Transport,GLOBAL,1.0,0.4296668959981654
+Transport,EUROPE,1.5,0.7016666666666667
+Transport,Centr&South AMERICA,1.5,0.5964912280701755
+Transport,ASIA,1.5,0.7333333333333334
+Transport,GLOBAL,1.5,0.6771637426900585
+Transport,EUROPE,2.0,0.8316666666666667
+Transport,Centr&South AMERICA,2.0,0.8421052631578947
+Transport,ASIA,2.0,0.8472222222222223
+Transport,GLOBAL,2.0,0.8403313840155945
+Transport,EUROPE,3.0,1.0
+Transport,Centr&South AMERICA,3.0,1.0
+Transport,ASIA,3.0,1.0
+Transport,GLOBAL,3.0,1.0
+Transport,EUROPE,4.0,1.0
+Transport,Centr&South AMERICA,4.0,1.0
+Transport,ASIA,4.0,1.0
+Transport,GLOBAL,4.0,1.0
+Transport,EUROPE,5.0,1.0
+Transport,Centr&South AMERICA,5.0,1.0
+Transport,ASIA,5.0,1.0
+Transport,GLOBAL,5.0,1.0
+Transport,EUROPE,6.0,1.0
+Transport,Centr&South AMERICA,6.0,1.0
+Transport,ASIA,6.0,1.0
+Transport,GLOBAL,6.0,1.0
+Infrastructure - roads,EUROPE,0.0,0.0
+Infrastructure - roads,ASIA,0.0,0.0
+Infrastructure - roads,GLOBAL,0.0,0.0
+Infrastructure - roads,EUROPE,0.5,0.25
+Infrastructure - roads,ASIA,0.5,0.2144369063772049
+Infrastructure - roads,GLOBAL,0.5,0.23221845318860246
+Infrastructure - roads,EUROPE,1.0,0.42
+Infrastructure - roads,ASIA,1.0,0.37275440976933516
+Infrastructure - roads,GLOBAL,1.0,0.39637720488466754
+Infrastructure - roads,EUROPE,1.5,0.55
+Infrastructure - roads,ASIA,1.5,0.6039348710990502
+Infrastructure - roads,GLOBAL,1.5,0.5769674355495251
+Infrastructure - roads,EUROPE,2.0,0.65
+Infrastructure - roads,ASIA,2.0,0.709659090909091
+Infrastructure - roads,GLOBAL,2.0,0.6798295454545455
+Infrastructure - roads,EUROPE,3.0,0.8
+Infrastructure - roads,ASIA,3.0,0.808409090909091
+Infrastructure - roads,GLOBAL,3.0,0.8042045454545454
+Infrastructure - roads,EUROPE,4.0,0.9
+Infrastructure - roads,ASIA,4.0,0.887159090909091
+Infrastructure - roads,GLOBAL,4.0,0.8935795454545454
+Infrastructure - roads,EUROPE,5.0,1.0
+Infrastructure - roads,ASIA,5.0,0.96875
+Infrastructure - roads,GLOBAL,5.0,0.984375
+Infrastructure - roads,EUROPE,6.0,1.0
+Infrastructure - roads,ASIA,6.0,1.0
+Infrastructure - roads,GLOBAL,6.0,1.0
+Agriculture,EUROPE,0.0,0.0
+Agriculture,North AMERICA,0.0,0.018575387611414872
+Agriculture,ASIA,0.0,0.0
+Agriculture,AFRICA,0.0,0.0
+Agriculture,GLOBAL,0.0,0.0
+Agriculture,EUROPE,0.5,0.3
+Agriculture,North AMERICA,0.5,0.26779766808978106
+Agriculture,ASIA,0.5,0.135
+Agriculture,AFRICA,0.5,0.24287356321839082
+Agriculture,GLOBAL,0.5,0.23641780782704297
+Agriculture,EUROPE,1.0,0.55
+Agriculture,North AMERICA,1.0,0.4736773774748458
+Agriculture,ASIA,1.0,0.37
+Agriculture,AFRICA,1.0,0.47183908045977013
+Agriculture,GLOBAL,1.0,0.466379114483654
+Agriculture,EUROPE,1.5,0.65
+Agriculture,North AMERICA,1.5,0.5505607847379999
+Agriculture,ASIA,1.5,0.524
+Agriculture,AFRICA,1.5,0.7413793103448275
+Agriculture,GLOBAL,1.5,0.6164850237707068
+Agriculture,EUROPE,2.0,0.75
+Agriculture,North AMERICA,2.0,0.6021613029402708
+Agriculture,ASIA,2.0,0.558
+Agriculture,AFRICA,2.0,0.9166666666666666
+Agriculture,GLOBAL,2.0,0.7067069924017344
+Agriculture,EUROPE,3.0,0.85
+Agriculture,North AMERICA,3.0,0.7600570910210638
+Agriculture,ASIA,3.0,0.66
+Agriculture,AFRICA,3.0,1.0
+Agriculture,GLOBAL,3.0,0.817514272755266
+Agriculture,EUROPE,4.0,0.95
+Agriculture,North AMERICA,4.0,0.8740946024295585
+Agriculture,ASIA,4.0,0.834
+Agriculture,AFRICA,4.0,1.0
+Agriculture,GLOBAL,4.0,0.9145236506073896
+Agriculture,EUROPE,5.0,1.0
+Agriculture,North AMERICA,5.0,0.954075572089204
+Agriculture,ASIA,5.0,0.9879999999999999
+Agriculture,AFRICA,5.0,1.0
+Agriculture,GLOBAL,5.0,0.985518893022301
+Agriculture,EUROPE,6.0,1.0
+Agriculture,North AMERICA,6.0,1.0
+Agriculture,ASIA,6.0,1.0
+Agriculture,AFRICA,6.0,1.0
+Agriculture,GLOBAL,6.0,1.0

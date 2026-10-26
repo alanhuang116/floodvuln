@@ -1,0 +1,14 @@
+step,records,share_of_ingested
+records ingested,1927948,1.0
+depth resolved,1920577,0.9962
+  of which unit inferred,1864912,0.9673
+  of which datum corrected,63036,0.0327
+  ambiguous depth value (12),24729,0.0128
+  undocumented sentinel depth (99/999),9018,0.0047
+  depth reported as 0 (water at floor),569377,0.2953
+damage ratio computed,1920896,0.9963
+  on actual cash value basis,1918944,0.9953
+  on converted replacement cost,1952,0.001
+  damage exceeded value (clipped to 1),2141,0.0011
+claims settled at the policy limit,118062,0.0612
+admissible to primary calibration,1861852,0.9657

@@ -1,0 +1,2052 @@
+<title>FloodVuln Global</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap">
+<style>
+/* ============ TOKENS — light is the base; dark redefines tokens only ============ */
+:root{
+  color-scheme: light;
+  --paper:#F1F4F3;
+  --panel:#FFFFFF;
+  --panel-2:#E7ECEB;
+  --panel-3:#DCE3E2;
+  --ink:#08191D;
+  --ink-2:#41565A;
+  --ink-3:#75898B;
+  --rule:#CBD6D4;
+  --rule-2:#B3C2C0;
+  --accent:#008C7D;
+  --accent-2:#00655C;
+  --accent-wash:rgba(0,140,125,.10);
+  --amber:#C2751A;
+  --amber-wash:rgba(194,117,26,.12);
+  --slate:#3059AE;
+  --slate-wash:rgba(48,89,174,.12);
+  --alarm:#B32D3B;
+  --alarm-wash:rgba(179,45,59,.12);
+  --good:#1C7A52;
+  --d1:#5FB9AC; --d2:#1FA08F; --d3:#00806F; --d4:#005850;
+  --surface:#FFFFFF;
+  --grid:#E3EAE9;
+  --shadow:0 1px 2px rgba(8,25,29,.05), 0 8px 28px -12px rgba(8,25,29,.16);
+  --shadow-lift:0 2px 6px rgba(8,25,29,.07), 0 22px 50px -18px rgba(8,25,29,.28);
+  --hairline:1px solid var(--rule);
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --measure:66ch;
+  --rail:88px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#0D1B20; --panel:#122429; --panel-2:#162C32; --panel-3:#1D373E;
+    --ink:#E9F2F1; --ink-2:#A6BAB9; --ink-3:#7B9190;
+    --rule:#22403F; --rule-2:#2F5350;
+    --accent:#16A895; --accent-2:#4FCBB9; --accent-wash:rgba(22,168,149,.14);
+    --amber:#C8811F; --amber-wash:rgba(200,129,31,.16);
+    --slate:#5B8FDB; --slate-wash:rgba(91,143,219,.16);
+    --alarm:#D2605E; --alarm-wash:rgba(210,96,94,.16);
+    --good:#3FA97A;
+    --d1:#7FD9C9; --d2:#46C1AE; --d3:#16A895; --d4:#0B7E70;
+    --surface:#122429; --grid:#1E3A3E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+    --shadow-lift:0 2px 8px rgba(0,0,0,.45), 0 26px 56px -20px rgba(0,0,0,.85);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#0D1B20; --panel:#122429; --panel-2:#162C32; --panel-3:#1D373E;
+  --ink:#E9F2F1; --ink-2:#A6BAB9; --ink-3:#7B9190;
+  --rule:#22403F; --rule-2:#2F5350;
+  --accent:#16A895; --accent-2:#4FCBB9; --accent-wash:rgba(22,168,149,.14);
+  --amber:#C8811F; --amber-wash:rgba(200,129,31,.16);
+  --slate:#5B8FDB; --slate-wash:rgba(91,143,219,.16);
+  --alarm:#D2605E; --alarm-wash:rgba(210,96,94,.16);
+  --good:#3FA97A;
+  --d1:#7FD9C9; --d2:#46C1AE; --d3:#16A895; --d4:#0B7E70;
+  --surface:#122429; --grid:#1E3A3E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  --shadow-lift:0 2px 8px rgba(0,0,0,.45), 0 26px 56px -20px rgba(0,0,0,.85);
+}
+
+/* ============ BASE ============ */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--f-body); font-size:17.5px; line-height:1.62;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden;
+}
+h1,h2,h3,h4,h5{font-family:var(--f-display); font-weight:700; letter-spacing:-.02em; line-height:1.08; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+::selection{background:var(--accent); color:#fff}
+svg{display:block}
+table{border-collapse:collapse; width:100%}
+.wrap{max-width:1220px; margin:0 auto; padding:0 28px}
+.measure{max-width:var(--measure)}
+.mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+.num{font-family:var(--f-mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+
+.eyebrow{
+  font-family:var(--f-mono); font-size:11px; font-weight:500; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:""; width:26px; height:0; border-top:2px solid var(--accent)}
+.eyebrow.amber{color:var(--amber)} .eyebrow.amber::before{border-color:var(--amber)}
+.eyebrow.slate{color:var(--slate)} .eyebrow.slate::before{border-color:var(--slate)}
+
+h2.sect{font-size:clamp(30px,4.1vw,50px); letter-spacing:-.03em; margin:16px 0 0}
+.lede{font-size:clamp(18px,1.5vw,20.5px); color:var(--ink-2); line-height:1.58; margin-top:18px; font-weight:300}
+
+section{position:relative}
+.band{padding:clamp(72px,9vw,124px) 0; border-top:var(--hairline)}
+.band-alt{background:var(--panel-2)}
+</style>
+<style>
+/* ============ STAFF-GAUGE RAIL ============ */
+.rail{position:fixed; left:0; top:0; bottom:0; width:var(--rail); z-index:40; pointer-events:none; display:none}
+@media(min-width:1460px){ .rail{display:block} }
+.rail-line{position:absolute; left:56px; top:0; bottom:0; width:1px; background:var(--rule)}
+.rail-fill{position:absolute; left:54px; top:0; width:5px; background:linear-gradient(180deg,var(--accent),var(--accent-2)); height:0; border-radius:0 0 3px 3px}
+.rail-tick{position:absolute; left:40px; width:16px; height:1px; background:var(--rule-2)}
+.rail-tick.major{left:26px; width:30px}
+.rail-lab{position:absolute; left:0; width:22px; text-align:right; transform:translateY(-50%);
+  font-family:var(--f-mono); font-size:9px; letter-spacing:.06em; color:var(--ink-3)}
+.rail-head{position:absolute; left:49px; width:15px; height:15px; margin-top:-7.5px; border-radius:50%;
+  background:var(--paper); border:2.5px solid var(--accent); box-shadow:0 0 0 4px var(--paper)}
+.rail-cap{position:absolute; left:10px; bottom:24px; font-family:var(--f-mono); font-size:9px; letter-spacing:.18em;
+  color:var(--ink-3); writing-mode:vertical-rl; text-transform:uppercase}
+
+/* ============ NAV ============ */
+.nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(16px) saturate(1.4);
+  background:color-mix(in srgb, var(--paper) 85%, transparent); border-bottom:var(--hairline)}
+.nav-in{display:flex; align-items:center; gap:24px; height:62px; max-width:1220px; margin:0 auto; padding:0 28px}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--f-display); font-weight:800;
+  letter-spacing:-.035em; font-size:18.5px; margin-right:auto}
+.brand em{font-style:normal; color:var(--accent); font-weight:600}
+.nlink{font-family:var(--f-display); font-size:13.5px; font-weight:500; color:var(--ink-2); text-decoration:none; transition:color .18s; display:none}
+@media(min-width:1000px){ .nlink{display:inline} }
+.nlink:hover{color:var(--accent)}
+.btn{font-family:var(--f-display); font-weight:600; font-size:13.5px; border:none; cursor:pointer;
+  padding:9px 17px; border-radius:3px; background:var(--accent); color:#fff; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s, background .2s}
+.btn:hover{transform:translateY(-1.5px); box-shadow:0 8px 20px -8px color-mix(in srgb, var(--accent) 75%, transparent)}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--rule-2)}
+.btn.ghost:hover{border-color:var(--accent); color:var(--accent); box-shadow:none}
+.themetog{background:transparent; border:1px solid var(--rule); border-radius:3px; width:32px; height:32px;
+  cursor:pointer; color:var(--ink-2); display:grid; place-items:center; font-size:14px; transition:border-color .18s,color .18s}
+.themetog:hover{border-color:var(--accent); color:var(--accent)}
+</style>
+<style>
+/* ============ HERO ============ */
+.hero{position:relative; overflow:hidden}
+.hero-grid{display:grid; grid-template-columns:1fr; gap:44px; padding:clamp(52px,7vw,88px) 0 clamp(48px,6vw,76px)}
+@media(min-width:1040px){ .hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr); gap:56px; align-items:center} }
+h1.hero-h{font-size:clamp(38px,6.1vw,76px); font-weight:800; letter-spacing:-.045em; line-height:.99}
+h1.hero-h .fade{color:var(--ink-3); font-weight:400}
+.hero-sub{margin-top:24px; font-size:clamp(17.5px,1.6vw,21px); color:var(--ink-2); font-weight:300; line-height:1.55; max-width:56ch}
+.hero-cta{display:flex; gap:12px; margin-top:32px; flex-wrap:wrap}
+.hero-note{margin-top:26px; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink-3); text-transform:uppercase}
+.tagline{margin-top:36px; padding-top:22px; border-top:var(--hairline); display:flex; gap:28px; flex-wrap:wrap}
+.tagline b{display:block; font-family:var(--f-display); font-size:13px; font-weight:700}
+.tagline span{font-size:13.5px; color:var(--ink-3); font-weight:300}
+
+.gauge{background:var(--panel); border:var(--hairline); border-radius:5px; box-shadow:var(--shadow-lift); overflow:hidden}
+.gauge-top{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-bottom:var(--hairline); background:var(--panel-2)}
+.gauge-title{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2)}
+.live{display:flex; align-items:center; gap:7px; font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; color:var(--accent); text-transform:uppercase}
+.live i{width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.35; transform:scale(.8)}}
+.gauge-canvas{display:block; width:100%; height:256px}
+.gauge-ctl{padding:16px 18px 6px; display:flex; align-items:center; gap:14px}
+.gauge-ctl label{font-family:var(--f-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap}
+.readout{display:grid; grid-template-columns:repeat(4,1fr); border-top:var(--hairline); margin-top:12px}
+.readout div{padding:13px 14px; border-right:var(--hairline)}
+.readout div:last-child{border-right:none}
+.readout .k{font-family:var(--f-mono); font-size:9px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:5px}
+.readout .v{font-family:var(--f-display); font-weight:700; font-size:clamp(18px,2vw,24px); letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.readout .v.tail{color:var(--alarm)}
+.readout .v.acc{color:var(--accent)}
+
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; background:transparent; cursor:pointer; height:22px}
+input[type=range]::-webkit-slider-runnable-track{height:4px; border-radius:2px; background:var(--panel-3)}
+input[type=range]::-moz-range-track{height:4px; border-radius:2px; background:var(--panel-3)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:17px; height:17px; border-radius:50%;
+  background:var(--accent); border:3px solid var(--panel); margin-top:-6.5px; box-shadow:0 1px 5px rgba(0,0,0,.28); transition:transform .15s}
+input[type=range]::-moz-range-thumb{width:17px; height:17px; border-radius:50%; background:var(--accent); border:3px solid var(--panel)}
+input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.14)}
+</style>
+<style>
+/* ============ GENERIC PIECES ============ */
+.card{background:var(--panel); border:var(--hairline); border-radius:4px; padding:24px; box-shadow:var(--shadow)}
+.grid-3{display:grid; gap:18px; grid-template-columns:1fr}
+@media(min-width:760px){ .grid-3{grid-template-columns:repeat(2,1fr)} }
+@media(min-width:1020px){ .grid-3{grid-template-columns:repeat(3,1fr)} }
+.grid-2{display:grid; gap:20px; grid-template-columns:1fr}
+@media(min-width:900px){ .grid-2{grid-template-columns:repeat(2,1fr)} }
+.tag{display:inline-flex; align-items:center; gap:6px; font-family:var(--f-mono); font-size:10px;
+  letter-spacing:.09em; text-transform:uppercase; padding:3px 8px; border-radius:2px;
+  background:var(--accent-wash); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 32%,transparent)}
+.tag.amber{background:var(--amber-wash); color:var(--amber); border-color:color-mix(in srgb,var(--amber) 34%,transparent)}
+.tag.slate{background:var(--slate-wash); color:var(--slate); border-color:color-mix(in srgb,var(--slate) 34%,transparent)}
+.tag.alarm{background:var(--alarm-wash); color:var(--alarm); border-color:color-mix(in srgb,var(--alarm) 34%,transparent)}
+.tag.plain{background:var(--panel-2); color:var(--ink-3); border-color:var(--rule)}
+.small{font-size:14.5px; color:var(--ink-2); line-height:1.55}
+.cap{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.04em; color:var(--ink-3); line-height:1.5}
+.rv{opacity:0; transform:translateY(18px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1; transform:none}
+@media(prefers-reduced-motion:reduce){ .rv{opacity:1; transform:none; transition:none} .live i{animation:none} }
+
+/* ============ PIPELINE ============ */
+.pipe{display:grid; grid-template-columns:1fr; gap:10px; margin-top:44px}
+@media(min-width:900px){ .pipe{grid-template-columns:repeat(5,1fr); gap:8px} }
+.stage{position:relative; background:var(--panel); border:var(--hairline); border-top:3px solid var(--stage,var(--accent));
+  border-radius:3px; padding:18px 16px 20px; cursor:default; transition:transform .25s cubic-bezier(.2,.8,.3,1), box-shadow .25s, border-color .25s}
+.stage:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+.stage h4{font-size:14px; font-weight:700; letter-spacing:-.01em; margin-bottom:9px}
+.stage .n{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.13em; color:var(--stage,var(--accent)); display:block; margin-bottom:9px}
+.stage ul{margin:0; padding-left:15px; font-size:13px; color:var(--ink-2); line-height:1.65; font-weight:300}
+@media(min-width:900px){
+  .stage::after{content:""; position:absolute; right:-8px; top:calc(50% - 4px); width:8px; height:8px;
+    border-top:1.5px solid var(--rule-2); border-right:1.5px solid var(--rule-2); transform:rotate(45deg); z-index:2}
+  .stage:last-child::after{display:none}
+}
+
+/* ============ CONSOLE ============ */
+.console{background:var(--panel); border:var(--hairline); border-radius:5px; box-shadow:var(--shadow-lift); overflow:hidden; margin-top:44px}
+.console-bar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 18px; background:var(--panel-2); border-bottom:var(--hairline)}
+.console-body{display:grid; grid-template-columns:1fr}
+@media(min-width:1000px){ .console-body{grid-template-columns:290px minmax(0,1fr) 268px} }
+.pane{padding:22px; border-bottom:var(--hairline)}
+@media(min-width:1000px){ .pane{border-bottom:none; border-right:var(--hairline)} .pane:last-child{border-right:none} }
+.fieldlab{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); margin-bottom:9px; display:block}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px}
+.chip{font-family:var(--f-display); font-size:12px; font-weight:500; padding:6px 10px; border-radius:2px; cursor:pointer;
+  background:transparent; border:1px solid var(--rule-2); color:var(--ink-2); transition:all .18s; text-align:left}
+.chip:hover{border-color:var(--accent); color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+.ladder{display:flex; flex-direction:column; gap:3px; margin-top:6px}
+.rung{display:grid; grid-template-columns:34px 1fr auto; align-items:center; gap:10px; padding:8px 9px; border-radius:2px;
+  cursor:pointer; border:1px solid transparent; background:transparent; text-align:left; transition:background .18s, border-color .18s}
+.rung:hover{background:var(--panel-2)}
+.rung[aria-pressed="true"]{background:var(--amber-wash); border-color:color-mix(in srgb,var(--amber) 40%,transparent)}
+.rung .g{font-family:var(--f-mono); font-size:11px; font-weight:600; color:var(--amber)}
+.rung .t{font-size:12.5px; color:var(--ink-2); font-family:var(--f-display); font-weight:500}
+.rung .n{font-family:var(--f-mono); font-size:10px; color:var(--ink-3)}
+</style>
+<style>
+/* ============ CHART SHELL ============ */
+.chartbox{position:relative}
+.chart-h{display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:4px}
+.chart-t{font-family:var(--f-display); font-size:15px; font-weight:700; letter-spacing:-.015em}
+.chart-s{font-size:13px; color:var(--ink-3); font-weight:300; max-width:60ch}
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:12px}
+.legend i{display:inline-block; width:14px; height:3px; border-radius:2px; vertical-align:middle; margin-right:6px}
+.legend span{font-family:var(--f-mono); font-size:10.5px; color:var(--ink-2); letter-spacing:.02em; white-space:nowrap}
+.tip{position:absolute; pointer-events:none; z-index:20; background:var(--ink); color:var(--paper);
+  border-radius:3px; padding:8px 10px; font-family:var(--f-mono); font-size:11px; line-height:1.5;
+  opacity:0; transition:opacity .12s; box-shadow:0 8px 24px -8px rgba(0,0,0,.5); white-space:nowrap}
+.tip.on{opacity:1}
+.tip b{color:var(--accent-2); font-weight:600}
+
+/* API panel */
+.api{background:var(--ink); color:#cfe3e0; font-family:var(--f-mono); font-size:11.5px; line-height:1.85;
+  padding:18px; border-radius:3px; overflow-x:auto}
+:root[data-theme="dark"] .api, :root:not([data-theme="light"]) .api{border:1px solid var(--rule)}
+.api .kk{color:#7fa9a5}
+.api .vv{color:#5ee0c8}
+.api .ss{color:#e8b46a}
+.badge-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+
+/* ============ TABS ============ */
+.tabs{display:flex; gap:2px; flex-wrap:wrap; border-bottom:var(--hairline); margin-top:38px}
+.tab{font-family:var(--f-display); font-size:13.5px; font-weight:600; padding:11px 15px; background:transparent;
+  border:none; border-bottom:2px solid transparent; color:var(--ink-3); cursor:pointer; transition:color .18s, border-color .18s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent)}
+.panel-body{padding-top:28px}
+.panel-body[hidden]{display:none}
+
+/* ============ TABLE ============ */
+.tbl{font-size:13.5px}
+.tbl th{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3);
+  text-align:left; padding:9px 12px; border-bottom:1px solid var(--rule-2); font-weight:500; white-space:nowrap}
+.tbl td{padding:10px 12px; border-bottom:var(--hairline); vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td.n{font-family:var(--f-mono); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap}
+.tbl tbody tr{transition:background .15s}
+.tbl tbody tr:hover{background:var(--panel-2)}
+.scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch}
+.sev{display:inline-flex; align-items:center; gap:6px; font-family:var(--f-mono); font-size:10px; letter-spacing:.06em}
+.sev i{width:8px; height:8px; border-radius:2px; flex:0 0 8px}
+
+/* ============ STAT TILES ============ */
+.tiles{display:grid; gap:1px; background:var(--rule); border:var(--hairline); border-radius:4px; overflow:hidden; grid-template-columns:repeat(2,1fr)}
+@media(min-width:820px){ .tiles{grid-template-columns:repeat(4,1fr)} }
+.tile{background:var(--panel); padding:20px 18px}
+.tile .k{font-family:var(--f-mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:8px}
+.tile .v{font-family:var(--f-display); font-weight:800; font-size:clamp(24px,3vw,34px); letter-spacing:-.035em; font-variant-numeric:tabular-nums; line-height:1}
+.tile .d{font-size:12.5px; color:var(--ink-3); margin-top:8px; font-weight:300; line-height:1.45}
+
+/* ============ QUOTE / CALLOUT ============ */
+.callout{border-left:3px solid var(--accent); background:var(--accent-wash); padding:20px 24px; border-radius:0 3px 3px 0}
+.callout.amber{border-left-color:var(--amber); background:var(--amber-wash)}
+.callout h5{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:9px; font-weight:600}
+.callout.amber h5{color:var(--amber)}
+.callout p{font-size:16px; line-height:1.6}
+
+/* ============ FOOTER ============ */
+.foot{background:var(--ink); color:#a9c2be; padding:70px 0 40px}
+:root[data-theme="dark"] .foot, :root:not([data-theme="light"]) .foot{background:#081418}
+.foot h4{color:#fff; font-size:13px; letter-spacing:.02em; margin-bottom:14px}
+.foot a{color:#a9c2be; text-decoration:none; font-size:13.5px; line-height:2; display:block; transition:color .18s}
+.foot a:hover{color:var(--accent-2)}
+.foot-grid{display:grid; gap:34px; grid-template-columns:1fr}
+@media(min-width:780px){ .foot-grid{grid-template-columns:1.6fr 1fr 1fr 1fr} }
+.foot-bot{margin-top:52px; padding-top:22px; border-top:1px solid rgba(255,255,255,.11); display:flex; gap:16px;
+  flex-wrap:wrap; justify-content:space-between; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.05em; color:#7b9490}
+.refs{font-family:var(--f-mono); font-size:10.5px; line-height:1.9; color:#7b9490; columns:1}
+@media(min-width:760px){ .refs{columns:2; column-gap:36px} }
+</style>
+
+<!-- ================= STAFF GAUGE RAIL ================= -->
+<div class="rail" aria-hidden="true">
+  <div class="rail-line"></div>
+  <div class="rail-fill" id="railFill"></div>
+  <div id="railTicks"></div>
+  <div class="rail-head" id="railHead" style="top:0"></div>
+  <div class="rail-cap">Datum &mdash; scroll depth</div>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M2 15.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <path d="M2 19.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity=".45"/>
+        <path d="M6.5 10.5V4.2h11v6.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M4.6 4.2h14.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      FloodVuln <em>Global</em>
+    </div>
+    <a class="nlink" href="#engine">Engine</a>
+    <a class="nlink" href="#calibration">Calibration</a>
+    <a class="nlink" href="#insurance">Insurance</a>
+    <a class="nlink" href="#banks">Banks</a>
+    <a class="nlink" href="#validation">Validation</a>
+    <button class="themetog" id="themeBtn" aria-label="Switch colour theme" title="Switch colour theme">&#9681;</button>
+    <a class="btn" href="#pilot">Request a pilot</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Global flood vulnerability intelligence</div>
+      <h1 class="hero-h">Hazard models tell you where the water goes.<br><span class="fade">We tell you what it does.</span></h1>
+      <p class="hero-sub">FloodVuln Global is a vendor-neutral vulnerability layer that converts flood intensity into a
+        probability distribution of physical damage &mdash; specific to building archetype, geography and the local evidence
+        you can actually produce.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#engine">Open the engine &rarr;</a>
+        <a class="btn ghost" href="#banks">Bank climate-risk use case</a>
+      </div>
+      <div class="tagline">
+        <div><b>Global knowledge.</b><span>~1,000 harmonized functions</span></div>
+        <div><b>Local calibration.</b><span>Updates from 10 observations up</span></div>
+        <div><b>Insurance-grade uncertainty.</b><span>Distributions, not point estimates</span></div>
+      </div>
+    </div>
+
+    <div class="gauge" id="heroGauge">
+      <div class="gauge-top">
+        <span class="gauge-title">Sounding &mdash; single risk</span>
+        <span class="live"><i></i>Live model</span>
+      </div>
+      <canvas class="gauge-canvas" id="gaugeCanvas" role="img"
+        aria-label="Cross-section of a single-storey timber-frame dwelling with a rising waterline. Drag the depth control to change inundation depth."></canvas>
+      <div class="gauge-ctl">
+        <label for="heroDepth">Depth</label>
+        <input type="range" id="heroDepth" min="0" max="300" value="55" step="1"
+          aria-label="Effective inundation depth above the first finished floor, in centimetres">
+        <span class="num" id="heroDepthOut" style="min-width:74px; text-align:right; font-weight:600">0.55 m</span>
+      </div>
+      <div class="readout">
+        <div><span class="k">Mean DR</span><span class="v acc" id="roMean">0.184</span></div>
+        <div><span class="k">P10 &ndash; P90</span><span class="v" id="roBand" style="font-size:clamp(14px,1.5vw,18px)">.03&ndash;.49</span></div>
+        <div><span class="k">P(DR &gt; 50%)</span><span class="v tail" id="roTail">9.4%</span></div>
+        <div><span class="k">Ground-up</span><span class="v" id="roLoss" style="font-size:clamp(14px,1.5vw,18px)">$57.0k</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= THE BOTTLENECK ================= -->
+<section class="band band-alt" id="problem">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">The bottleneck</div>
+      <h2 class="sect">The hazard side got good.<br>The damage side did not.</h2>
+      <p class="lede measure">A flood model can now resolve inundation to a few metres. The step that turns that water
+        into money is still, in most portfolios, a single curve mapping one depth to one expected damage ratio &mdash;
+        and the observations say that curve is not what happens.</p>
+    </div>
+
+    <div class="tiles rv" style="margin-top:44px">
+      <div class="tile"><span class="k">Sources reviewed</span><span class="v">61</span><span class="d">Flood loss models assembled in the Gerl et&nbsp;al. harmonization review [1].</span></div>
+      <div class="tile"><span class="k">Vulnerability functions</span><span class="v">~1,000</span><span class="d">Strongly heterogeneous in structure, datum and damage definition.</span></div>
+      <div class="tile"><span class="k">Explicitly validated</span><span class="v">~50%</span><span class="d">About half carried no explicit validation at proposal time.</span></div>
+      <div class="tile"><span class="k">US claims analysed</span><span class="v">2M+</span><span class="d">NFIP big-data study: losses at a given depth are broad and often bimodal [3].</span></div>
+    </div>
+
+    <div class="card rv" style="margin-top:26px; padding:26px 26px 20px">
+      <div class="chart-h">
+        <div>
+          <div class="chart-t">One depth, many outcomes</div>
+          <div class="chart-s">Observed damage at a fixed depth spreads across almost the whole 0&ndash;1 range. A deterministic
+            curve prices the middle of a cloud it never describes.</div>
+        </div>
+        <div class="tag plain">Illustrative</div>
+      </div>
+      <div class="chartbox" id="cloudBox">
+        <svg id="cloudChart" viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+             role="img" aria-label="Scatter of observed damage ratios against flood depth, with a deterministic curve and a P10 to P90 uncertainty ribbon."></svg>
+        <div class="tip" id="cloudTip"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--ink-3)"></i>Observed loss records</span>
+        <span><i style="background:var(--alarm)"></i>Conventional single curve</span>
+        <span><i style="background:var(--accent); height:9px; opacity:.28; border-radius:1px"></i>FloodVuln P10&ndash;P90 band</span>
+        <span><i style="background:var(--accent)"></i>FloodVuln mean</span>
+      </div>
+      <p class="cap" style="margin-top:12px">Synthetic records drawn from a zero/one-inflated beta with the shape reported for US
+        residential claims. Shown to illustrate the model contract, not to reproduce any specific dataset.</p>
+    </div>
+
+    <div class="grid-3 rv" style="margin-top:26px">
+      <div class="card">
+        <div class="tag alarm">Fails quietly</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Depth-only transfer</h3>
+        <p class="small">A curve fitted on one country&rsquo;s building stock, moved to another, carries its construction,
+          code era and repair economics with it &mdash; invisibly.</p>
+      </div>
+      <div class="card">
+        <div class="tag alarm">Fails quietly</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Payout learned as physics</h3>
+        <p class="small">Calibrating on settled claims without normalising deductibles and limits teaches the model your
+          policy terms and calls the result vulnerability.</p>
+      </div>
+      <div class="card">
+        <div class="tag alarm">Fails quietly</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Silent extrapolation</h3>
+        <p class="small">Out-of-domain depth, occupancy or geography returns a number with the same confidence as an
+          in-sample one, and nothing on the screen says so.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section class="band" id="architecture">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Architecture</div>
+      <h2 class="sect">Global evidence in.<br>Local insurance intelligence out.</h2>
+      <p class="lede measure">Five independently versioned layers. Every production prediction reproduces from a model
+        version, an evidence snapshot, a calibration dataset ID and a parameter set &mdash; so model governance is a
+        property of the system, not a document written afterwards.</p>
+    </div>
+
+    <div class="pipe rv">
+      <div class="stage" style="--stage:var(--ink-2)">
+        <span class="n">LAYER 1</span><h4>Evidence</h4>
+        <ul><li>Published curves</li><li>Claims &amp; surveys</li><li>Engineering models</li><li>Local expert knowledge</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--accent)">
+        <span class="n">LAYER 2</span><h4>Harmonization</h4>
+        <ul><li>Units &amp; depth datum</li><li>Taxonomy crosswalk</li><li>Provenance</li><li>Evidence scoring</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--slate)">
+        <span class="n">LAYER 3</span><h4>Global prior</h4>
+        <ul><li>Meta-vulnerability</li><li>Regional hierarchy</li><li>Archetype priors</li><li>Uncertainty</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--amber)">
+        <span class="n">LAYER 4</span><h4>Local calibration</h4>
+        <ul><li>Claims updating</li><li>Sparse-data pooling</li><li>Expert priors</li><li>Client view of risk</li></ul>
+      </div>
+      <div class="stage" style="--stage:var(--good)">
+        <span class="n">LAYER 5</span><h4>Delivery</h4>
+        <ul><li>Damage distribution</li><li>Ground-up loss</li><li>Confidence score</li><li>API &amp; portfolio batch</li></ul>
+      </div>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:34px">
+      <div class="callout">
+        <h5>Positioning</h5>
+        <p>A universal translation layer between flood intensity and financial damage &mdash; designed to plug into the
+          hazard and catastrophe-model ecosystem you already run, and strengthen the vulnerability component inside it.</p>
+      </div>
+      <div class="callout amber">
+        <h5>Deliberately out of scope</h5>
+        <p>We do not rebuild stochastic event sets, terrain models or policy financial modules. Bring depths from Fathom,
+          JBA, Moody&rsquo;s RMS, Verisk, a government map or your own hydrodynamics &mdash; the vulnerability layer is the product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ENGINE CONSOLE ================= -->
+<section class="band band-alt" id="engine">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">FloodVuln Engine</div>
+      <h2 class="sect">Operate the model.</h2>
+      <p class="lede measure">Choose an archetype, set a depth, add whatever local evidence you actually have. The engine
+        returns a bounded damage distribution &mdash; and shows you how much of the width is the world, and how much is
+        the thinness of your evidence.</p>
+    </div>
+
+    <div class="console rv">
+      <div class="console-bar">
+        <span class="gauge-title">FloodVuln&nbsp;Engine &mdash; interactive</span>
+        <span class="tag plain" id="archId" style="text-transform:none; letter-spacing:.02em">US.RES.SF.WOOD.1STORY.SLAB</span>
+        <span class="live" style="margin-left:auto"><i></i>Recomputing on every input</span>
+      </div>
+
+      <div class="console-body">
+        <!-- CONTROLS -->
+        <div class="pane">
+          <span class="fieldlab">Asset archetype</span>
+          <div class="chips" id="archChips"></div>
+
+          <span class="fieldlab">Effective depth above finished floor</span>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:22px">
+            <input type="range" id="engDepth" min="-40" max="320" value="70" step="1"
+              aria-label="Effective depth above finished floor, centimetres">
+            <span class="num" id="engDepthOut" style="min-width:66px; text-align:right; font-weight:600">0.70 m</span>
+          </div>
+
+          <span class="fieldlab">Additional hazard evidence</span>
+          <div class="chips" style="margin-bottom:22px">
+            <button class="chip" id="chDur" aria-pressed="false">Duration &gt; 24h</button>
+            <button class="chip" id="chVel" aria-pressed="false">Velocity &gt; 1 m/s</button>
+            <button class="chip" id="chCon" aria-pressed="false">Contamination</button>
+          </div>
+
+          <span class="fieldlab">Calibration level &mdash; local evidence</span>
+          <div class="ladder" id="ladder" role="group" aria-label="Calibration level"></div>
+        </div>
+
+        <!-- CHART -->
+        <div class="pane">
+          <div class="chart-h">
+            <div>
+              <div class="chart-t">Damage-ratio distribution</div>
+              <div class="chart-s">Zero/one-inflated beta. The bars at 0 and 1 are the probability of no damage and of
+                effective total loss; the curve between them is the continuous density.</div>
+            </div>
+          </div>
+          <div class="chartbox" id="densBox">
+            <svg id="densChart" viewBox="0 0 620 348" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+                 role="img" aria-label="Probability density of the damage ratio, with point masses at zero and one and a shaded P10 to P90 interval."></svg>
+            <div class="tip" id="densTip"></div>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--accent); height:9px; opacity:.3; border-radius:1px"></i>P10&ndash;P90 interval</span>
+            <span><i style="background:var(--accent)"></i>Density</span>
+            <span><i style="background:var(--amber)"></i>Mean</span>
+            <span><i style="background:var(--ink-3)"></i>Point masses at 0 / 1</span>
+          </div>
+          <div class="scroll-x" style="margin-top:16px">
+            <table class="tbl" id="quantTable">
+              <caption class="cap" style="text-align:left; padding-bottom:8px">Distribution summary &mdash; the values the API returns</caption>
+            </table>
+          </div>
+        </div>
+
+        <!-- API -->
+        <div class="pane">
+          <span class="fieldlab">Response &mdash; POST /v1/vulnerability</span>
+          <div class="api" id="apiOut"></div>
+          <div class="badge-row" id="evidenceBadges"></div>
+          <p class="cap" style="margin-top:16px">Every response carries its archetype, calibration level, evidence grade
+            and model version. Pin the version and the result reproduces next year, after the model has moved on.</p>
+          <div style="margin-top:18px; padding-top:16px; border-top:var(--hairline)">
+            <span class="fieldlab">What widened the interval</span>
+            <ul class="small" id="whyList" style="margin:0; padding-left:17px; font-size:13px"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="cap rv" style="margin-top:14px">Illustrative engine. Coefficients are plausible demonstration values, not
+      production parameters &mdash; production coefficients are estimated and validated from source data.</p>
+  </div>
+</section>
+
+<!-- ================= CALIBRATION ================= -->
+<section class="band" id="calibration">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow amber">Global-to-local calibration</div>
+      <h2 class="sect">The differentiator is not another curve.<br>It is knowing what to do with ten observations.</h2>
+      <p class="lede measure">Local data update the global prior in proportion to their quality and sample size. Ten
+        records shrink hard toward the prior; a thousand records own the answer. The prior is never discarded, so a
+        location with no evidence at all still returns a documented number &mdash; with honest width.</p>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:44px; align-items:start">
+      <div class="card">
+        <div class="chart-h">
+          <div>
+            <div class="chart-t">Sparse-data learning curve</div>
+            <div class="chart-s">Blind hold-out error against the number of local depth&ndash;damage observations used
+              for calibration. The band is the spread across resampled training sets.</div>
+          </div>
+          <div class="tag plain">Illustrative</div>
+        </div>
+        <div class="chartbox" id="learnBox">
+          <svg id="learnChart" viewBox="0 0 620 330" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+               role="img" aria-label="Mean absolute error of predicted damage ratio falling as the number of local calibration observations increases from zero to five hundred."></svg>
+          <div class="tip" id="learnTip"></div>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--amber)"></i>Hierarchical posterior (partial pooling)</span>
+          <span><i style="background:var(--slate)"></i>Local-only refit</span>
+          <span><i style="background:var(--ink-3)"></i>Global prior, no local data</span>
+        </div>
+        <p class="cap" style="margin-top:12px">A local-only refit beats the prior eventually &mdash; but is worse than
+          doing nothing until it has enough data to earn its variance. That crossover is the whole argument for pooling.</p>
+      </div>
+
+      <div style="display:grid; gap:18px">
+        <div class="card">
+          <h3 style="font-size:19px; margin-bottom:14px">What counts as local evidence</h3>
+          <div class="scroll-x">
+            <table class="tbl">
+              <thead><tr><th>Level</th><th>Minimum evidence</th><th>Model behaviour</th></tr></thead>
+              <tbody>
+                <tr><td><b class="mono" style="color:var(--amber)">G0</b></td><td>Location, sector, depth</td><td>Global / continental prior</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G1</b></td><td>Building characteristics</td><td>Archetype prior</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G2</b></td><td>Structured local expert evidence</td><td>Informative prior modifiers</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G3</b></td><td>Tens of depth&ndash;damage pairs</td><td>Hierarchical posterior, shrunk</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G4</b></td><td>Hundreds of quality records</td><td>Market-specific posterior</td></tr>
+                <tr><td><b class="mono" style="color:var(--amber)">G5</b></td><td>Carrier portfolio history</td><td>Client-specific layer</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout amber">
+          <h5>Where claims are scarce</h5>
+          <p>We elicit distributions, not curve edits &mdash; the proportion of masonry in the local stock, typical
+            first-floor height, basement prevalence, code era, repair practice. Expert statements are stored as auditable
+            priors with source, date and confidence, and they move the answer by exactly as much as they should.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSURANCE ================= -->
+<section class="band band-alt" id="insurance">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Insurance workflows</div>
+      <h2 class="sect">Five desks, one vulnerability view.</h2>
+      <p class="lede measure">The same versioned engine answers the underwriter, the pricing actuary, the accumulation
+        team, the model-validation function and the claims unit &mdash; which is the point. Today those five desks
+        usually disagree because they are quietly running different vulnerability assumptions.</p>
+    </div>
+
+    <div class="tabs rv" role="tablist" aria-label="Insurance workflows">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="tp-uw" id="tb-uw">Underwriting</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-pr" id="tb-pr">Pricing</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-ac" id="tb-ac">Accumulation</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-mv" id="tb-mv">Model validation</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="tp-cl" id="tb-cl">Claims triage</button>
+    </div>
+
+    <!-- UNDERWRITING -->
+    <div class="panel-body rv" id="tp-uw" role="tabpanel" aria-labelledby="tb-uw">
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">Two risks, one hazard score, different answers</h3>
+          <p class="small" style="font-size:16px">Both properties sit in the same 1-in-100 depth band, and a depth-only
+            curve prices them identically. The archetype split is where the underwriting decision actually lives:
+            the same 0.9&nbsp;m of water is a manageable claim in one and a near-total loss in the other.</p>
+          <div class="callout" style="margin-top:22px">
+            <h5>What the underwriter sees</h5>
+            <p>Not a score. A severity distribution, the archetype it was drawn from, the evidence grade behind it, and
+              a warning if the depth sits outside the calibrated domain.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="scroll-x">
+            <table class="tbl">
+              <thead><tr><th>Risk</th><th>Archetype</th><th class="n">Mean DR</th><th class="n">P90</th><th class="n">P(&gt;50%)</th><th>Grade</th></tr></thead>
+              <tbody id="uwTable"></tbody>
+            </table>
+          </div>
+          <p class="cap" style="margin-top:12px">Depth 0.9&nbsp;m above finished floor; illustrative engine output.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="panel-body rv" id="tp-pr" role="tabpanel" aria-labelledby="tb-pr" hidden>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">Technical price from the whole distribution</h3>
+          <p class="small" style="font-size:16px">Expected loss comes off the mean; the risk load comes off the tail. A
+            point estimate gives you the first and forces you to guess the second, usually through a flat regional
+            factor that is wrong in both directions at once.</p>
+          <p class="small" style="font-size:16px; margin-top:14px">Because ground-up damage is kept strictly separate
+            from policy terms, the deductible and limit apply <i>downstream</i> of the vulnerability layer &mdash; so a
+            change in attachment does not silently rewrite the physics.</p>
+        </div>
+        <div class="tiles" id="prTiles" style="grid-template-columns:repeat(2,1fr)"></div>
+      </div>
+    </div>
+
+    <!-- ACCUMULATION -->
+    <div class="panel-body rv" id="tp-ac" role="tabpanel" aria-labelledby="tb-ac" hidden>
+      <h3 style="font-size:23px; margin-bottom:8px">One consistent view across a multinational book</h3>
+      <p class="small measure" style="font-size:16px; margin-bottom:22px">Each country arrives with its own national
+        classification and its own local functions. The taxonomy crosswalk makes the books comparable; the evidence grade
+        stops that comparability from being mistaken for equal confidence.</p>
+      <div class="card" style="padding:8px 0 0">
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Territory</th><th>Dominant archetype</th><th class="n">Exposure</th><th class="n">Mean DR</th><th class="n">AAL (bps)</th><th class="n">1-in-200</th><th>Evidence</th></tr></thead>
+            <tbody id="portTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:12px">Illustrative portfolio. AAL expressed in basis points of total insured value;
+        1-in-200 is the modelled portfolio ground-up loss at that return period.</p>
+    </div>
+
+    <!-- MODEL VALIDATION -->
+    <div class="panel-body rv" id="tp-mv" role="tabpanel" aria-labelledby="tb-mv" hidden>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">An independent challenge to the vulnerability component</h3>
+          <p class="small" style="font-size:16px">This is where most first engagements start, because independence is an
+            asset to a validation team rather than a threat. FloodVuln Compare benchmarks your incumbent vendor curve, your
+            own internal curve and the harmonized global families against the same observations, on the same hold-out.</p>
+          <p class="small" style="font-size:16px; margin-top:14px">You get the disagreement, the size of it, and the
+            evidence behind each side &mdash; in a form a regulator will accept as model-risk documentation.</p>
+        </div>
+        <div class="card">
+          <div class="chart-h"><div class="chart-t">Blind hold-out event &mdash; portfolio loss error</div></div>
+          <div class="chartbox" id="cmpBox">
+            <svg id="cmpChart" viewBox="0 0 560 250" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+                 role="img" aria-label="Bar chart of portfolio loss error against a held-out event for four vulnerability assumptions."></svg>
+            <div class="tip" id="cmpTip"></div>
+          </div>
+          <p class="cap" style="margin-top:10px">Signed error against actual settled ground-up loss on a withheld event.
+            Illustrative; production comparisons are tied to named datasets, events and metrics.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLAIMS -->
+    <div class="panel-body rv" id="tp-cl" role="tabpanel" aria-labelledby="tb-cl" hidden>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <h3 style="font-size:23px; margin-bottom:14px">Triage before the adjusters arrive</h3>
+          <p class="small" style="font-size:16px">Post-event observed depth plus the exposure file gives a probable
+            severity for every affected location within hours. Not to settle claims &mdash; to sequence them, staff them
+            and reserve for them while the water is still in the street.</p>
+          <div class="callout" style="margin-top:22px">
+            <h5>Reserve intelligence</h5>
+            <p>Because the output is a distribution, the reserving question &ldquo;what is the chance this book runs past
+              our booked figure&rdquo; is answerable on day two, not month three.</p>
+          </div>
+        </div>
+        <div class="tiles" style="grid-template-columns:repeat(2,1fr)">
+          <div class="tile"><span class="k">Locations inundated</span><span class="v">4,180</span><span class="d">Matched to observed depth grid within 6 hours of peak.</span></div>
+          <div class="tile"><span class="k">P(&gt;50% damage)</span><span class="v" style="color:var(--alarm)">612</span><span class="d">Risks above 25% probability of severe damage &mdash; adjuster priority.</span></div>
+          <div class="tile"><span class="k">Likely zero-claim</span><span class="v">1,905</span><span class="d">Inundated but below floor level; de-prioritised, not closed.</span></div>
+          <div class="tile"><span class="k">Indicated reserve</span><span class="v">$71m</span><span class="d">Mean ground-up, with a P90 of $154m carried alongside it.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BANKS ================= -->
+<section class="band" id="banks">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow slate">Banks &mdash; physical climate risk</div>
+      <h2 class="sect">A mortgage book is a portfolio<br>of building vulnerabilities.</h2>
+      <p class="lede measure">Banks are asked to quantify physical climate risk on collateral they did not underwrite for
+        flood, using hazard layers that stop at the water&rsquo;s edge. The missing step is the same one insurers are
+        missing: what a given depth does to a given building, with the uncertainty stated. Damage on collateral is what
+        moves valuation, LTV, loss given default and, ultimately, expected credit loss.</p>
+    </div>
+
+    <div class="card rv" style="margin-top:44px; padding:0; overflow:hidden">
+      <div class="console-bar" style="border-bottom:var(--hairline)">
+        <span class="gauge-title">Mortgage book &mdash; physical risk stress</span>
+        <div class="chips" style="margin:0; margin-left:auto" id="scenChips">
+          <button class="chip" aria-pressed="true" data-scen="0">Current climate</button>
+          <button class="chip" aria-pressed="false" data-scen="1">+1.5&deg;C &middot; 2050</button>
+          <button class="chip" aria-pressed="false" data-scen="2">+3.0&deg;C &middot; 2050</button>
+        </div>
+        <button class="chip" id="adaptBtn" aria-pressed="false" style="margin:0">Adaptation programme</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr">
+        <div class="grid-2" style="gap:0; align-items:stretch">
+          <div style="padding:26px; border-bottom:var(--hairline)">
+            <div class="chart-h">
+              <div>
+                <div class="chart-t">Expected annual collateral damage</div>
+                <div class="chart-s">Basis points of exposure at default, on a 42,000-loan residential book concentrated
+                  in three flood-exposed regions.</div>
+              </div>
+            </div>
+            <div class="chartbox" id="bankBox">
+              <svg id="bankChart" viewBox="0 0 620 320" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto"
+                   role="img" aria-label="Expected annual collateral damage in basis points of exposure, from 2025 to 2055, under three warming scenarios."></svg>
+              <div class="tip" id="bankTip"></div>
+            </div>
+            <div class="legend" id="bankLegend"></div>
+          </div>
+
+          <div style="padding:26px; border-bottom:var(--hairline); border-left:var(--hairline)">
+            <div class="chart-h">
+              <div>
+                <div class="chart-t">Where the number comes from</div>
+                <div class="chart-s">Vulnerability is the only link in this chain that is not already in the bank&rsquo;s
+                  stack &mdash; and it is the one that decides the size of everything downstream.</div>
+              </div>
+            </div>
+            <div id="chain" style="display:grid; gap:9px; margin-top:18px"></div>
+          </div>
+        </div>
+
+        <div class="tiles" style="border:none; border-radius:0; border-top:var(--hairline)" id="bankTiles"></div>
+      </div>
+    </div>
+
+    <div class="grid-3 rv" style="margin-top:26px">
+      <div class="card">
+        <div class="tag slate">Regulatory</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Stress testing and ICAAP</h3>
+        <p class="small">Hold vulnerability fixed and move the hazard, or evolve adaptation and hold the hazard &mdash; the
+          two are separable, so a supervisor can see which assumption is doing the work.</p>
+      </div>
+      <div class="card">
+        <div class="tag slate">Accounting</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">IFRS 9 and collateral valuation</h3>
+        <p class="small">Damage distributions feed a forward-looking haircut on collateral value, and therefore LGD, with
+          provenance a model-validation function can trace back to source evidence.</p>
+      </div>
+      <div class="card">
+        <div class="tag slate">Origination</div>
+        <h3 style="font-size:17px; margin:14px 0 9px">Lending policy and green finance</h3>
+        <p class="small">Quantified avoided loss from elevation, floodproofing or utility relocation turns a resilience
+          retrofit into a priceable adjustment rather than a marketing claim.</p>
+      </div>
+    </div>
+
+    <div class="callout rv" style="margin-top:26px">
+      <h5>Why banks and insurers should use the same layer</h5>
+      <p>When the lender and the insurer of the same building disagree about its flood vulnerability, one of them is
+        mispricing and neither can prove which. A shared, versioned, independently validated vulnerability layer makes
+        that disagreement visible and testable &mdash; which is a precondition for insurance-linked lending terms,
+        resilience-linked mortgages and any credible transfer of physical risk between the two balance sheets.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VALIDATION ================= -->
+<section class="band band-alt" id="validation">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">Validation and governance</div>
+      <h2 class="sect">We would rather be checkable than impressive.</h2>
+      <p class="lede measure">A vulnerability layer that cannot be independently tested is worth nothing to a model-risk
+        function, whatever it scores. The benchmark programme is pre-specified, reproducible and open to review &mdash;
+        and the marketing language is held to what it has actually passed.</p>
+    </div>
+
+    <div class="grid-2 rv" style="margin-top:44px; align-items:start">
+      <div class="card" style="padding:8px 0 0">
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Benchmark</th><th>Design</th><th>Primary metrics</th></tr></thead>
+            <tbody>
+              <tr><td><b>Curve reproduction</b></td><td>Harmonized function vs source implementation</td><td class="mono" style="font-size:11.5px">transform error, datum QA</td></tr>
+              <tr><td><b>Hold-out event</b></td><td>Exclude an event, predict its losses</td><td class="mono" style="font-size:11.5px">MAE, RMSE, bias, CRPS</td></tr>
+              <tr><td><b>Leave-region-out</b></td><td>Train elsewhere, predict a held-out region</td><td class="mono" style="font-size:11.5px">transfer error, calibration</td></tr>
+              <tr><td><b>Leave-country-out</b></td><td>Zero-local-data global coverage test</td><td class="mono" style="font-size:11.5px">vs JRC / transferred baseline</td></tr>
+              <tr><td><b>Learning curve</b></td><td>n = 0, 5, 10, 25, 50, 100, 500 local records</td><td class="mono" style="font-size:11.5px">error reduction per record</td></tr>
+              <tr><td><b>Portfolio blind test</b></td><td>Insurer withholds event and supplies allowed inputs only</td><td class="mono" style="font-size:11.5px">portfolio error, severity calibration</td></tr>
+              <tr><td><b>Uncertainty</b></td><td>Evaluate the probability forecasts themselves</td><td class="mono" style="font-size:11.5px">PIT, CRPS, coverage, slope</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:grid; gap:18px">
+        <div class="card">
+          <h3 style="font-size:19px; margin-bottom:6px">Coverage is global. Confidence is not.</h3>
+          <p class="small" style="margin-bottom:18px">The API returns a scientifically documented answer anywhere on
+            earth. What changes by geography is the evidence grade attached to it &mdash; and we would rather show you a
+            D than dress it up as an A.</p>
+          <div style="display:grid; gap:8px" id="grades"></div>
+        </div>
+        <div class="card" style="background:var(--panel-3); border-color:var(--rule-2)">
+          <span class="fieldlab">Claim discipline</span>
+          <div class="grid-2" style="gap:14px; margin-top:6px">
+            <div>
+              <div class="tag" style="margin-bottom:9px">Say now</div>
+              <p class="small" style="font-size:13px">&ldquo;Globally harmonized, locally calibratable, probabilistic
+                flood vulnerability, built for transparent benchmarking.&rdquo;</p>
+            </div>
+            <div>
+              <div class="tag alarm" style="margin-bottom:9px">Not until proven</div>
+              <p class="small" style="font-size:13px">&ldquo;The most accurate flood model in the world.&rdquo;
+                &ldquo;Uncertainty eliminated.&rdquo; &ldquo;Guaranteed accurate at every property.&rdquo;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODULES ================= -->
+<section class="band" id="modules">
+  <div class="wrap">
+    <div class="rv">
+      <div class="eyebrow">The platform</div>
+      <h2 class="sect">Six modules, one evidence base.</h2>
+    </div>
+    <div class="grid-3 rv" style="margin-top:40px" id="modGrid"></div>
+  </div>
+</section>
+
+<!-- ================= PILOT ================= -->
+<section class="band band-alt" id="pilot">
+  <div class="wrap">
+    <div class="grid-2" style="align-items:start; gap:44px">
+      <div class="rv">
+        <div class="eyebrow">Minimum pilot</div>
+        <h2 class="sect">Prove it on your own withheld event.</h2>
+        <p class="lede">A first engagement replaces nothing. You supply a historical sample &mdash; property attributes,
+          event depth or an agreed hazard layer, ground-up or normalised loss, and the policy metadata needed to strip out
+          financial terms. We run blind against your current vulnerability assumption.</p>
+        <div class="callout" style="margin-top:26px">
+          <h5>The question the pilot answers</h5>
+          <p>Does FloodVuln reduce blind portfolio loss error and improve probabilistic calibration relative to your
+            current vulnerability assumption &mdash; while staying explainable enough for model governance?</p>
+        </div>
+        <div class="hero-cta">
+          <a class="btn" href="#">Request the pilot protocol &rarr;</a>
+          <a class="btn ghost" href="#engine">Back to the engine</a>
+        </div>
+      </div>
+      <div class="card rv" style="padding:8px 0 0">
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Workstream</th><th>Deliverable</th></tr></thead>
+            <tbody>
+              <tr><td><b>Data audit</b></td><td class="small" style="font-size:13px">Coverage, missingness, depth datum, loss normalisation, leakage checks</td></tr>
+              <tr><td><b>Baseline reproduction</b></td><td class="small" style="font-size:13px">Your incumbent curve&rsquo;s performance on the agreed hold-out</td></tr>
+              <tr><td><b>Global prior</b></td><td class="small" style="font-size:13px">FloodVuln with no client-specific calibration at all</td></tr>
+              <tr><td><b>Sparse calibration</b></td><td class="small" style="font-size:13px">Learning curve at n = 10, 25, 50, 100, 500</td></tr>
+              <tr><td><b>Full calibration</b></td><td class="small" style="font-size:13px">Client-specific posterior on the approved training subset</td></tr>
+              <tr><td><b>Blind evaluation</b></td><td class="small" style="font-size:13px">Location-level and portfolio-level predictive metrics</td></tr>
+              <tr><td><b>Governance pack</b></td><td class="small" style="font-size:13px">Methodology, evidence, limitations, version IDs, reproducibility bundle</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="color:#fff; margin-bottom:14px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M2 15.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M2 19.5c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity=".45"/>
+            <path d="M6.5 10.5V4.2h11v6.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M4.6 4.2h14.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          FloodVuln <em style="color:var(--accent-2)">Global</em>
+        </div>
+        <p style="font-size:14.5px; max-width:36ch; line-height:1.6; color:#a9c2be">Global knowledge. Local calibration.
+          Insurance-grade uncertainty.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="#engine">Engine</a><a href="#calibration">Local calibration</a><a href="#modules">Atlas &amp; Compare</a><a href="#validation">Validation</a>
+      </div>
+      <div>
+        <h4>Sectors</h4>
+        <a href="#insurance">Insurance &amp; reinsurance</a><a href="#banks">Banks &amp; lenders</a><a href="#banks">Public sector</a><a href="#pilot">Model validation teams</a>
+      </div>
+      <div>
+        <h4>Governance</h4>
+        <a href="#validation">Benchmark programme</a><a href="#validation">Evidence grading</a><a href="#pilot">Pilot protocol</a><a href="#architecture">Versioning policy</a>
+      </div>
+    </div>
+
+    <div style="margin-top:52px; padding-top:22px; border-top:1px solid rgba(255,255,255,.11)">
+      <h4 style="margin-bottom:14px">Evidence foundation</h4>
+      <div class="refs">
+        <div>[1] Gerl et&nbsp;al. (2016) A Review of Flood Loss Models. PLOS ONE 11(7) e0159791.</div>
+        <div>[2] Huizinga, de Moel &amp; Szewczyk (2017) Global flood depth&ndash;damage functions. JRC EUR 28552 EN.</div>
+        <div>[3] Wing et&nbsp;al. (2020) New insights into US flood vulnerability. Nat. Commun. 11:1444.</div>
+        <div>[4] Wagenaar, de Jong &amp; Bouwer (2017) Multi-variable flood damage modelling. NHESS 17:1683.</div>
+        <div>[5] Dottori et&nbsp;al. (2016) INSYDE. NHESS 16:2577.</div>
+        <div>[6] Kellermann et&nbsp;al. (2020) HOWAS21. NHESS 20:2503.</div>
+        <div>[7] FEMA. Hazus Flood Model Technical Manual.</div>
+        <div>[8] Wagenaar et&nbsp;al. (2018) Transferability of Multivariable Flood Damage Models. WRR.</div>
+      </div>
+    </div>
+
+    <div class="foot-bot">
+      <span>Confidential product concept &middot; Specification v1.0 &middot; August 2026</span>
+      <span>All figures on this page are illustrative and do not represent validated model output.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=(v,d)=>v.toFixed(d===undefined?3:d);
+const REDRAW=[];
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---- design tokens read live so charts follow the theme ---- */
+function tok(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function T(){
+  return {ink:tok("--ink"),ink2:tok("--ink-2"),ink3:tok("--ink-3"),grid:tok("--grid"),rule:tok("--rule"),
+    rule2:tok("--rule-2"),acc:tok("--accent"),acc2:tok("--accent-2"),amb:tok("--amber"),sl:tok("--slate"),
+    al:tok("--alarm"),good:tok("--good"),surf:tok("--surface"),panel:tok("--panel"),
+    d1:tok("--d1"),d2:tok("--d2"),d3:tok("--d3"),d4:tok("--d4")};
+}
+
+/* =================== THEME =================== */
+const tb=$("#themeBtn");
+tb.addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme");
+  const sysDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next);
+  requestAnimationFrame(()=>REDRAW.forEach(f=>{try{f();}catch(e){}}));
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{
+  if(!document.documentElement.getAttribute("data-theme")) REDRAW.forEach(f=>{try{f();}catch(e){}});
+});
+
+/* =================== REVEAL =================== */
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} });
+},{rootMargin:"0px 0px -8% 0px",threshold:.06});
+$$(".rv").forEach((n,i)=>{ n.style.transitionDelay=(Math.min(i,3)*55)+"ms"; io.observe(n); });
+
+/* =================== STAFF-GAUGE RAIL =================== */
+(function(){
+  const marks=[["#problem","0.5"],["#architecture","1.0"],["#engine","1.5"],["#calibration","2.0"],
+               ["#insurance","2.5"],["#banks","3.0"],["#validation","3.5"],["#pilot","4.0"]];
+  const ticks=$("#railTicks"), fill=$("#railFill"), head=$("#railHead");
+  if(!ticks) return;
+  function build(){
+    ticks.innerHTML="";
+    const H=window.innerHeight;
+    for(let i=0;i<=40;i++){
+      const y=(i/40)*H, major=i%5===0;
+      const t=document.createElement("div");
+      t.className="rail-tick"+(major?" major":"");
+      t.style.top=y+"px"; ticks.appendChild(t);
+      if(major && i<40){
+        const l=document.createElement("div");
+        l.className="rail-lab"; l.style.top=y+"px";
+        const m=marks[i/5]; l.textContent=m?m[1]+" m":"";
+        ticks.appendChild(l);
+      }
+    }
+  }
+  let ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(()=>{
+      const max=document.body.scrollHeight-window.innerHeight;
+      const p=max>0?clamp(window.scrollY/max,0,1):0;
+      const y=p*window.innerHeight;
+      fill.style.height=y+"px"; head.style.top=y+"px";
+      ticking=false;
+    });
+  }
+  build(); onScroll();
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",()=>{build();onScroll();});
+})();
+
+/* =================== BETA / INCOMPLETE-BETA MATH =================== */
+const GC=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+function gammaln(x){
+  let y=x, t=x+5.5; t-=(x+0.5)*Math.log(t);
+  let s=1.000000000190015;
+  for(let j=0;j<6;j++) s+=GC[j]/++y;
+  return -t+Math.log(2.5066282746310005*s/x);
+}
+function betacf(a,b,x){
+  const FPMIN=1e-300, EPS=3e-12;
+  let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;
+  if(Math.abs(d)<FPMIN) d=FPMIN;
+  d=1/d; let h=d;
+  for(let m=1;m<=200;m++){
+    const m2=2*m;
+    let aa=m*(b-m)*x/((qam+m2)*(a+m2));
+    d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
+    d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d; const del=d*c; h*=del;
+    if(Math.abs(del-1)<EPS) break;
+  }
+  return h;
+}
+/* regularised incomplete beta I_x(a,b) */
+function ibeta(x,a,b){
+  if(x<=0) return 0; if(x>=1) return 1;
+  const bt=Math.exp(gammaln(a+b)-gammaln(a)-gammaln(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x < (a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b;
+}
+function ibetaInv(p,a,b){
+  let lo=0,hi=1,mid=0.5;
+  for(let i=0;i<70;i++){ mid=(lo+hi)/2; (ibeta(mid,a,b)<p)?lo=mid:hi=mid; }
+  return mid;
+}
+function betapdf(x,a,b){
+  if(x<=0||x>=1) return 0;
+  return Math.exp((a-1)*Math.log(x)+(b-1)*Math.log(1-x)+gammaln(a+b)-gammaln(a)-gammaln(b));
+}
+window.__FV_MATH={ibeta:ibeta,ibetaInv:ibetaInv,betapdf:betapdf,tok:tok,T:T,REDRAW:REDRAW,
+  clamp:clamp,fmt:fmt,$:$,$$:$$,reduced:reduced};
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, $=M.$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const MONO="500 9px \"IBM Plex Mono\", monospace";
+const MONOB="600 11px \"IBM Plex Mono\", monospace";
+
+/* =================== ARCHETYPES =================== */
+const ARCH=[
+  {id:"US.RES.SF.WOOD.1STORY.SLAB", chip:"Wood frame, slab",      mumax:.94,k:.50, d0:0,   z0:.58,pT:.30,xc:2.25,val:310000},
+  {id:"US.RES.SF.WOOD.BASEMENT",    chip:"Wood frame, basement",  mumax:.96,k:.42, d0:-.85,z0:.30,pT:.34,xc:2.05,val:342000},
+  {id:"EU.RES.MASONRY.2STORY.RAISED",chip:"Masonry, raised floor",mumax:.82,k:.36, d0:.30, z0:.72,pT:.20,xc:2.70,val:288000},
+  {id:"GLB.RES.RC.MULTI.3STORY",    chip:"RC, multi-storey",      mumax:.64,k:.30, d0:.12, z0:.64,pT:.11,xc:3.10,val:246000},
+  {id:"GLB.COM.RETAIL.1STORY",      chip:"Retail, single storey", mumax:.90,k:.62, d0:0,   z0:.46,pT:.28,xc:2.00,val:1180000},
+  {id:"GLB.IND.WAREHOUSE.STEEL",    chip:"Warehouse, steel",      mumax:.70,k:.44, d0:.15, z0:.52,pT:.15,xc:2.60,val:4400000}
+];
+/* =================== CALIBRATION LADDER =================== */
+const LVL=[
+  {g:"G0",t:"Global prior",        n:"location + sector",       phi:5.5, shift:.10, grade:"D",conf:38,mix:.45,src:9, ns:0},
+  {g:"G1",t:"Building-informed",   n:"archetype attributes",    phi:8.5, shift:.06, grade:"D",conf:54,mix:.18,src:11,ns:0},
+  {g:"G2",t:"Local knowledge",     n:"structured expert priors",phi:12.5,shift:.02, grade:"C",conf:67,mix:.06,src:13,ns:0},
+  {g:"G3",t:"Sparse local data",   n:"~40 observations",        phi:19,  shift:-.03,grade:"B",conf:78,mix:0,  src:14,ns:40},
+  {g:"G4",t:"Local claims",        n:"~900 records",            phi:31,  shift:-.06,grade:"A",conf:92,mix:0,  src:16,ns:912},
+  {g:"G5",t:"Client view of risk", n:"carrier portfolio",       phi:38,  shift:-.08,grade:"A",conf:95,mix:0,  src:16,ns:4310}
+];
+const GEN={mumax:.86,k:.44,d0:.05};
+
+function engine(a, depth, fl, li){
+  const L=LVL[li];
+  let mumax=a.mumax,k=a.k,z0=a.z0,pT=a.pT,xc=a.xc;
+  const notes=[];
+  if(fl.dur){ mumax=Math.min(.985,mumax*1.10); k*=1.05; notes.push("Duration over 24h raises the saturation ceiling."); }
+  if(fl.vel){ mumax=Math.min(.99,mumax*1.07); k*=1.18; pT=Math.min(.55,pT*1.35); notes.push("Velocity over 1 m/s steepens the response and lifts total-loss probability."); }
+  if(fl.con){ mumax=Math.min(.99,mumax*1.05); z0*=.72; notes.push("Contamination cuts the probability of a nil claim."); }
+  const x=Math.max(0,depth-a.d0);
+  let m=mumax*(1-Math.exp(-k*Math.pow(x,1.15)));
+  if(L.mix>0){ const gx=Math.max(0,depth-GEN.d0);
+    m=m*(1-L.mix)+GEN.mumax*(1-Math.exp(-GEN.k*Math.pow(gx,1.15)))*L.mix; }
+  m=clamp(m*(1+L.shift),.015,.965);
+  const p0=clamp(z0*Math.exp(-2.55*x),0,.97);
+  const p1=clamp(pT/(1+Math.exp(-2.3*(x-xc))),0,.72);
+  const rest=Math.max(.02,1-p0-p1);
+  let phi=L.phi;
+  const domain=x>3.2;
+  if(domain) phi*=.72;
+  const a1=Math.max(.4,m*phi), b1=Math.max(.4,(1-m)*phi);
+  const q=function(p){ if(p<=p0) return 0; if(p>=1-p1) return 1; return M.ibetaInv((p-p0)/rest,a1,b1); };
+  const mean=p1+rest*m;
+  const pgt50=p1+rest*(1-M.ibeta(.5,a1,b1));
+  let conf=L.conf;
+  if(domain) conf-=13;
+  if(fl.dur||fl.vel||fl.con) conf+=2;
+  conf=clamp(Math.round(conf),5,98);
+  if(p0>.12) notes.push("Point mass at exactly zero damage carries "+(p0*100).toFixed(0)+"% of the probability.");
+  if(li<=1) notes.push("No local evidence: the interval carries the full width of the global prior.");
+  if(li===2) notes.push("Expert priors sharpen the centre but cannot narrow it the way observations do.");
+  if(li>=3) notes.push("Partial pooling on "+L.ns+" local records has shrunk the interval toward the local signal.");
+  if(domain) notes.push("Depth sits outside the calibrated domain: uncertainty widened, confidence cut.");
+  return {a:a1,b:b1,p0:p0,p1:p1,rest:rest,m:m,mean:mean,med:q(.5),p10:q(.1),p90:q(.9),
+    pgt50:pgt50,conf:conf,grade:L.grade,lvl:L,x:x,notes:notes,domain:domain,arch:a,q:q};
+}
+window.__FV_ENGINE={ARCH:ARCH,LVL:LVL,engine:engine};
+
+/* =================== HERO GAUGE =================== */
+(function(){
+  const cv=$("#gaugeCanvas"); if(!cv) return;
+  const ctx=cv.getContext("2d");
+  const slider=$("#heroDepth"), out=$("#heroDepthOut");
+  let W=0,H=0,phase=0,depth=.55;
+  const HA=ARCH[0];
+
+  function size(){
+    const r=cv.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
+    W=r.width; H=r.height; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function wave(px,wy){ return wy+Math.sin(px*0.031+phase)*2.6+Math.sin(px*0.017-phase*0.7)*1.7; }
+
+  function draw(){
+    const t=T(); if(!W) size();
+    ctx.clearRect(0,0,W,H);
+    const groundY=H-30, floorY=groundY-26, roofY=44;
+    const bx=W*0.30, bw=W*0.40;
+    ctx.strokeStyle=t.grid; ctx.lineWidth=1;
+    for(let d=0;d<=3.5;d+=.5){
+      const y=floorY-(d/3.5)*(floorY-roofY);
+      ctx.beginPath(); ctx.moveTo(38,Math.round(y)+.5); ctx.lineTo(W-14,Math.round(y)+.5); ctx.stroke();
+      ctx.fillStyle=t.ink3; ctx.font=MONO; ctx.textAlign="right";
+      ctx.fillText(d.toFixed(1),32,y+3);
+    }
+    ctx.fillStyle=t.rule; ctx.fillRect(0,groundY,W,H-groundY);
+    ctx.fillStyle=t.panel; ctx.strokeStyle=t.ink2; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.rect(bx,floorY-96,bw,96); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx-14,floorY-96); ctx.lineTo(bx+bw/2,roofY+4); ctx.lineTo(bx+bw+14,floorY-96);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=t.rule2; ctx.fillRect(bx,floorY,bw,groundY-floorY);
+    ctx.strokeStyle=t.rule2; ctx.lineWidth=1.2;
+    ctx.strokeRect(bx+bw*0.13,floorY-72,bw*0.22,34);
+    ctx.strokeRect(bx+bw*0.65,floorY-72,bw*0.22,34);
+    ctx.strokeRect(bx+bw*0.40,floorY-46,bw*0.20,46);
+    ctx.setLineDash([4,4]); ctx.strokeStyle=t.amb; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(38,floorY+.5); ctx.lineTo(W-14,floorY+.5); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=t.amb; ctx.font=MONO; ctx.textAlign="left";
+    ctx.fillText("FINISHED FLOOR \u2014 DATUM 0.00", 42, floorY-7);
+    const wy=floorY-(depth/3.5)*(floorY-roofY);
+    const grad=ctx.createLinearGradient(0,wy,0,H);
+    grad.addColorStop(0,t.acc+"66"); grad.addColorStop(1,t.acc+"22");
+    ctx.fillStyle=grad;
+    ctx.beginPath(); ctx.moveTo(0,wy);
+    for(let px=0;px<=W;px+=6) ctx.lineTo(px,wave(px,wy));
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle=t.acc; ctx.lineWidth=1.8; ctx.beginPath();
+    for(let px=0;px<=W;px+=6){ const y=wave(px,wy); px===0?ctx.moveTo(px,y):ctx.lineTo(px,y); }
+    ctx.stroke();
+    ctx.fillStyle=t.acc; ctx.font=MONOB; ctx.textAlign="right";
+    ctx.fillText(depth.toFixed(2)+" m", W-16, wy-9);
+  }
+  function tick(){ phase+=0.035; draw(); requestAnimationFrame(tick); }
+  function update(){
+    depth=parseInt(slider.value,10)/100;
+    out.textContent=depth.toFixed(2)+" m";
+    const r=engine(HA,depth,{dur:false,vel:false,con:false},4);
+    $("#roMean").textContent=r.mean.toFixed(3);
+    $("#roBand").textContent=r.p10.toFixed(2).slice(1)+"\u2013"+r.p90.toFixed(2).slice(1);
+    $("#roTail").textContent=(r.pgt50*100).toFixed(1)+"%";
+    const loss=r.mean*HA.val;
+    $("#roLoss").textContent="$"+(loss/1000).toFixed(1)+"k";
+    if(M.reduced) draw();
+  }
+  size(); slider.addEventListener("input",update); update();
+  window.addEventListener("resize",function(){size();draw();});
+  REDRAW.push(draw);
+  if(M.reduced){ draw(); } else { tick(); }
+})();
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, E=window.__FV_ENGINE, $=M.$, $$=M.$$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const ARCH=E.ARCH, LVL=E.LVL, engine=E.engine;
+
+/* deterministic PRNG so the illustration is stable across reloads */
+function rng(seed){ let s=seed>>>0; return function(){ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+
+/* ---------- tooltip helper ---------- */
+function mkTip(boxSel,tipSel){
+  const box=$(boxSel), tip=$(tipSel);
+  return {
+    show:function(html,cx,cy){
+      tip.innerHTML=html; tip.classList.add("on");
+      const bw=box.clientWidth, tw=tip.offsetWidth;
+      tip.style.left=clamp(cx-tw/2,4,bw-tw-4)+"px";
+      tip.style.top=Math.max(4,cy-tip.offsetHeight-14)+"px";
+    },
+    hide:function(){ tip.classList.remove("on"); },
+    box:box
+  };
+}
+
+/* =================== CHART 1 — OBSERVATION CLOUD =================== */
+(function(){
+  const svg=$("#cloudChart"); if(!svg) return;
+  const W=900,H=380,L=58,R=18,TOP=18,B=44;
+  const px=d=>L+(d/3)*(W-L-R), py=v=>TOP+(1-v)*(H-TOP-B);
+  const A=ARCH[0];
+  const trad=d=>0.93*(1-Math.exp(-0.47*d));
+
+  /* sample observation cloud once */
+  const rand=rng(20260822), pts=[];
+  for(let i=0;i<540;i++){
+    const d=Math.pow(rand(),0.75)*3;
+    const r=engine(A,d,{dur:false,vel:false,con:false},4);
+    const u=rand();
+    let v;
+    if(u<r.p0) v=0.004+rand()*0.012;
+    else if(u>1-r.p1) v=0.985+rand()*0.012;
+    else v=M.ibetaInv((u-r.p0)/r.rest,r.a,r.b);
+    pts.push([d,clamp(v,0,1)]);
+  }
+  /* band + mean */
+  const band=[];
+  for(let i=0;i<=60;i++){
+    const d=(i/60)*3, r=engine(A,d,{dur:false,vel:false,con:false},4);
+    band.push([d,r.p10,r.p90,r.mean]);
+  }
+  const tip=mkTip("#cloudBox","#cloudTip");
+
+  function draw(){
+    const t=T(), o=[];
+    for(let g=0;g<=5;g++){
+      const v=g/5, y=py(v);
+      o.push(`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="${t.grid}" stroke-width="1"/>`);
+      o.push(`<text x="${L-10}" y="${y+4}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.ink3}">${v.toFixed(1)}</text>`);
+    }
+    for(let d=0;d<=3;d+=0.5){
+      o.push(`<text x="${px(d)}" y="${H-22}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.ink3}">${d.toFixed(1)}</text>`);
+    }
+    o.push(`<text x="${L}" y="${H-4}" font-family="IBM Plex Mono, monospace" font-size="10" fill="${t.ink3}" letter-spacing="1">DEPTH ABOVE FINISHED FLOOR (m)</text>`);
+    o.push(`<text transform="translate(15,${TOP+108}) rotate(-90)" font-family="IBM Plex Mono, monospace" font-size="10" fill="${t.ink3}" letter-spacing="1">DAMAGE RATIO</text>`);
+    /* ribbon */
+    let up="",dn="";
+    band.forEach((p,i)=>{ up+=(i?" L":"M")+px(p[0])+" "+py(p[2]); });
+    for(let i=band.length-1;i>=0;i--){ dn+=" L"+px(band[i][0])+" "+py(band[i][1]); }
+    o.push(`<path d="${up+dn} Z" fill="${t.acc}" opacity=".18"/>`);
+    /* points */
+    pts.forEach(p=>{
+      o.push(`<circle cx="${px(p[0]).toFixed(1)}" cy="${py(p[1]).toFixed(1)}" r="2.6" fill="${t.ink3}" opacity=".42"/>`);
+    });
+    /* curves */
+    let tp="",mp="";
+    for(let i=0;i<=60;i++){ const d=(i/60)*3; tp+=(i?" L":"M")+px(d)+" "+py(trad(d)); }
+    band.forEach((p,i)=>{ mp+=(i?" L":"M")+px(p[0])+" "+py(p[3]); });
+    o.push(`<path d="${tp}" fill="none" stroke="${t.al}" stroke-width="2.4" stroke-dasharray="7 5" stroke-linecap="round"/>`);
+    o.push(`<path d="${mp}" fill="none" stroke="${t.acc}" stroke-width="2.6" stroke-linecap="round"/>`);
+    o.push(`<text x="${px(2.35)}" y="${py(trad(2.35))-12}" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.al}">single curve</text>`);
+    o.push(`<text x="${px(1.55)}" y="${py(band[31][3])+20}" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${t.acc}">FloodVuln mean</text>`);
+    o.push(`<g id="cloudHover"></g>`);
+    svg.innerHTML=o.join("");
+  }
+  draw(); REDRAW.push(draw);
+
+  svg.addEventListener("mousemove",function(ev){
+    const r=svg.getBoundingClientRect(), sx=(ev.clientX-r.left)*(W/r.width);
+    const d=clamp(((sx-L)/(W-L-R))*3,0,3);
+    const m=engine(ARCH[0],d,{dur:false,vel:false,con:false},4);
+    const t=T();
+    const g=svg.querySelector("#cloudHover");
+    if(g) g.innerHTML=`<line x1="${px(d)}" y1="${TOP}" x2="${px(d)}" y2="${H-B}" stroke="${t.ink2}" stroke-width="1" stroke-dasharray="3 3"/>`
+      +`<circle cx="${px(d)}" cy="${py(m.mean)}" r="5" fill="${t.acc}" stroke="${t.surf}" stroke-width="2"/>`;
+    tip.show(`<b>${d.toFixed(2)} m</b> &nbsp;mean ${m.mean.toFixed(3)}<br>P10&ndash;P90 ${m.p10.toFixed(2)} &ndash; ${m.p90.toFixed(2)}<br>single curve ${trad(d).toFixed(3)}`,
+      (px(d)/W)*tip.box.clientWidth, (py(m.mean)/H)*tip.box.clientHeight);
+  });
+  svg.addEventListener("mouseleave",function(){ tip.hide(); const g=svg.querySelector("#cloudHover"); if(g) g.innerHTML=""; });
+})();
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, E=window.__FV_ENGINE, $=M.$, $$=M.$$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const ARCH=E.ARCH, LVL=E.LVL, engine=E.engine;
+
+const state={ai:0, depth:0.70, fl:{dur:false,vel:false,con:false}, lvl:4};
+
+/* ---------- controls ---------- */
+const chipWrap=$("#archChips");
+ARCH.forEach(function(a,i){
+  const b=document.createElement("button");
+  b.className="chip"; b.type="button"; b.textContent=a.chip;
+  b.setAttribute("aria-pressed", i===0?"true":"false");
+  b.addEventListener("click",function(){
+    state.ai=i;
+    $$(".chip",chipWrap).forEach(function(c,j){ c.setAttribute("aria-pressed", j===i?"true":"false"); });
+    render();
+  });
+  chipWrap.appendChild(b);
+});
+const ladder=$("#ladder");
+LVL.forEach(function(l,i){
+  const b=document.createElement("button");
+  b.className="rung"; b.type="button";
+  b.setAttribute("aria-pressed", i===4?"true":"false");
+  b.innerHTML=`<span class="g">${l.g}</span><span class="t">${l.t}</span><span class="n">${l.n}</span>`;
+  b.addEventListener("click",function(){
+    state.lvl=i;
+    $$(".rung",ladder).forEach(function(c,j){ c.setAttribute("aria-pressed", j===i?"true":"false"); });
+    render();
+  });
+  ladder.appendChild(b);
+});
+const dep=$("#engDepth"), depOut=$("#engDepthOut");
+dep.addEventListener("input",function(){ state.depth=parseInt(dep.value,10)/100; render(); });
+[["#chDur","dur"],["#chVel","vel"],["#chCon","con"]].forEach(function(p){
+  const el=$(p[0]);
+  el.addEventListener("click",function(){
+    state.fl[p[1]]=!state.fl[p[1]];
+    el.setAttribute("aria-pressed", state.fl[p[1]]?"true":"false");
+    render();
+  });
+});
+
+/* ---------- density chart ---------- */
+const svg=$("#densChart");
+const W=620,H=348,L=48,R=16,TOP=22,B=62;
+const PW=W-L-R, PH=H-TOP-B;
+const NB=20, SLOT=PW/(NB+2.6);
+const tipBox=$("#densBox"), tipEl=$("#densTip");
+let lastBars=[];
+
+function showTip(html,cx,cy){
+  tipEl.innerHTML=html; tipEl.classList.add("on");
+  const bw=tipBox.clientWidth, tw=tipEl.offsetWidth;
+  tipEl.style.left=clamp(cx-tw/2,4,bw-tw-4)+"px";
+  tipEl.style.top=Math.max(4,cy-tipEl.offsetHeight-12)+"px";
+}
+
+function drawDensity(r){
+  const t=T(), o=[];
+  const bins=[];
+  for(let i=0;i<NB;i++){
+    const lo=i/NB, hi=(i+1)/NB;
+    bins.push(r.rest*(M.ibeta(hi,r.a,r.b)-M.ibeta(lo,r.a,r.b)));
+  }
+  const ymax=Math.max(r.p0,r.p1,Math.max.apply(null,bins))*1.18;
+  const yy=function(v){ return TOP+PH-(v/ymax)*PH; };
+  const xBins=L+SLOT*1.5;
+  const xSpike0=L+SLOT*0.12;
+  const xSpike1=xBins+NB*SLOT+SLOT*0.35;
+
+  for(let g=0;g<=4;g++){
+    const v=(g/4)*ymax, y=yy(v);
+    o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+    o.push(`<text x="${L-8}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${(v*100).toFixed(0)}%</text>`);
+  }
+  const x10=xBins+r.p10*NB*SLOT, x90=xBins+r.p90*NB*SLOT;
+  o.push(`<rect x="${x10.toFixed(1)}" y="${TOP.toFixed(1)}" width="${Math.max(1.5,x90-x10).toFixed(1)}" height="${PH.toFixed(1)}" fill="${t.acc}" opacity=".13"/>`);
+
+  lastBars=[];
+  const bw=SLOT-2;
+  bins.forEach(function(p,i){
+    const x=xBins+i*SLOT, y=yy(p), h=Math.max(0,TOP+PH-y);
+    o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(4,h/2).toFixed(1)}" fill="${t.acc}" opacity=".92"/>`);
+    lastBars.push({x:x,w:bw,p:p,lo:i/NB,hi:(i+1)/NB,kind:"bin"});
+  });
+  function spike(x,p,lab,kind){
+    const y=yy(p), h=Math.max(0,TOP+PH-y), sw=SLOT*1.05;
+    o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${sw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${t.ink3}"/>`);
+    o.push(`<text x="${(x+sw/2).toFixed(1)}" y="${(y-7).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${t.ink2}">${(p*100).toFixed(0)}%</text>`);
+    o.push(`<text x="${(x+sw/2).toFixed(1)}" y="${(TOP+PH+15).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${lab}</text>`);
+    lastBars.push({x:x,w:sw,p:p,kind:kind});
+  }
+  spike(xSpike0,r.p0,"D = 0","zero");
+  spike(xSpike1,r.p1,"D = 1","total");
+
+  o.push(`<line x1="${L}" y1="${TOP+PH}" x2="${W-R}" y2="${TOP+PH}" stroke="${t.rule2}" stroke-width="1"/>`);
+  [0,0.25,0.5,0.75,1].forEach(function(v){
+    const x=xBins+v*NB*SLOT;
+    o.push(`<text x="${x.toFixed(1)}" y="${(TOP+PH+15).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}">${v.toFixed(2)}</text>`);
+  });
+  o.push(`<text x="${(xBins+NB*SLOT/2).toFixed(1)}" y="${H-10}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}" letter-spacing="1">DAMAGE RATIO</text>`);
+  o.push(`<text transform="translate(12,${TOP+96}) rotate(-90)" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.ink3}" letter-spacing="1">PROBABILITY</text>`);
+
+  const by=TOP+PH+30;
+  o.push(`<line x1="${x10.toFixed(1)}" y1="${by}" x2="${x90.toFixed(1)}" y2="${by}" stroke="${t.acc}" stroke-width="2" stroke-linecap="round"/>`);
+  o.push(`<text x="${((x10+x90)/2).toFixed(1)}" y="${by+13}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="${t.acc}">P10 &#8211; P90</text>`);
+
+  const xm=xBins+r.mean*NB*SLOT;
+  o.push(`<line x1="${xm.toFixed(1)}" y1="${TOP}" x2="${xm.toFixed(1)}" y2="${(TOP+PH).toFixed(1)}" stroke="${t.amb}" stroke-width="2"/>`);
+  o.push(`<text x="${clamp(xm,L+40,W-R-40).toFixed(1)}" y="${(TOP-7).toFixed(1)}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${t.amb}">mean ${r.mean.toFixed(3)}</text>`);
+  svg.innerHTML=o.join("");
+}
+
+svg.addEventListener("mousemove",function(ev){
+  const rc=svg.getBoundingClientRect(), sx=(ev.clientX-rc.left)*(W/rc.width);
+  let hit=null;
+  lastBars.forEach(function(b){ if(sx>=b.x-1 && sx<=b.x+b.w+1) hit=b; });
+  if(!hit){ tipEl.classList.remove("on"); return; }
+  let label;
+  if(hit.kind==="zero") label=`<b>No damage</b><br>P(D = 0) = ${(hit.p*100).toFixed(1)}%`;
+  else if(hit.kind==="total") label=`<b>Effective total loss</b><br>P(D = 1) = ${(hit.p*100).toFixed(1)}%`;
+  else label=`<b>DR ${hit.lo.toFixed(2)} &#8211; ${hit.hi.toFixed(2)}</b><br>P = ${(hit.p*100).toFixed(1)}%`;
+  showTip(label,((hit.x+hit.w/2)/W)*tipBox.clientWidth, tipBox.clientHeight*0.42);
+});
+svg.addEventListener("mouseleave",function(){ tipEl.classList.remove("on"); });
+
+/* ---------- summary table ---------- */
+function renderTable(r){
+  const rows=[
+    ["Mean damage ratio",r.mean.toFixed(3),"Technical pricing and expected loss"],
+    ["Median damage ratio",r.med.toFixed(3),"Central outcome, less tail-sensitive"],
+    ["P10 / P90",r.p10.toFixed(3)+" / "+r.p90.toFixed(3),"Uncertainty and scenario range"],
+    ["P(damage &gt; 50%)",(r.pgt50*100).toFixed(1)+"%","Severity screening in underwriting"],
+    ["P(near-total loss)",(r.p1*100).toFixed(1)+"%","Tail modelling and claims planning"],
+    ["P(no damage)",(r.p0*100).toFixed(1)+"%","Frequency and nil-claim assumptions"]
+  ];
+  const body=rows.map(function(x){
+    return `<tr><td>${x[0]}</td><td class="n"><b>${x[1]}</b></td><td class="small" style="font-size:12.5px">${x[2]}</td></tr>`;
+  }).join("");
+  $("#quantTable").innerHTML=`<caption class="cap" style="text-align:left; padding-bottom:8px">Distribution summary &#8212; the values the API returns</caption><tbody>${body}</tbody>`;
+}
+
+/* ---------- api panel ---------- */
+function renderApi(r,a){
+  const loss=r.mean*a.val;
+  const rows=[
+    ["asset_archetype",`<span class="ss">${a.id}</span>`],
+    ["effective_depth_m",`<span class="vv">${state.depth.toFixed(2)}</span>`],
+    ["mean_damage_ratio",`<span class="vv">${r.mean.toFixed(3)}</span>`],
+    ["median_damage_ratio",`<span class="vv">${r.med.toFixed(3)}</span>`],
+    ["p10",`<span class="vv">${r.p10.toFixed(3)}</span>`],
+    ["p90",`<span class="vv">${r.p90.toFixed(3)}</span>`],
+    ["p_damage_gt_50pct",`<span class="vv">${r.pgt50.toFixed(3)}</span>`],
+    ["p_zero_damage",`<span class="vv">${r.p0.toFixed(3)}</span>`],
+    ["expected_ground_up_loss",`<span class="vv">${Math.round(loss)}</span> <span class="ss">USD</span>`],
+    ["evidence_grade",`<span class="ss">${r.grade}</span>`],
+    ["confidence_score",`<span class="vv">${r.conf}</span>`],
+    ["calibration_level",`<span class="ss">${r.lvl.g}</span>`],
+    ["local_sample_size",`<span class="vv">${r.lvl.ns}</span>`],
+    ["source_family_count",`<span class="vv">${r.lvl.src}</span>`],
+    ["model_version",`<span class="ss">1.0.0</span>`]
+  ];
+  if(r.domain) rows.push(["warnings",`<span class="ss">out_of_domain_depth</span>`]);
+  $("#apiOut").innerHTML=rows.map(function(x){ return `<span class="kk">${x[0]}</span>: ${x[1]}`; }).join("<br>");
+  const gradeCls={A:"",B:"",C:"amber",D:"alarm"}[r.grade];
+  $("#evidenceBadges").innerHTML=
+    `<span class="tag ${gradeCls}">Evidence grade ${r.grade}</span>`+
+    `<span class="tag plain">Confidence ${r.conf} / 100</span>`+
+    `<span class="tag amber">${r.lvl.g} &#183; ${r.lvl.t}</span>`+
+    (r.domain?`<span class="tag alarm">Out of domain</span>`:"");
+  $("#whyList").innerHTML=r.notes.map(function(n){ return `<li>${n}</li>`; }).join("");
+}
+
+function render(){
+  const a=ARCH[state.ai];
+  const r=engine(a,state.depth,state.fl,state.lvl);
+  depOut.textContent=state.depth.toFixed(2)+" m";
+  $("#archId").textContent=a.id;
+  drawDensity(r); renderTable(r); renderApi(r,a);
+}
+render();
+REDRAW.push(render);
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, E=window.__FV_ENGINE, $=M.$, $$=M.$$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const ARCH=E.ARCH, engine=E.engine;
+const FF="IBM Plex Mono, monospace";
+
+function tipFactory(boxSel,tipSel){
+  const box=$(boxSel), tip=$(tipSel);
+  return {
+    show:function(html,cx,cy){
+      tip.innerHTML=html; tip.classList.add("on");
+      const bw=box.clientWidth, tw=tip.offsetWidth;
+      tip.style.left=clamp(cx-tw/2,4,Math.max(4,bw-tw-4))+"px";
+      tip.style.top=Math.max(4,cy-tip.offsetHeight-12)+"px";
+    },
+    hide:function(){ tip.classList.remove("on"); },
+    box:box
+  };
+}
+
+/* =================== LEARNING CURVE =================== */
+(function(){
+  const svg=$("#learnChart"); if(!svg) return;
+  const W=620,H=330,L=54,R=88,TOP=20,B=50, PW=W-L-R, PH=H-TOP-B;
+  const NS=[0,5,10,25,50,100,500];
+  const POOL=[0.213,0.190,0.171,0.147,0.130,0.117,0.098];
+  const LOCAL=[null,0.318,0.264,0.194,0.157,0.131,0.101];
+  const SPREAD=[0.041,0.036,0.031,0.024,0.019,0.015,0.010];
+  const PRIOR=0.213, YMAX=0.36;
+  const xi=function(i){ return L+(i/(NS.length-1))*PW; };
+  const yv=function(v){ return TOP+PH-(v/YMAX)*PH; };
+  const tip=tipFactory("#learnBox","#learnTip");
+  let prog=0;
+
+  function draw(){
+    const t=T(), o=[];
+    for(let g=0;g<=4;g++){
+      const v=(g/4)*YMAX, y=yv(v);
+      o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+      o.push(`<text x="${L-9}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${v.toFixed(2)}</text>`);
+    }
+    NS.forEach(function(n,i){
+      o.push(`<text x="${xi(i).toFixed(1)}" y="${(TOP+PH+16).toFixed(1)}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${n}</text>`);
+    });
+    o.push(`<text x="${(L+PW/2).toFixed(1)}" y="${H-12}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}" letter-spacing="1">LOCAL OBSERVATIONS USED FOR CALIBRATION</text>`);
+    o.push(`<text transform="translate(11,${TOP+112}) rotate(-90)" font-family="${FF}" font-size="9.5" fill="${t.ink3}" letter-spacing="1">HOLD-OUT MAE</text>`);
+
+    const k=Math.max(1,Math.round(prog*(NS.length-1))+1);
+    let up="",dn="";
+    for(let i=0;i<k;i++){ up+=(i?" L":"M")+xi(i).toFixed(1)+" "+yv(POOL[i]+SPREAD[i]).toFixed(1); }
+    for(let i=k-1;i>=0;i--){ dn+=" L"+xi(i).toFixed(1)+" "+yv(Math.max(0,POOL[i]-SPREAD[i])).toFixed(1); }
+    o.push(`<path d="${up+dn} Z" fill="${t.amb}" opacity=".16"/>`);
+
+    o.push(`<line x1="${L}" y1="${yv(PRIOR).toFixed(1)}" x2="${W-R}" y2="${yv(PRIOR).toFixed(1)}" stroke="${t.ink3}" stroke-width="1.8" stroke-dasharray="6 5"/>`);
+    o.push(`<text x="${(W-R+7)}" y="${(yv(PRIOR)+4).toFixed(1)}" font-family="${FF}" font-size="9.5" fill="${t.ink3}">global prior</text>`);
+
+    let lp="";
+    for(let i=1;i<k;i++){ lp+=(i===1?"M":" L")+xi(i).toFixed(1)+" "+yv(LOCAL[i]).toFixed(1); }
+    if(lp) o.push(`<path d="${lp}" fill="none" stroke="${t.sl}" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4"/>`);
+
+    let pp="";
+    for(let i=0;i<k;i++){ pp+=(i?" L":"M")+xi(i).toFixed(1)+" "+yv(POOL[i]).toFixed(1); }
+    o.push(`<path d="${pp}" fill="none" stroke="${t.amb}" stroke-width="2.6" stroke-linecap="round"/>`);
+    for(let i=0;i<k;i++){
+      o.push(`<circle cx="${xi(i).toFixed(1)}" cy="${yv(POOL[i]).toFixed(1)}" r="4" fill="${t.amb}" stroke="${t.surf}" stroke-width="2"/>`);
+    }
+    if(k>=NS.length){
+      o.push(`<text x="${(W-R+7)}" y="${(yv(POOL[6])+4).toFixed(1)}" font-family="${FF}" font-size="9.5" font-weight="600" fill="${t.amb}">pooled</text>`);
+      o.push(`<text x="${(W-R+7)}" y="${(yv(LOCAL[6])+15).toFixed(1)}" font-family="${FF}" font-size="9.5" fill="${t.sl}">local only</text>`);
+    }
+    svg.innerHTML=o.join("");
+  }
+  draw(); REDRAW.push(draw);
+
+  if(M.reduced){ prog=1; draw(); }
+  else{
+    const ob=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          ob.disconnect();
+          const t0=performance.now();
+          (function step(now){
+            prog=clamp((now-t0)/1100,0,1); draw();
+            if(prog<1) requestAnimationFrame(step);
+          })(t0);
+        }
+      });
+    },{threshold:.35});
+    ob.observe(svg);
+  }
+
+  svg.addEventListener("mousemove",function(ev){
+    const rc=svg.getBoundingClientRect(), sx=(ev.clientX-rc.left)*(W/rc.width);
+    let bi=0, bd=1e9;
+    NS.forEach(function(n,i){ const d=Math.abs(xi(i)-sx); if(d<bd){bd=d;bi=i;} });
+    if(bd>44){ tip.hide(); return; }
+    const loc = LOCAL[bi]===null ? "n/a" : LOCAL[bi].toFixed(3);
+    tip.show(`<b>n = ${NS[bi]}</b><br>pooled MAE ${POOL[bi].toFixed(3)}<br>local-only ${loc}<br>prior ${PRIOR.toFixed(3)}`,
+      (xi(bi)/W)*tip.box.clientWidth, (yv(POOL[bi])/H)*tip.box.clientHeight);
+  });
+  svg.addEventListener("mouseleave",tip.hide);
+})();
+
+/* =================== MODEL-COMPARISON BARS =================== */
+(function(){
+  const svg=$("#cmpChart"); if(!svg) return;
+  const W=560,H=250,L=176,R=34,TOP=14,B=34, PW=W-L-R, PH=H-TOP-B;
+  const D=[
+    {n:"Incumbent vendor curve", v:0.38},
+    {n:"Internal depth-only curve", v:-0.21},
+    {n:"JRC global prior (no local data)", v:0.12},
+    {n:"FloodVuln, G4 calibrated", v:-0.03, hi:true}
+  ];
+  const MX=0.45, zx=L+PW/2;
+  const bw=(PH-D.length*10)/D.length;
+  const tip=tipFactory("#cmpBox","#cmpTip");
+  function draw(){
+    const t=T(), o=[];
+    [-0.4,-0.2,0,0.2,0.4].forEach(function(v){
+      const x=zx+(v/MX)*(PW/2);
+      o.push(`<line x1="${x.toFixed(1)}" y1="${TOP}" x2="${x.toFixed(1)}" y2="${TOP+PH}" stroke="${v===0?t.rule2:t.grid}" stroke-width="1"/>`);
+      o.push(`<text x="${x.toFixed(1)}" y="${(TOP+PH+16).toFixed(1)}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${v>0?"+":""}${(v*100).toFixed(0)}%</text>`);
+    });
+    D.forEach(function(d,i){
+      const y=TOP+i*(bw+10), x=Math.min(zx,zx+(d.v/MX)*(PW/2)), w=Math.abs((d.v/MX)*(PW/2));
+      const c=d.hi?t.acc:t.ink3;
+      o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(2,w).toFixed(1)}" height="${bw.toFixed(1)}" rx="3" fill="${c}" opacity="${d.hi?"1":".55"}"/>`);
+      o.push(`<text x="${L-14}" y="${(y+bw/2+4).toFixed(1)}" text-anchor="end" font-family="${FF}" font-size="10.5" fill="${d.hi?t.ink:t.ink2}" font-weight="${d.hi?"600":"400"}">${d.n}</text>`);
+      const lx = d.v>0 ? zx+w+7 : zx-w-7;
+      o.push(`<text x="${lx.toFixed(1)}" y="${(y+bw/2+4).toFixed(1)}" text-anchor="${d.v>0?"start":"end"}" font-family="${FF}" font-size="10.5" font-weight="600" fill="${d.hi?t.acc:t.ink2}">${d.v>0?"+":""}${(d.v*100).toFixed(0)}%</text>`);
+    });
+    o.push(`<text x="${zx}" y="${H-6}" text-anchor="middle" font-family="${FF}" font-size="9" fill="${t.ink3}" letter-spacing="1">SIGNED PORTFOLIO LOSS ERROR</text>`);
+    svg.innerHTML=o.join("");
+  }
+  draw(); REDRAW.push(draw);
+})();
+
+/* =================== PORTFOLIO TABLE =================== */
+(function(){
+  const tb=$("#portTable"); if(!tb) return;
+  const rows=[
+    ["United States","Wood frame, slab","$4.2bn",0.184,7.4,"$310m","A",1],
+    ["United Kingdom","Masonry, raised floor","$1.8bn",0.121,4.1,"$96m","B",2],
+    ["Germany","Masonry, basement","$1.1bn",0.229,9.8,"$121m","B",2],
+    ["Japan","RC, multi-storey","$2.6bn",0.087,2.9,"$88m","B",2],
+    ["Australia","Wood frame, elevated","$0.9bn",0.104,3.6,"$41m","C",3],
+    ["Viet Nam","Mixed, low-rise","$0.4bn",0.263,12.7,"$63m","D",4]
+  ];
+  const cols=["good","good","amber","alarm"];
+  function draw(){
+    const t=T();
+    const gc=[t.good,t.good,t.amb,t.al];
+    tb.innerHTML=rows.map(function(r){
+      return `<tr><td><b>${r[0]}</b></td><td class="mono" style="font-size:11.5px">${r[1]}</td>`+
+        `<td class="n">${r[2]}</td><td class="n">${r[3].toFixed(3)}</td><td class="n">${r[4].toFixed(1)}</td>`+
+        `<td class="n">${r[5]}</td><td><span class="sev"><i style="background:${gc[r[7]-1]}"></i>${r[6]}</span></td></tr>`;
+    }).join("");
+  }
+  draw(); REDRAW.push(draw);
+})();
+
+/* =================== EVIDENCE GRADES =================== */
+(function(){
+  const el=$("#grades"); if(!el) return;
+  const G=[
+    ["A","Locally validated","Large local dataset across multiple events, plus external validation.",100],
+    ["B","Locally calibrated","Moderate local observations and / or strong engineering evidence.",74],
+    ["C","Regionally calibrated","Evidence transferred from demonstrably comparable regions.",48],
+    ["D","Global transfer","Global or continental prior with limited local evidence.",26]
+  ];
+  function draw(){
+    const t=T(), c=[t.good,t.good,t.amb,t.al];
+    el.innerHTML=G.map(function(g,i){
+      return `<div style="display:grid; grid-template-columns:26px 1fr; gap:12px; align-items:start">`+
+        `<div style="font-family:${FF}; font-weight:600; font-size:15px; color:${c[i]}">${g[0]}</div>`+
+        `<div><div style="display:flex; justify-content:space-between; gap:10px; align-items:baseline">`+
+        `<b style="font-family:var(--f-display); font-size:13.5px">${g[1]}</b></div>`+
+        `<div style="height:5px; border-radius:3px; background:var(--panel-3); margin:7px 0 6px; overflow:hidden">`+
+        `<div style="height:100%; width:${g[3]}%; background:${c[i]}; border-radius:3px"></div></div>`+
+        `<div class="small" style="font-size:12.5px">${g[2]}</div></div></div>`;
+    }).join("");
+  }
+  draw(); REDRAW.push(draw);
+})();
+
+/* =================== MODULES =================== */
+(function(){
+  const el=$("#modGrid"); if(!el) return;
+  const MODS=[
+    ["FloodVuln Atlas","Search, compare and audit the harmonized function library and every source behind it.","Model validation, R&amp;D, engineering"],
+    ["FloodVuln Engine","Production API for property- and portfolio-level probabilistic vulnerability.","Underwriting, pricing, cat modelling"],
+    ["FloodVuln Local","Turn claims, surveys and structured expert knowledge into a calibrated local view.","Insurers, reinsurers, local markets"],
+    ["FloodVuln Compare","Benchmark client and vendor curves against observations and alternative model families.","Model governance and validation"],
+    ["FloodVuln Resilience","Quantify the change in damage from elevation, floodproofing and utility relocation.","Underwriting, lending, public sector"],
+    ["FloodVuln Portfolio","High-volume batch scoring with stable, machine-readable, Oasis-compatible outputs.","Accumulation and capital teams"]
+  ];
+  el.innerHTML=MODS.map(function(m,i){
+    return `<div class="card"><span class="fieldlab">Module ${String(i+1).padStart(2,"0")}</span>`+
+      `<h3 style="font-size:19px; margin:2px 0 10px">${m[0]}</h3>`+
+      `<p class="small">${m[1]}</p>`+
+      `<p class="cap" style="margin-top:14px; padding-top:12px; border-top:var(--hairline)">${m[2]}</p></div>`;
+  }).join("");
+})();
+
+/* =================== TABS =================== */
+(function(){
+  const tabs=$$(".tab");
+  tabs.forEach(function(tb){
+    tb.addEventListener("click",function(){
+      tabs.forEach(function(o){
+        const on=o===tb;
+        o.setAttribute("aria-selected",on?"true":"false");
+        const p=document.getElementById(o.getAttribute("aria-controls"));
+        if(p){ p.hidden=!on; if(on) p.classList.add("in"); }
+      });
+      REDRAW.forEach(function(f){ try{f();}catch(e){} });
+    });
+    tb.addEventListener("keydown",function(ev){
+      const i=tabs.indexOf(tb);
+      if(ev.key==="ArrowRight"||ev.key==="ArrowLeft"){
+        ev.preventDefault();
+        const n=tabs[(i+(ev.key==="ArrowRight"?1:tabs.length-1))%tabs.length];
+        n.focus(); n.click();
+      }
+    });
+  });
+})();
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, E=window.__FV_ENGINE, $=M.$, $$=M.$$, clamp=M.clamp, T=M.T, REDRAW=M.REDRAW;
+const ARCH=E.ARCH, engine=E.engine;
+const FF="IBM Plex Mono, monospace";
+const NOFL={dur:false,vel:false,con:false};
+
+/* ---- book assumptions (illustrative) ---- */
+const RP=[20,50,100,200,500];
+const BASED=[0.14,0.40,0.66,0.95,1.35];
+const SCEN=[{lab:"Current climate",s:0.05},{lab:"+1.5°C · 2050",s:0.34},{lab:"+3.0°C · 2050",s:0.74}];
+const EXPOSED=0.18, EAD=18.4e9, PD=0.011, STRUCT_SHARE=0.58;
+const AB=ARCH[2];
+const st={scen:0, adapt:false};
+
+function depthAt(i,scen,year){ return BASED[i]*(1+SCEN[scen].s*(year-2025)/30); }
+function drAt(d,adapt){
+  const base=engine(AB,d,NOFL,4).mean;
+  if(!adapt) return base;
+  const lifted=engine(AB,Math.max(-0.6,d-0.35),NOFL,4).mean;
+  return 0.45*lifted+0.55*base;
+}
+function aalBps(scen,year,adapt){
+  let aal=0;
+  for(let i=0;i<RP.length;i++){
+    const w=(1/RP[i])-(i+1<RP.length?1/RP[i+1]:0);
+    aal+=w*drAt(depthAt(i,scen,year),adapt);
+  }
+  return aal*EXPOSED*10000;
+}
+
+/* =================== SCENARIO CHART =================== */
+const svg=$("#bankChart");
+const W=620,H=320,L=52,R=76,TOP=18,B=46, PW=W-L-R, PH=H-TOP-B;
+const YEARS=[2025,2030,2035,2040,2045,2050,2055];
+const tipBox=$("#bankBox"), tipEl=$("#bankTip");
+
+function xy(yr){ return L+((yr-2025)/30)*PW; }
+
+function drawBank(){
+  const t=T(), o=[];
+  const ramp=[t.d2,t.d3,t.d4];
+  let ymax=0;
+  const series=SCEN.map(function(s,si){
+    return YEARS.map(function(y){ const v=aalBps(si,y,st.adapt); if(v>ymax) ymax=v; return v; });
+  });
+  const ghost=st.adapt?SCEN.map(function(s,si){
+    return YEARS.map(function(y){ const v=aalBps(si,y,false); if(v>ymax) ymax=v; return v; });
+  }):null;
+  ymax=Math.ceil(ymax*1.15/5)*5;
+  const yv=function(v){ return TOP+PH-(v/ymax)*PH; };
+
+  for(let g=0;g<=4;g++){
+    const v=(g/4)*ymax, y=yv(v);
+    o.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${t.grid}" stroke-width="1"/>`);
+    o.push(`<text x="${L-9}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${v.toFixed(0)}</text>`);
+  }
+  YEARS.forEach(function(y){
+    o.push(`<text x="${xy(y).toFixed(1)}" y="${(TOP+PH+16).toFixed(1)}" text-anchor="middle" font-family="${FF}" font-size="9.5" fill="${t.ink3}">${y}</text>`);
+  });
+  o.push(`<text transform="translate(11,${TOP+130}) rotate(-90)" font-family="${FF}" font-size="9.5" fill="${t.ink3}" letter-spacing="1">BPS OF EXPOSURE</text>`);
+
+  if(ghost){
+    ghost.forEach(function(vals,si){
+      let p="";
+      vals.forEach(function(v,i){ p+=(i?" L":"M")+xy(YEARS[i]).toFixed(1)+" "+yv(v).toFixed(1); });
+      o.push(`<path d="${p}" fill="none" stroke="${ramp[si]}" stroke-width="1.4" stroke-dasharray="3 4" opacity=".5"/>`);
+    });
+  }
+  series.forEach(function(vals,si){
+    let p="";
+    vals.forEach(function(v,i){ p+=(i?" L":"M")+xy(YEARS[i]).toFixed(1)+" "+yv(v).toFixed(1); });
+    const on = si===st.scen;
+    o.push(`<path d="${p}" fill="none" stroke="${ramp[si]}" stroke-width="${on?3.2:2}" stroke-linecap="round" opacity="${on?1:.55}"/>`);
+    o.push(`<circle cx="${xy(2055).toFixed(1)}" cy="${yv(vals[6]).toFixed(1)}" r="${on?5:3.6}" fill="${ramp[si]}" stroke="${t.surf}" stroke-width="2"/>`);
+    o.push(`<text x="${(W-R+8)}" y="${(yv(vals[6])+4).toFixed(1)}" font-family="${FF}" font-size="9.5" font-weight="${on?"600":"400"}" fill="${ramp[si]}" opacity="${on?1:.7}">${vals[6].toFixed(1)} bps</text>`);
+  });
+  svg.innerHTML=o.join("");
+
+  $("#bankLegend").innerHTML=SCEN.map(function(s,si){
+    return `<span><i style="background:${ramp[si]}"></i>${s.lab}</span>`;
+  }).join("")+(st.adapt?`<span><i style="background:${t.ink3}; height:2px"></i>Dashed: without adaptation</span>`:"");
+}
+
+svg.addEventListener("mousemove",function(ev){
+  const rc=svg.getBoundingClientRect(), sx=(ev.clientX-rc.left)*(W/rc.width);
+  let by=YEARS[0], bd=1e9;
+  YEARS.forEach(function(y){ const d=Math.abs(xy(y)-sx); if(d<bd){bd=d;by=y;} });
+  if(bd>36){ tipEl.classList.remove("on"); return; }
+  const lines=SCEN.map(function(s,si){ return `${s.lab}: <b>${aalBps(si,by,st.adapt).toFixed(1)} bps</b>`; }).join("<br>");
+  tipEl.innerHTML=`<b>${by}</b><br>${lines}`;
+  tipEl.classList.add("on");
+  const bw=tipBox.clientWidth, tw=tipEl.offsetWidth;
+  tipEl.style.left=clamp((xy(by)/W)*bw-tw/2,4,Math.max(4,bw-tw-4))+"px";
+  tipEl.style.top="8px";
+});
+svg.addEventListener("mouseleave",function(){ tipEl.classList.remove("on"); });
+
+/* =================== TRANSMISSION CHAIN =================== */
+function drawChain(){
+  const t=T();
+  const d100=depthAt(2,st.scen,2050);
+  const dr=drAt(d100,st.adapt);
+  const haircut=dr*STRUCT_SHARE;
+  const ltvShare=clamp(0.061+haircut*0.55,0,0.6);
+  const lgdUp=haircut*0.42*100;
+  const eclUp=lgdUp*PD*100;
+  const steps=[
+    ["Hazard","1-in-100 inundation depth, 2050",d100.toFixed(2)+" m",t.sl,false],
+    ["Vulnerability","Mean damage ratio on collateral",dr.toFixed(3),t.acc,true],
+    ["Collateral","Forward-looking value haircut",(haircut*100).toFixed(1)+"%",t.acc,false],
+    ["LTV migration","Exposed book above 80% LTV",(ltvShare*100).toFixed(1)+"%",t.amb,false],
+    ["LGD","Uplift on loss given default","+"+lgdUp.toFixed(1)+" pp",t.amb,false],
+    ["ECL","Uplift on expected credit loss","+"+eclUp.toFixed(1)+" bps",t.al,false]
+  ];
+  $("#chain").innerHTML=steps.map(function(s,i){
+    const mark=s[4]?`<span class="tag" style="margin-left:8px">FloodVuln layer</span>`:"";
+    return `<div style="display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; padding:11px 13px;`+
+      ` border:1px solid ${s[4]?s[3]:"var(--rule)"}; border-left:3px solid ${s[3]}; border-radius:3px;`+
+      ` background:${s[4]?"var(--accent-wash)":"transparent"}">`+
+      `<div><div style="font-family:var(--f-display); font-weight:600; font-size:13px">${s[0]}${mark}</div>`+
+      `<div class="cap" style="margin-top:3px">${s[1]}</div></div>`+
+      `<div class="num" style="font-family:var(--f-display); font-weight:700; font-size:19px; letter-spacing:-.02em; color:${s[3]}">${s[2]}</div>`+
+      `</div>`+
+      (i<steps.length-1?`<div style="height:9px; width:1px; background:var(--rule-2); margin-left:22px"></div>`:"");
+  }).join("");
+}
+
+/* =================== TILES =================== */
+function drawTiles(){
+  const bps2050=aalBps(st.scen,2050,st.adapt);
+  const bpsNow=aalBps(0,2025,false);
+  const d100=depthAt(2,st.scen,2050);
+  const loss100=drAt(d100,st.adapt)*EAD*EXPOSED;
+  const lgdUp=drAt(d100,st.adapt)*STRUCT_SHARE*0.42*100;
+  const ecl=lgdUp*PD*100;
+  const tiles=[
+    ["Exposure at default","$18.4bn","42,000 residential loans; 18% in flood-exposed locations."],
+    ["Annual collateral damage 2050",bps2050.toFixed(1)+" bps","Against "+bpsNow.toFixed(1)+" bps in the current climate."],
+    ["1-in-100 collateral loss","$"+(loss100/1e6).toFixed(0)+"m","Ground-up damage on exposed collateral at that return period."],
+    ["ECL uplift","+"+ecl.toFixed(1)+" bps","Transmitted through the haircut, LTV migration and LGD."]
+  ];
+  $("#bankTiles").innerHTML=tiles.map(function(t){
+    return `<div class="tile"><span class="k">${t[0]}</span><span class="v">${t[1]}</span><span class="d">${t[2]}</span></div>`;
+  }).join("");
+}
+
+function renderBank(){ drawBank(); drawChain(); drawTiles(); }
+
+$$("#scenChips .chip").forEach(function(c){
+  c.addEventListener("click",function(){
+    st.scen=parseInt(c.getAttribute("data-scen"),10);
+    $$("#scenChips .chip").forEach(function(o){ o.setAttribute("aria-pressed", o===c?"true":"false"); });
+    renderBank();
+  });
+});
+const ad=$("#adaptBtn");
+ad.addEventListener("click",function(){
+  st.adapt=!st.adapt;
+  ad.setAttribute("aria-pressed", st.adapt?"true":"false");
+  renderBank();
+});
+renderBank();
+REDRAW.push(renderBank);
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+const M=window.__FV_MATH, E=window.__FV_ENGINE, $=M.$, T=M.T, REDRAW=M.REDRAW;
+const ARCH=E.ARCH, engine=E.engine, NO={dur:false,vel:false,con:false};
+
+/* ---- underwriting comparison at 0.90 m ---- */
+const D=0.90;
+const rows=[
+  {tag:"A", a:ARCH[3], id:"GLB.RES.RC.MULTI.3STORY"},
+  {tag:"B", a:ARCH[1], id:"US.RES.SF.WOOD.BASEMENT"}
+];
+function drawUw(){
+  const t=T(), tb=$("#uwTable"); if(!tb) return;
+  let html=rows.map(function(r){
+    const x=engine(r.a,D,NO,4);
+    return `<tr><td><b>${r.tag}</b></td>`+
+      `<td class="mono" style="font-size:11px">${r.id}</td>`+
+      `<td class="n">${x.mean.toFixed(3)}</td>`+
+      `<td class="n">${x.p90.toFixed(2)}</td>`+
+      `<td class="n">${(x.pgt50*100).toFixed(1)}%</td>`+
+      `<td><span class="sev"><i style="background:${t.good}"></i>${x.grade}</span></td></tr>`;
+  }).join("");
+  const avg=(engine(rows[0].a,D,NO,4).mean+engine(rows[1].a,D,NO,4).mean)/2;
+  html+=`<tr style="opacity:.75"><td colspan="2" class="small" style="font-size:12.5px"><i>Depth-only curve, both risks</i></td>`+
+    `<td class="n">${avg.toFixed(3)}</td><td class="n">&#8212;</td><td class="n">&#8212;</td>`+
+    `<td><span class="sev"><i style="background:${t.ink3}"></i>n/a</span></td></tr>`;
+  tb.innerHTML=html;
+}
+
+/* ---- pricing tiles: exact expected loss net of a deductible ---- */
+function drawPricing(){
+  const el=$("#prTiles"); if(!el) return;
+  const a=ARCH[0], v=a.val, K=25000, d=0.55;
+  const r=engine(a,d,NO,4);
+  const t0=K/v;
+  const gu=r.mean*v;
+  const tail=r.p90*v;
+  const net=r.p1*(v-K)+r.rest*( v*r.m*(1-M.ibeta(t0,r.a+1,r.b)) - K*(1-M.ibeta(t0,r.a,r.b)) );
+  const noClaim=r.p0+r.rest*M.ibeta(t0,r.a,r.b);
+  const money=function(x){ return x>=1e6 ? "$"+(x/1e6).toFixed(2)+"m" : "$"+(x/1000).toFixed(1)+"k"; };
+  const tiles=[
+    ["Expected ground-up",money(gu),"Mean DR "+r.mean.toFixed(3)+" on a $"+(v/1000).toFixed(0)+"k replacement value."],
+    ["Tail load basis",money(tail),"P90 ground-up loss &#8212; the number a flat regional factor misses."],
+    ["Net of $25k deductible",money(Math.max(0,net)),"Integrated over the whole distribution, not applied to the mean."],
+    ["No payable claim",(noClaim*100).toFixed(0)+"%","Probability the loss never reaches the deductible."]
+  ];
+  el.innerHTML=tiles.map(function(x){
+    return `<div class="tile"><span class="k">${x[0]}</span><span class="v">${x[1]}</span><span class="d">${x[2]}</span></div>`;
+  }).join("");
+}
+
+drawUw(); drawPricing();
+REDRAW.push(function(){ drawUw(); drawPricing(); });
+})();
+</script>
+<style>
+html{scroll-behavior:smooth; scroll-padding-top:78px}
+@media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+@media(max-width:600px){
+  .readout{grid-template-columns:repeat(2,1fr)}
+  .readout div:nth-child(2n){border-right:none}
+  .readout div:nth-child(-n+2){border-bottom:var(--hairline)}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  body{font-size:16.5px}
+}
+.stage ul li::marker{color:var(--stage,var(--accent))}
+.tab:focus-visible{outline-offset:-2px}
+.chip:active{transform:translateY(1px)}
+.tbl caption{caption-side:top}
+.api::-webkit-scrollbar{height:7px}
+.api::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18); border-radius:4px}
+</style>

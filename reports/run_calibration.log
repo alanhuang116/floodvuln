@@ -1,0 +1,36 @@
+C:\Users\XHUAN40\AppData\Roaming\Python\Python311\site-packages\pandas\core\computation\expressions.py:22: UserWarning: Pandas requires version '2.10.2' or newer of 'numexpr' (version '2.8.4' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+C:\Users\XHUAN40\AppData\Roaming\Python\Python311\site-packages\pandas\core\arrays\masked.py:56: UserWarning: Pandas requires version '1.4.2' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+observations: 1,861,852
+groups: 142   states: 58
+loaded existing full fit (142 archetypes, 4483 local units)
+
+hold-out events: ['Hurricane Harvey', 'Hurricane Katrina', 'Hurricane Ike', 'Hurricane Irma', 'Hurricane Florence', 'Hurricane Ida', 'Hurricane Matthew', 'Hurricane Isaac', 'Hurricane Michael', 'Hurricane Rita', 'Hurricane Sandy']
+  Hurricane Harvey: n_test=72,031  (215s)
+  Hurricane Katrina: n_test=140,043  (251s)
+  Hurricane Ike: n_test=43,998  (198s)
+  Hurricane Irma: n_test=19,554  (317s)
+  Hurricane Florence: n_test=14,160  (227s)
+  Hurricane Ida: n_test=17,078  (178s)
+  Hurricane Matthew: n_test=13,812  (222s)
+  Hurricane Isaac: n_test=11,831  (182s)
+  Hurricane Michael: n_test=3,658  (206s)
+  Hurricane Rita: n_test=8,616  (200s)
+  Hurricane Sandy: n_test=115,584  (420s)
+
+hold-out regions: ['TX', 'LA', 'NJ', 'NY', 'FL', 'NC', 'SC', 'MO', 'IA']
+  TX: n_test=289,908  (318s)
+  LA: n_test=346,734  (400s)
+  NJ: n_test=146,607  (104s)
+  NY: n_test=121,456  (60s)
+  FL: n_test=277,579  (125s)
+  NC: n_test=75,424  (45s)
+  SC: n_test=31,824  (26s)
+  MO: n_test=36,082  (24s)
+  IA: n_test=10,381  (19s)
+
+learning curve: state=LA archetype=RES.SF.1.UNK
+  local pool=151,474  test=40,000
+
+wrote reports/bench_summary.md

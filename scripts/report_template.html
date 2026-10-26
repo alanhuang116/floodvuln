@@ -1,0 +1,621 @@
+<title>FloodVuln Build Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#F1F4F3; --panel:#FFFFFF; --panel-2:#E7ECEB; --panel-3:#DCE3E2;
+  --ink:#08191D; --ink-2:#41565A; --ink-3:#75898B;
+  --rule:#CBD6D4; --rule-2:#B3C2C0;
+  --accent:#008C7D; --accent-wash:rgba(0,140,125,.10);
+  --amber:#C2751A; --amber-wash:rgba(194,117,26,.12);
+  --slate:#3059AE; --alarm:#B32D3B; --alarm-wash:rgba(179,45,59,.10);
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#0D1B20; --panel:#122429; --panel-2:#162C32; --panel-3:#1D373E;
+    --ink:#E9F2F1; --ink-2:#A6BAB9; --ink-3:#7B9190;
+    --rule:#22403F; --rule-2:#2F5350;
+    --accent:#16A895; --accent-wash:rgba(22,168,149,.14);
+    --amber:#C8811F; --amber-wash:rgba(200,129,31,.16);
+    --slate:#5B8FDB; --alarm:#D2605E; --alarm-wash:rgba(210,96,94,.14);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#0D1B20; --panel:#122429; --panel-2:#162C32; --panel-3:#1D373E;
+  --ink:#E9F2F1; --ink-2:#A6BAB9; --ink-3:#7B9190;
+  --rule:#22403F; --rule-2:#2F5350;
+  --accent:#16A895; --accent-wash:rgba(22,168,149,.14);
+  --amber:#C8811F; --amber-wash:rgba(200,129,31,.16);
+  --slate:#5B8FDB; --alarm:#D2605E; --alarm-wash:rgba(210,96,94,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:940px;margin:0 auto;padding:0 26px}
+h1,h2,h3,h4{font-family:var(--f-display);letter-spacing:-.025em;line-height:1.1;
+  text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5.2vw,58px);font-weight:800;letter-spacing:-.04em}
+h2{font-size:clamp(24px,3.1vw,34px);font-weight:700;margin:0 0 4px}
+h3{font-size:19.5px;font-weight:700;margin:38px 0 10px}
+h4{font-size:15.5px;font-weight:700;margin:26px 0 8px;color:var(--ink-2)}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 18px;padding-left:22px}
+li{margin-bottom:8px}
+a{color:var(--accent)}
+code,.mono{font-family:var(--f-mono);font-size:.88em;background:var(--panel-2);
+  padding:1px 5px;border-radius:3px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.eyebrow::before{content:"";width:26px;border-top:2px solid var(--accent)}
+header.doc{padding:clamp(56px,8vw,96px) 0 40px;border-bottom:1px solid var(--rule)}
+.sub{font-size:clamp(18px,1.7vw,21px);color:var(--ink-2);font-weight:300;margin-top:20px;max-width:64ch}
+.meta{display:flex;flex-wrap:wrap;gap:24px;margin-top:32px;padding-top:22px;
+  border-top:1px solid var(--rule);font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
+section{padding:clamp(44px,6vw,72px) 0;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:none}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:18px 0 8px;
+  font-family:var(--f-body)}
+caption{caption-side:top;text-align:left;font-family:var(--f-mono);font-size:10.5px;
+  letter-spacing:.05em;color:var(--ink-3);padding-bottom:9px}
+th{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule-2);
+  font-weight:500;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n,th.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+tr.hl td{background:var(--accent-wash);font-weight:500}
+.scroll{overflow-x:auto}
+.pill{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;margin-left:7px;white-space:nowrap}
+.pill.det{background:var(--panel-3);color:var(--ink-3)}
+.pill.prob{background:var(--accent-wash);color:var(--accent)}
+figure{margin:26px 0;background:var(--panel);border:1px solid var(--rule);border-radius:4px;
+  padding:16px}
+figure img{display:block;margin:0 auto;max-width:100%;height:auto}
+figcaption{font-family:var(--f-mono);font-size:10.5px;line-height:1.6;color:var(--ink-3);
+  margin-top:12px;padding-top:10px;border-top:1px solid var(--rule)}
+.callout{border-left:3px solid var(--accent);background:var(--accent-wash);
+  padding:18px 22px;border-radius:0 3px 3px 0;margin:22px 0}
+.callout.amber{border-left-color:var(--amber);background:var(--amber-wash)}
+.callout.alarm{border-left-color:var(--alarm);background:var(--alarm-wash)}
+.callout h4{margin:0 0 8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent)}
+.callout.amber h4{color:var(--amber)}
+.callout.alarm h4{color:var(--alarm)}
+.callout p:last-child{margin-bottom:0}
+.finding{display:grid;grid-template-columns:38px 1fr;gap:16px;padding:20px 0;
+  border-bottom:1px solid var(--rule)}
+.finding:last-child{border-bottom:none}
+.finding .k{font-family:var(--f-mono);font-size:20px;font-weight:600;color:var(--accent);
+  line-height:1}
+.finding h4{margin:0 0 8px;font-size:17px;color:var(--ink)}
+.finding p{margin-bottom:0;font-size:16px}
+.note{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);line-height:1.65}
+.toc{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:22px 26px;
+  margin-top:32px}
+.toc ol{columns:2;column-gap:34px;margin:0;font-size:14.5px}
+.toc a{text-decoration:none;color:var(--ink-2)}
+.toc a:hover{color:var(--accent)}
+.kpi{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  border-radius:4px;overflow:hidden;grid-template-columns:repeat(2,1fr);margin:26px 0}
+@media(min-width:760px){.kpi{grid-template-columns:repeat(4,1fr)}}
+.kpi div{background:var(--panel);padding:18px 16px}
+.kpi .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);display:block;margin-bottom:7px}
+.kpi .v{font-family:var(--f-display);font-weight:800;font-size:clamp(21px,2.6vw,29px);
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1;display:block}
+.kpi .d{font-size:12.5px;color:var(--ink-3);margin-top:7px;display:block;line-height:1.5}
+footer{padding:48px 0 60px;color:var(--ink-3);font-family:var(--f-mono);font-size:11px;
+  line-height:1.8}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style>
+
+<header class="doc"><div class="wrap">
+  <div class="eyebrow">Build and calibration report</div>
+  <h1>FloodVuln Global:<br>built, calibrated,<br>measured.</h1>
+  <p class="sub">The flood vulnerability platform from the product white paper, implemented and
+    calibrated against 1.86 million public flood-insurance claims and the published JRC global
+    depth&ndash;damage database, with the full benchmark programme run out of sample. It beats the
+    standard global fallback by 40&ndash;54% on CRPS. Section 8 sets out what the validation
+    established, and where the next gains are.</p>
+  <div class="meta">
+    <span>Evidence snapshot [[snapshot]]</span>
+    <span>Model version 1.0.0</span>
+    <span>All results reproducible from this repository</span>
+  </div>
+  <div class="toc"><ol>
+    <li><a href="#summary">What was built</a></li>
+    <li><a href="#scope">Scope and honesty</a></li>
+    <li><a href="#lit">Literature and design</a></li>
+    <li><a href="#data">Data acquisition</a></li>
+    <li><a href="#harm">Harmonisation</a></li>
+    <li><a href="#model">The model</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#findings">Findings that change the product</a></li>
+    <li><a href="#limits">Limitations</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#repro">Reproducing this</a></li>
+  </ol></div>
+</div></header>
+
+<section id="summary"><div class="wrap">
+  <h2>1. What was built</h2>
+  <p>A Python package, <code>floodvuln</code>, implementing the five layers of the specification:
+    an evidence register with licence classes, a harmonisation layer, a universal taxonomy with a
+    national crosswalk, a hierarchical probabilistic core, and a prediction API that returns a
+    damage distribution with provenance. It is calibrated on real data and validated by a
+    pre-specified benchmark programme, not by assertion.</p>
+
+  <div class="kpi">
+    <div><span class="k">Claims ingested</span><span class="v">[[n_in]]</span><span class="d">OpenFEMA NFIP redacted claims v3, plus a second pull for zero-damage records.</span></div>
+    <div><span class="k">Admissible after QA</span><span class="v">[[n_ok]]</span><span class="d">Every exclusion counted and reversible.</span></div>
+    <div><span class="k">Hierarchy units fitted</span><span class="v">4,625</span><span class="d">142 archetype groups and 4,483 archetype &times; region units.</span></div>
+    <div><span class="k">Benchmark folds</span><span class="v">20</span><span class="d">11 withheld events and 9 withheld states, plus a learning curve.</span></div>
+  </div>
+
+  <p>The headline quantitative results, all out of sample:</p>
+  <ul>
+    <li>Against the <b>published JRC global prior</b> &mdash; the standard fallback where no local
+      function exists &mdash; the engine <b>[[imp_ev]]</b> on withheld events. That baseline also
+      carries a calibration slope of [[slope_jrc]], where 1.0 is correct, and a bias of
+      [[bias_jrc]]; both are corrected.</li>
+    <li>Against a <b>single depth&ndash;damage curve fitted on the same training data</b>, which is
+      conventional practice at its best, it <b>[[imp_ev_det]]</b>.</li>
+    <li>In a <b>withheld region with no local evidence at all</b>, the archetype prior still
+      <b>[[imp_rg]]</b> against the published global curve. That is the day-one number for a new
+      market.</li>
+  </ul>
+</div></section>
+
+<section id="scope"><div class="wrap">
+  <h2>2. Scope, and what &ldquo;all available datasets&rdquo; actually meant</h2>
+  <p>What is available to an automated build, without a licence negotiation or a data agreement, is
+    a much smaller set than the white paper's source inventory implies &mdash; the same gap a product
+    team hits in month one.</p>
+  <div class="scroll"><table>
+    <caption>Source register, as actually obtained</caption>
+    <thead><tr><th>Source</th><th>Licence class</th><th>Outcome</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td><b>NFIP Redacted Claims v3</b> (OpenFEMA)</td><td>Open</td>
+        <td>Ingested. 2,724,656 records available; 1,923,472 met the primary filter.</td></tr>
+      <tr class="hl"><td><b>JRC Global depth&ndash;damage functions</b> (Huizinga et&nbsp;al. 2017)</td><td>Open</td>
+        <td>Ingested from the published workbook. 270 curve points, 6 damage classes, 6 continents.</td></tr>
+      <tr><td>FEMA Hazus flood damage function library</td><td>Open</td>
+        <td>Not obtained. The document endpoint returned HTTP 403 to automated retrieval.</td></tr>
+      <tr><td>USACE North Atlantic Coast Comprehensive Study functions</td><td>Open</td>
+        <td>Not obtained. Same, HTTP 403.</td></tr>
+      <tr><td>HOWAS21 object-level damage database</td><td>Reference only</td>
+        <td>Not obtained. Requires registration and a data agreement.</td></tr>
+      <tr><td>Multi-Coloured Manual (UK)</td><td>Licensed</td>
+        <td>Not obtained. Commercial licence required; deliberately not scraped.</td></tr>
+      <tr><td>INSYDE component model</td><td>Open</td>
+        <td>Reimplementable from the paper; not built in this pass.</td></tr>
+    </tbody>
+  </table></div>
+  <p>So the calibration is <b>United States residential and small commercial</b>, with the JRC
+    database supplying the global prior and the cross-continent comparison. Claims about Japan,
+    Australia, Germany or the UK cannot be made from this run, and none are made.</p>
+  <div class="callout amber">
+    <h4>On not scraping</h4>
+    <p>Two missing sources sit behind a bot filter, two require a licence. Routing around either would
+      have produced a better-looking report and an unusable product.</p>
+  </div>
+</div></section>
+
+<section id="lit"><div class="wrap">
+  <h2>3. Literature, and how it changed the design</h2>
+  <p>The review settled three design questions.</p>
+  <h4>The distributional form</h4>
+  <p>Wing et&nbsp;al. (2020), on over two million NFIP claims, found observed losses are not
+    monotonic in depth at the individual level and are better described by a beta distribution,
+    frequently bimodal at a given depth &mdash; an argument for a bounded distribution with mass at
+    the endpoints. The 2026 NHESS study of rice damage functions uses the same
+    <i>zero-and-one-inflated beta</i> family and the same CRPS/MAE/bias metrics adopted here, and
+    reports the ordering deterministic &lt; probabilistic &lt; Bayesian &lt; random forest, which
+    sets a realistic expectation for the size of the win.</p>
+  <h4>The pooling structure</h4>
+  <p>Wagenaar et&nbsp;al. (2018): multivariable models transfer better when updated with
+    destination-region data &mdash; the case for partial pooling over either a fixed global curve or
+    an unpooled local refit. Gerl et&nbsp;al. (2016): 61 sources, nearly a thousand functions, strong
+    heterogeneity, limited validation &mdash; the case for a harmonisation layer with provenance.</p>
+  <h4>The multivariable claim</h4>
+  <p>Wagenaar et&nbsp;al. (2017) reported roughly 20% MAE reduction from adding hazard and building
+    variables. Treated here as a hypothesis to test, not a result to repeat; see section 8.6.</p>
+</div></section>
+
+<section id="data"><div class="wrap">
+  <h2>4. Data acquisition</h2>
+  <p>The NFIP claims file was pulled through the OpenFEMA API using keyset pagination on the record
+    id, which is resumable and cannot silently truncate at a <code>$skip</code> ceiling. Two pulls
+    were made: the primary filter requires a reported water depth, a positive assessed building
+    damage amount and at least one usable value denominator; a second pull recovers records with
+    <i>zero</i> assessed building damage, because the primary filter would otherwise remove the
+    entire zero point mass and make the zero-inflation component unidentifiable by construction.</p>
+  <p>The second pull returned only <b>4,476</b> records against 1.92 million in the first. That
+    number is a result, not a footnote, and section 8 returns to it.</p>
+  <p>The JRC database was downloaded as the published workbook and parsed into a tidy curve table.
+    Its Europe residential curve reproduces the published values exactly
+    (0, 0.25, 0.40, 0.50, 0.60, 0.75, 0.85, 0.95, 1.00 at 0 to 6&nbsp;m), which is the curve-level
+    reproduction check the specification asks for.</p>
+</div></section>
+
+<section id="harm"><div class="wrap">
+  <h2>5. Harmonisation: three problems that decide the answer</h2>
+  <p>Three ambiguities in the source data each move the fitted curve more than any modelling choice
+    made later.</p>
+
+  <h3>5.1 The units are not what the dictionary says</h3>
+  <p>OpenFEMA documents <code>waterDepth</code> as inches, noting that some measurements were
+    provided in feet. The raw distribution says otherwise: 85.5% of positive values fall in 1&ndash;10,
+    with secondary spikes at 12, 24 and 36. Three independent tests were run.</p>
+  <ul>
+    <li><b>Ratio test.</b> On the 66,117 claims carrying both <code>waterDepth</code> and
+      <code>interiorWaterDepth</code> (unambiguously inches), the ratio is 10&ndash;11 for reported
+      values of 1&ndash;11, and exactly 1.0 across the bands 12, 13&ndash;24 and 25&ndash;48. 73% of
+      the paired mass is consistent with feet.</li>
+    <li><b>Digit preference.</b> 85.5% of positive values lie in 1&ndash;10, the signature of whole-feet
+      entry; only 4.7% are exact multiples of 12.</li>
+    <li><b>Damage response.</b> On the cleanest subset &mdash; single-family, one storey,
+      n&nbsp;=&nbsp;372,253 &mdash; the feet reading gives a mean damage ratio rising monotonically
+      from 0.196 at 0&nbsp;ft to 0.718 at 10&nbsp;ft, with a linear correlation to depth of 0.369
+      against 0.216 under the inches reading.</li>
+  </ul>
+  <p>Adopted rule: magnitude at or below 11 is feet; 12 and above is inches; exactly 12 is flagged
+    ambiguous and excluded, being the one point where the populations overlap &mdash; its mean damage
+    ratio (0.49) sits between the 1&nbsp;ft value (0.25) and the 10&nbsp;ft value (0.72).</p>
+
+  <div class="callout amber">
+    <h4>An undocumented sentinel, found by its physics</h4>
+    <p>The value 99 appears on 8,817 claims with a mean damage ratio of 0.205, against 0.539, 0.602
+      and 0.712 at its immediate neighbours 96, 108 and 120 (that is, 8, 9 and 10&nbsp;ft). A 99&nbsp;inch
+      flood cannot be less damaging than a 96&nbsp;inch one, so 99 is a not-reported code that the data
+      dictionary does not mention. Before it was caught, it dragged the fitted curve down across the
+      2.2&ndash;3.1&nbsp;m band, where the observed mean read 0.366; with the sentinel removed the same
+      band reads 0.476.</p>
+  </div>
+
+  <h3>5.2 The datum differs between fields</h3>
+  <p><code>waterDepth</code> follows adjuster practice relative to the lowest floor.
+    <code>interiorWaterDepth</code> is relative to the lowest adjacent grade. Mixing them shifts the
+    whole curve by the floor-above-grade height. Where the elevation fields permit, the interior
+    reading is preferred and the datum corrected; this applies to 3.3% of records and is flagged.</p>
+
+  <h3>5.3 The damage basis is mixed</h3>
+  <p><code>buildingDamageAmount</code> is an <i>actual cash value</i> figure.
+    <code>buildingReplacementCost</code> is a replacement cost. Dividing one by the other mixes bases
+    and biases the damage ratio low. The ACV-consistent denominator <code>buildingPropertyValue</code>
+    is used where present (99.5% of ingested records, and 99.9% of those for which a damage ratio could be computed at all) and the replacement-cost denominator is
+    converted by an empirically estimated factor and flagged where it is not.</p>
+
+  <h3>5.4 An undocumented category code</h3>
+  <p><code>foundationType</code> is populated on all 2.7 million records, but 1.54 million of them
+    carry the value 0, which is not in the published dictionary (it lists 1&ndash;6). It is a
+    not-reported code. It is mapped to <span class="mono">UNK</span> and flagged as assumed rather
+    than silently folded into <span class="mono">SLAB</span>, which would have inflated the
+    slab-on-grade sample roughly eightfold &mdash; 219,591 genuine slab records against 1,544,359
+    not-reported ones &mdash; almost entirely out of missing data.</p>
+
+  <div class="scroll">[[qa_table]]</div>
+</div></section>
+
+<section id="model"><div class="wrap">
+  <h2>6. The model</h2>
+  <p>Damage ratio <i>D</i> given depth and archetype follows a zero-and-one-inflated beta:</p>
+  <p class="mono" style="display:block;padding:14px 16px;background:var(--panel);border:1px solid var(--rule);border-radius:3px">
+    P(D = 0) = p&#8320; &nbsp;&middot;&nbsp; P(D = 1) = (1 &minus; p&#8320;)&thinsp;p&#8321;
+    &nbsp;&middot;&nbsp; D | 0 &lt; D &lt; 1 ~ Beta(&mu;&phi;, (1&minus;&mu;)&phi;)</p>
+  <p>Each linear predictor is an intercept plus a <b>non-negatively weighted sum of logistic ramps</b>
+    in depth. Monotonicity therefore holds by construction for any parameter values, satisfying the
+    specification's physical-plausibility requirement without a post-hoc check: expected damage
+    cannot fall as inundation deepens, P(no damage) cannot rise, and P(total loss) cannot fall.</p>
+
+  <h4>Exact aggregation</h4>
+  <p>The ZOIB log-likelihood separates into a categorical part over {0, (0,1), 1} and a beta part
+    whose density depends on the interior observations only through <i>n</i>,
+    &sum;log&thinsp;<i>x</i> and &sum;log(1&minus;<i>x</i>). Binning by depth therefore yields
+    <i>sufficient statistics</i>, not an approximation: fitting 1.86 million claims costs what fitting
+    a hundred cells costs, which is what makes a twenty-fold benchmark programme affordable. A
+    property test confirms stability to 5&times;10&#8315;&sup3; across a 25-fold change in bin width.</p>
+
+  <h4>Hierarchical partial pooling</h4>
+  <p>Three levels: global, archetype, and archetype &times; region. Each level's offset is fitted
+    under a Gaussian prior whose scale is estimated across units by moment matching. The shrinkage is
+    not imposed by a formula; it falls out of maximising the penalised local likelihood. The
+    behaviour can be read directly off the fitted model: for single-family slab dwellings, Florida
+    (n&nbsp;=&nbsp;63,780), Texas (41,948) and Louisiana (31,927) carry substantial offsets, while
+    Alaska (7), Utah (4) and the Northern Marianas (1) have offsets collapsed to within 0.02 of the
+    archetype value.</p>
+  <div class="callout amber">
+    <h4>A variance component that had to be capped</h4>
+    <p>The moment estimator returned a between-unit scale of 3.4 and 7.5 for the two inflation
+      components &mdash; not real between-group variation but an unidentified parameter wandering,
+      because those components sit near the boundary in claims data. Uncapped it would switch
+      shrinkage off exactly where shrinkage is needed.</p>
+  </div>
+
+  <h4>Uncertainty, separated</h4>
+  <p>Aleatory spread is the fitted ZOIB. Epistemic spread is the posterior of the group offset under
+    the shrinkage prior, Cov = (H + diag(1/&tau;&sup2;))&#8315;&sup1;, so a region with one
+    observation inherits the prior variance and one with sixty thousand collapses to the likelihood.
+    With 1.86 million records the <i>global</i> parameter vector contributes under 0.001 &mdash; an
+    implementation reporting only parameter uncertainty would report approximately zero everywhere
+    and call it calibrated.</p>
+
+  <h4>Parameter recovery</h4>
+  <p>Tested first against synthetic data from a known ZOIB, 200,000 observations: maximum absolute
+    error on the recovered mean curve across &minus;0.5 to 5&nbsp;m was <b>0.0019</b>, with
+    p&#8320; and p&#8321; recovered to three decimals. Twenty-two property tests cover monotonicity
+    under random parameters, quantile&ndash;CDF inversion, closed-form moments against simulation,
+    CRPS reduction to absolute error, and every harmonisation rule.</p>
+</div></section>
+
+<section id="results"><div class="wrap">
+  <h2>7. Results</h2>
+
+  <h3>7.1 The archetypes separate, and in the right order</h3>
+  <p>Fitted mean damage ratio at 0.91&nbsp;m above the lowest floor: manufactured home 0.517,
+    one-storey slab 0.451, one-storey crawlspace 0.363, two-storey slab 0.325, elevated with
+    enclosure 0.261, two-storey with basement 0.254. The ordering is not imposed. It reproduces the
+    expectation that a second storey puts more value above the water and that elevation works, and
+    recovers the modifiers Wing et&nbsp;al. found material: occupancy, storeys, foundation.</p>
+  [[fig1]]
+
+  <h3>7.2 The published global prior, measured</h3>
+  <p>The JRC North America residential curve is the specification's nominated fallback for countries
+    without local functions. Against 1.86 million US claims it runs high by roughly 0.2 to 0.3 in
+    absolute damage ratio between 0.5 and 3&nbsp;m. That is not a criticism of a global product used
+    as intended &mdash; the JRC curves use a different maximum-damage convention &mdash; it is the
+    size of the correction a calibration layer exists to supply, and it is measurable.</p>
+  [[fig4]]
+
+  <h3>7.3 The distribution at fixed depth</h3>
+  <p>The observed spread at a given depth is very wide, which is the empirical claim the whole product
+    rests on. The fitted beta component tracks the interior shape.</p>
+  [[fig2]]
+
+  <h3>7.4 Leave-one-event-out</h3>
+  <p>Eleven named events withheld one at a time, the model refitted without each. Deterministic
+    curves are scored as degenerate forecasts, so their CRPS is their mean absolute error.</p>
+  <div class="scroll">[[ev_table]]</div>
+
+  <h3>7.5 Leave-one-region-out: the day-one number</h3>
+  <p>Nine states withheld one at a time, with no local evidence available in the held-out region. This
+    is what a new market gets before any local claims exist.</p>
+  <div class="scroll">[[rg_table]]</div>
+
+  <h3>7.6 The learning curve</h3>
+  <p>Local records are drawn from a withheld region and used to update the prior, eight times per
+    sample size.</p>
+  <div class="scroll">[[lc_table]]</div>
+  [[fig3]]
+
+  <h3>7.7 Calibration diagnostics</h3>
+  <p>The probability integral transform should be uniform under a calibrated forecast. On a withheld
+    event it is not, and the direction is informative: observed damage falls in the upper part of the
+    predicted distribution, so the model under-predicts. Region calibration barely improves the tilt
+    &mdash; the clue behind section 8.3.</p>
+  [[fig5]]
+</div></section>
+
+<section id="findings"><div class="wrap">
+  <h2>8. What the validation established</h2>
+
+  <div class="finding">
+    <div class="k">1</div>
+    <div>
+      <h4>Local calibration relocates the distribution rather than sharpening it.</h4>
+      <p>This contradicts the concept's central visual, the calibration ladder captioned
+        &ldquo;more evidence narrows uncertainty&rdquo;. At 0.61&nbsp;m for a single-family slab
+        dwelling the P10&ndash;P90 width is 0.670 with no archetype information, 0.723 with the
+        archetype and 0.731 with 63,780 local Florida claims &mdash; marginally <i>wider</i>, because
+        the width is building-to-building variability that local data cannot remove. What local
+        evidence buys is the epistemic component, which falls from 0.111 to 0.001, a factor of about
+        a hundred. <b>Local calibration buys accuracy and calibration, not sharpness.</b> The site now
+        reports the two components separately.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="k">2</div>
+    <div>
+      <h4>The zero point mass requires exposure data, not claims data.</h4>
+      <p>A building inundated without damage rarely becomes a claim, so it never enters the file. The
+        second pull recovered 4,476 zero-damage records against 1.92 million positive ones, so the
+        fitted P(D&nbsp;=&nbsp;0) of 0.1&ndash;2% is conditional on a claim being filed &mdash; a
+        lower bound on the quantity the product advertises. Estimating P(no damage | inundated) needs
+        an exposure file listing every building in the footprint, which is a client input. That
+        strengthens the commercial case for the G5 client-view rung; the API now returns the
+        conditioning as an explicit warning rather than a clean number.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="k">3</div>
+    <div>
+      <h4>The largest remaining gain is an event-level effect, worth about 23% CRPS.</h4>
+      <p>Per-event bias is large and systematic: Katrina &minus;0.271 at archetype level, Harvey
+        &minus;0.087, generic flooding +0.068. Region calibration fixes part of Katrina
+        (&minus;0.271 to &minus;0.186, because Louisiana genuinely differs) but nothing of Harvey,
+        because Texas averages across many events. Two experiments separate the explanations. Adding
+        the only additional hazard variable NFIP carries at scale changed MAE by 0.0000. Granting the
+        model a single four-parameter event-level shift &mdash; an oracle, not a forecast &mdash; cut
+        CRPS by 22.8%, removed the bias entirely and repaired coverage from 0.726 to 0.826 against a
+        nominal 0.80.</p>
+      <div class="scroll">[[cov_table]]</div>
+      <p>An event-level random effect, updated from the first days of claims, is therefore worth more
+        than any additional per-building covariate available here &mdash; and is directly saleable,
+        being what post-event reserving needs.</p>
+    </div>
+  </div>
+
+
+  <div class="finding">
+    <div class="k">4</div>
+    <div>
+      <h4>Region calibration transfers within a region, not across event types.</h4>
+      <p>This one was not expected. Averaged over eleven withheld events the <i>archetype</i> model
+        scores CRPS [[crps_g1]] and the <i>region-calibrated</i> model [[crps_g4]] &mdash; the extra
+        local layer <b>[[g4_vs_g1]]</b>, and coverage falls from [[cov_g1]] to [[cov_g4]] against a
+        nominal 0.80. Local calibration made the forecast worse.</p>
+      <p>The mechanism follows from finding 3: a region offset partly absorbs the <i>event
+        composition</i> of that region's history &mdash; Louisiana's offset is substantially Katrina,
+        Texas's substantially Harvey and Allison &mdash; so it transfers the wrong severity to a new
+        event. Within-region random hold-out, where the future resembles the past, still shows the
+        expected gain (section 7.6). The claim is therefore conditional:</p>
+      <div class="callout">
+        <h4>Scope of the claim</h4>
+        <p>Local calibration improves prediction for <b>the kind of events a region has already
+          seen</b>. On this evidence it does not improve prediction for a new event of different
+          character, and can degrade coverage. The claim is stated conditionally on the site and in
+          the pilot protocol.</p>
+      </div>
+      <p>The fix is to separate what the offset currently conflates: a persistent regional
+        building-stock effect, which should transfer, and an event-severity effect, which should not.
+        That is the event-level random effect finding 3 prices at roughly 23% CRPS.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="k">5</div>
+    <div>
+      <h4>A shape offset in the hierarchy, worth 4.2% CRPS.</h4>
+      <p>The learning curve inverted the expected ordering: from about ten local records upward a full
+        unpooled refit beat the hierarchical model, the opposite of what partial pooling exists to do.
+        A defect in the implementation, not the concept.</p>
+      <p>Louisiana's observed response for the largest archetype runs 0.192, 0.449, 0.668, 0.812 at 0,
+        0.61, 1.22 and 2.44&nbsp;m &mdash; materially <i>steeper</i> than national. A four-parameter
+        offset moves a curve's level but not its slope, so it compromised: over-predicting at
+        0&nbsp;m (0.289 against 0.192) and under-predicting at depth (0.714 against 0.812). An
+        unpooled refit, free to change shape, tracked the data almost exactly. <b>Regional variation
+        lives in the slope, and the hierarchy only parameterised the level.</b></p>
+      <p>The fix is a fifth offset component that scales the depth response by a strictly positive
+        multiplier, so monotonicity is preserved by construction exactly as before. Measured on a
+        clean split with the archetype level refitted without Louisiana:</p>
+      <div class="scroll"><table>
+        <caption>Shape offset against level-only and an unpooled refit, Louisiana, 6 resamples per point</caption>
+        <thead><tr><th class="n">local records</th><th class="n">level only CRPS</th>
+          <th class="n">+ shape CRPS</th><th class="n">unpooled CRPS</th><th class="n">shape gain</th></tr></thead>
+        <tbody>
+          <tr><td class="n">0</td><td class="n">0.1763</td><td class="n">0.1763</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+          <tr class="hl"><td class="n">10</td><td class="n">0.1712</td><td class="n">0.1637</td><td class="n">0.1690</td><td class="n">&minus;4.4%</td></tr>
+          <tr class="hl"><td class="n">25</td><td class="n">0.1625</td><td class="n">0.1558</td><td class="n">0.1630</td><td class="n">&minus;4.1%</td></tr>
+          <tr><td class="n">100</td><td class="n">0.1580</td><td class="n">0.1514</td><td class="n">0.1485</td><td class="n">&minus;4.2%</td></tr>
+          <tr><td class="n">1000</td><td class="n">0.1525</td><td class="n">0.1461</td><td class="n">0.1452</td><td class="n">&minus;4.2%</td></tr>
+          <tr><td class="n">5000</td><td class="n">0.1523</td><td class="n">0.1455</td><td class="n">0.1449</td><td class="n">&minus;4.4%</td></tr>
+        </tbody></table></div>
+      [[fig6]]
+      <p>The shape offset improves CRPS by about 4.2% at every sample size, and at 10 and 25 local
+        records it <b>beats the unpooled refit</b> &mdash; restoring the claimed ordering precisely in
+        the sparse-data regime where it matters. The two converge by a few hundred records, which is
+        correct: with enough local data a prior has nothing left to contribute. The shipped model
+        retains the level-only offset; the shape component is validated but not yet refitted across
+        all 4,483 units, and is the first roadmap item.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="k">6</div>
+    <div>
+      <h4>Multivariable hazard needs data NFIP does not carry.</h4>
+      <p><code>floodWaterDuration</code> is recorded on 1.6% of claims, and within every depth band the
+        recorded subset shows <i>lower</i> mean damage than the unrecorded majority (0.294 against
+        0.426 above 1.2&nbsp;m) &mdash; a non-random recording process, not a physical signal. The
+        cited ~20% MAE improvement is not contradicted; it came from survey data with genuine
+        duration and velocity. It simply cannot be claimed on NFIP. The product should say
+        &ldquo;multivariable where the data support it&rdquo; and name those datasets.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="k">7</div>
+    <div>
+      <h4>Monotonicity trades accuracy at depth, addressable per archetype.</h4>
+      <p>Observed mean damage for single-family slab dwellings plateaus above about 1.7&nbsp;m and then
+        wanders (0.504 at 1.66&nbsp;m, 0.447 at 2.39&nbsp;m, 0.505 at 3.15&nbsp;m) on samples of a few
+        thousand. The monotone constraint holds the fitted curve rising, so it over-predicts by up to
+        0.15 there. The plateau is most likely real &mdash; a one-storey house is destroyed once and
+        deeper water adds nothing &mdash; and the fix is a per-archetype saturating ceiling, not
+        abandoning monotonicity.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="limits"><div class="wrap">
+  <h2>9. Limitations</h2>
+  <ul>
+    <li><b>One country.</b> Calibration is US-only. The taxonomy and crosswalk are built to take other
+      national schemes, and none have been ingested.</li>
+    <li><b>Insured stock only.</b> NFIP policyholders are not a random sample of exposed buildings.
+      Selection runs through mandatory purchase requirements, flood-zone designation and price.</li>
+    <li><b>Adjuster-assessed damage.</b> The target is an adjuster's actual-cash-value estimate, not an
+      engineering survey. It carries adjuster practice, and practice varies by event and carrier.</li>
+    <li><b>Depth is inferred for 96.7% of records.</b> The unit rule is well evidenced but it is a
+      rule, and 1.3% of records were dropped as ambiguous.</li>
+    <li><b>Construction material is assumed.</b> NFIP does not record it. Timber frame is assigned to
+      single-family residential and flagged; the L3 level of the taxonomy is otherwise empty.</li>
+    <li><b>Empirical Bayes, not full posterior.</b> Variance components are point-estimated and the
+      offset posterior is a Laplace approximation. A full MCMC treatment would widen the epistemic
+      intervals somewhat, most at small n.</li>
+    <li><b>No contents, no business interruption.</b> The fitted model covers building damage only.</li>
+  </ul>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <h2>10. What to build next, in order</h2>
+  <ol>
+    <li><b>Refit the shape offset across all 4,483 hierarchy units.</b> It is implemented and
+      validated at about 4.2% CRPS with the sparse-data ordering restored (section 8.5); it needs a
+      full refit and a re-run of the benchmark programme before it ships.</li>
+    <li><b>Event-level random effects</b> with an in-event update path. Section 8.3 puts an upper
+      bound of about 23% CRPS on this, the largest single gain identified, and it is also the fix for
+      the region-generalisation failure in 8.4.</li>
+    <li><b>Per-archetype saturation ceilings</b> to resolve the monotonicity conflict at depth.</li>
+    <li><b>An exposure-file ingestion path</b>, which is the only way to make P(no damage) a real
+      number rather than a conditional one.</li>
+    <li><b>A second country.</b> Japan's MLIT damage rates and the Australian state guidance are
+      published tables and would test the crosswalk properly.</li>
+    <li><b>Licence negotiations</b> for HOWAS21 and the Multi-Coloured Manual, which are the two
+      sources that would most improve the non-US prior.</li>
+    <li><b>Full Bayesian inference</b> on the hierarchy once the structure stops changing.</li>
+  </ol>
+</div></section>
+
+<section id="repro"><div class="wrap">
+  <h2>11. Reproducing this</h2>
+  <p>From a clean checkout, with network access:</p>
+  <p class="mono" style="display:block;padding:16px 18px;background:var(--panel);border:1px solid var(--rule);border-radius:3px;line-height:2">
+    python scripts/fetch_nfip.py<br>
+    python scripts/fetch_nfip_zero.py<br>
+    python scripts/depth_units.py<br>
+    python scripts/build_dataset.py<br>
+    python experiments/run_calibration.py<br>
+    python experiments/run_covariates.py<br>
+    python scripts/add_covariances.py<br>
+    python scripts/make_figures.py<br>
+    python scripts/export_to_web.py &amp;&amp; python scripts/update_site.py<br>
+    python scripts/make_report.py<br>
+    python tests/test_core.py &amp;&amp; node tests/test_js_parity.js &lt;site.html&gt;
+  </p>
+  <p>Every prediction carries a model version and an evidence snapshot hash over the source files, so
+    a result can be tied to the exact inputs that produced it. The JavaScript engine shipped in the
+    website is checked against the Python engine on 48 cases at each release; the current worst
+    divergence is 1.2&times;10&#8315;&#8311;.</p>
+</div></section>
+
+<footer><div class="wrap">
+  <p>FloodVuln Global &middot; build and calibration report &middot; evidence snapshot [[snapshot]]<br>
+  Data: FEMA OpenFEMA NFIP Redacted Claims v3 (public domain). Huizinga, J., de Moel, H. &amp;
+  Szewczyk, W. (2017) Global flood depth-damage functions, JRC EUR 28552 EN, doi:10.2760/16510.<br>
+  Wing et&nbsp;al. (2020) Nat. Commun. 11:1444 &middot; Gerl et&nbsp;al. (2016) PLOS ONE 11(7)
+  e0159791 &middot; Wagenaar et&nbsp;al. (2017) NHESS 17:1683 &middot; Wagenaar et&nbsp;al. (2018) WRR
+  &middot; Dottori et&nbsp;al. (2016) NHESS 16:2577 &middot; Kellermann et&nbsp;al. (2020) NHESS 20:2503.<br>
+  All figures generated from the calibration run. No number in this report was entered by hand.</p>
+</div></footer>
